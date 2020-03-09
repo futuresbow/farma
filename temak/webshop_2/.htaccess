@@ -1,0 +1,5 @@
+Options +FollowSymLinks
+
+RewriteEngine on
+
+RewriteRule ^([A-Za-z0-9-\s]+)/?$ index.php?id=$1 [L]

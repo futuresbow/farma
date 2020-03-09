@@ -1,0 +1,115 @@
+// main: ../css/style.less
+// 480
+
+@media screen and (max-width: 480px) {
+
+    // header
+    .header {
+        .top-line {
+            .cs-mobile {
+                display: none;
+            }
+        }
+    }
+
+    // home page product list
+    .product-list {
+
+        .products {
+
+            li {
+                width: 50%;
+                border-left: 1px solid @input-border;
+                border-bottom: 1px solid @input-border;
+
+                &:nth-child(4n+4) {
+                    border-right: none;
+                }
+
+                &:nth-child(3n+3) {
+                    border-right: none;
+                }
+
+                &:nth-child(2n+2) {
+                    border-right: 1px solid @input-border;
+                }
+            }
+        }
+    }
+
+    .products-heading {
+        height: 50px;
+        padding: 0 10px;
+
+        h1, h2 {
+            display: block;
+            overflow: hidden;text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: 0 15px 0 0;
+            .semi(18px,18px,0);
+            text-transform: uppercase;
+        }
+
+        .styled-select {
+            display: none;
+        }
+    }
+
+
+    .pagination {
+        .flex-display(flex);
+        .flex-direction(row);
+        .justify-content(space-between);
+        .flex-wrap(nowrap);
+        .align-items(center);
+        .bg-col(@static-bg);
+        border: 1px solid @input-border;
+        height: 50px;
+        padding: 0 15px;
+
+        .styled-select {
+            display: none;
+        }
+
+        ul {
+            width: 100%;
+            .ta(center);
+
+            li {
+                display: inline-block;
+                .bold(16px,16px,0);
+                padding: 0 5px;
+                .va(top);
+
+                a {
+                    display: block;
+                    color: @static-link;
+                    .transition(all .25s);
+
+                    &:hover {
+                        .opacity(.66);
+                    }
+
+                    &.active {
+                        color: @static-link-hover;
+
+                        &:hover {
+                            .opacity(1);
+                        }
+                    }
+
+                    &.prev {
+                        .bg-img('../img/icon-prev.svg',center,no-repeat,cover);
+                        .wh(16px,16px);
+                    }
+
+                    &.next {
+                        .bg-img('../img/icon-next.svg',center,no-repeat,cover);
+                        .wh(16px,16px);
+                    }
+                }
+            }
+        }
+    }
+
+}

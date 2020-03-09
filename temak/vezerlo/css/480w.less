@@ -1,0 +1,103 @@
+// main: ../css/style.less
+// 480
+
+@media screen and (max-width: 480px) {
+
+
+    .content-box {
+
+        .box {
+
+            .box-item {
+
+                .scrollable-container {
+
+                    .scrollable-item {
+                        min-width: 420px;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .table-top-search {
+
+        .table-top-select {
+            display: none;
+        }
+
+        .table-top-input {
+
+            input[type="text"] {
+                .border-radius(0,0,3px,3px);
+            }
+        }
+
+        .table-top-btn {
+
+            .btn {
+                padding: 0 10px;
+            }
+        }
+    }
+
+    .pagination-container {
+        .flex-display(flex);
+        .flex-direction(row);
+        justify-content: center;
+        align-items: center;
+
+        .bottom-controls {
+            display: none;
+        }
+
+        .pagination {
+
+            ul {
+                list-style: none;
+                .flex-display(flex);
+                .flex-direction(row);
+
+                li {
+                    margin-left: 3px;
+                    width: 30px;
+                    .ta(center);
+                    .open-semi(0.75em,30px,0.25px);
+                    color: @gray-dark;
+
+                    a {
+                        display: block;
+                        .wh(30px,30px);
+                        .rounded(3px);
+                        .bg-col(@gray-light-2);
+                        color: @gray-dark;
+                        .transition(all .15s);
+
+                        &:hover {
+                            text-decoration: none;
+                            .bg-col(@gray-light-3);
+                        }
+
+                        &.active {
+                            color: @white;
+                            .bg-col(@gray-dark);
+                        }
+
+                        &.prev {
+                            .bg-img('../img/icon-pagination-left.svg',center,no-repeat,16px 16px);
+                        }
+
+                        &.next {
+                            .bg-img('../img/icon-pagination-right.svg',center,no-repeat,16px 16px);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+}

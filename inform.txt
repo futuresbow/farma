@@ -1,0 +1,9 @@
+
+
+hookok:
+
+rendeles.statuszvaltozas(rendeles_id)
+felhasznalo.beleptetes(felhasznalo_id)
+felhasznalo.hirlevelfeliratkozas(felhasznalo_id)
+felhasznalo.regisztacio(felhasznalo_id)
+

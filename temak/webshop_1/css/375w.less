@@ -1,0 +1,33 @@
+// main: ../css/style.less
+// 480
+
+@media screen and (max-width: 374px) {
+
+    // home page product list
+    .product-list {
+
+        .products {
+
+            li {
+                width: 100%;
+                border-left: 1px solid @input-border;
+                border-bottom: 1px solid @input-border;
+                border-right: 1px solid @input-border;
+
+
+                &:nth-child(4n+4) {
+                    border-right: 1px solid @input-border;
+                }
+
+                &:nth-child(3n+3) {
+                    border-right: 1px solid @input-border;
+                }
+
+                &:nth-child(2n+2) {
+                    border-right: 1px solid @input-border;
+                }
+            }
+        }
+    }
+
+}

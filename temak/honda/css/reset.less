@@ -1,0 +1,91 @@
+// main: ../css/style.less
+// reset & base
+
+html {
+    height: 100%;
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    //-webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+div, span, a, img, input, textarea, button, blockquote, li, header, footer, p, ul, ol {
+    .box-sizing(border-box);
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+
+img, p {
+    display: block;
+}
+
+.clear {
+    clear: both;
+}
+
+.clearfix:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.left {
+    float: left;
+    text-align: left;
+}
+
+.right {
+    float: right;
+    text-align: left;
+}
+
+.center {
+    margin: 0 auto;
+    .ta(center);
+}
+
+.btn {
+    .user-select(none);
+}
+
+button:focus, textarea:focus, input:focus, select:focus{
+    outline: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    display: block;
+    .box-sizing(border-box);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+
+/*
+::selection {
+    background: #54a8cb;
+    color: #333333;
+}
+
+::-moz-selection {
+    background: #54a8cb;
+    color: #333333;
+}
+*/

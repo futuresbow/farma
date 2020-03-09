@@ -1,0 +1,57 @@
+[01-Dec-2018 07:46:54 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 17
+[01-Dec-2018 07:54:40 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 17
+[01-Dec-2018 08:02:39 UTC] PHP Parse error:  syntax error, unexpected ';' in /home/zenteorg/add/epeditor.zente.org/application/controllers/Scan.php on line 17
+[01-Dec-2018 08:06:27 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Scan.php on line 30
+[01-Dec-2018 09:35:57 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/zenteorg/add/epeditor.zente.org/application/controllers/Scan.php on line 19
+[01-Dec-2018 12:51:10 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 17
+[01-Dec-2018 12:51:48 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 17
+[01-Dec-2018 12:51:50 UTC] PHP Fatal error:  Call to undefined function recur_dir() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 17
+[05-Dec-2018 12:54:11 UTC] PHP Parse error:  syntax error, unexpected ';' in /home/zenteorg/add/epeditor.zente.org/application/controllers/Iframe.php on line 26
+[08-Dec-2018 06:48:38 UTC] PHP Fatal error:  Cannot redeclare Epedit::index() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 29
+[05-Jan-2019 14:35:05 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/zenteorg/add/epeditor.zente.org/application/controllers/Iframe.php on line 51
+[09-Jan-2019 13:19:03 UTC] PHP Parse error:  syntax error, unexpected 'html' (T_STRING), expecting variable (T_VARIABLE) in /home/zenteorg/add/epeditor.zente.org/application/libraries/Hirlevel.php on line 6
+[09-Jan-2019 13:19:26 UTC] PHP Fatal error:  Call to a member function letrehozas() on null in /home/zenteorg/add/epeditor.zente.org/application/controllers/Iframe.php on line 80
+[12-Jan-2019 08:19:14 UTC] PHP Fatal error:  Call to a member function userdata() on null in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 25
+[12-Jan-2019 08:26:06 UTC] PHP Fatal error:  Class 'tagid' not found in /home/zenteorg/add/epeditor.zente.org/system/database/drivers/mysqli/mysqli_result.php on line 229
+[12-Jan-2019 08:27:51 UTC] PHP Fatal error:  Class 'tagid' not found in /home/zenteorg/add/epeditor.zente.org/system/database/drivers/mysqli/mysqli_result.php on line 229
+[12-Jan-2019 08:27:54 UTC] PHP Fatal error:  Class 'tagid' not found in /home/zenteorg/add/epeditor.zente.org/system/database/drivers/mysqli/mysqli_result.php on line 229
+[12-Jan-2019 09:04:54 UTC] PHP Fatal error:  Cannot redeclare Epedit::levelletrehozas() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 54
+[12-Jan-2019 09:05:23 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 61
+[12-Jan-2019 09:05:37 UTC] PHP Parse error:  syntax error, unexpected ''Mailprocesszor_'' (T_CONSTANT_ENCAPSED_STRING) in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 61
+[12-Jan-2019 09:12:30 UTC] PHP Parse error:  syntax error, unexpected '=>' (T_DOUBLE_ARROW) in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 64
+[12-Jan-2019 09:19:42 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/zenteorg/add/epeditor.zente.org/application/views/epeditor/keret_view.php on line 50
+[12-Jan-2019 10:19:36 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::torzsAdat() in /home/zenteorg/add/epeditor.zente.org/application/views/epeditor/lapok/levelszerkeszto_view.php on line 11
+[12-Jan-2019 10:38:13 UTC] PHP Fatal error:  Class 'Mailprocesszor_alap' not found in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 62
+[12-Jan-2019 11:06:30 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 15
+[12-Jan-2019 12:05:03 UTC] PHP Parse error:  syntax error, unexpected 'function' (T_FUNCTION), expecting ',' or ';' in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 26
+[12-Jan-2019 12:05:14 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::editor() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 66
+[13-Jan-2019 09:17:08 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::levelTorzs() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 46
+[13-Jan-2019 09:20:29 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 43
+[13-Jan-2019 09:20:50 UTC] PHP Fatal error:  Cannot assign by reference to overloaded object in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 42
+[13-Jan-2019 10:28:20 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::textSzerkeszto() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 51
+[13-Jan-2019 10:30:16 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::textHtml() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 51
+[13-Jan-2019 10:34:13 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 126
+[13-Jan-2019 11:34:11 UTC] PHP Fatal error:  Call to undefined method Epedit::sqlUpdate() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 107
+[14-Jan-2019 15:19:25 UTC] PHP Fatal error:  Call to undefined method Mailprocesszor_alap::imageHtml() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Mailprocesszor_alap.php on line 51
+[15-Jan-2019 14:25:26 UTC] PHP Fatal error:  Call to a member function getsIdArr() on null in /home/zenteorg/add/epeditor.zente.org/application/helpers/ephelper_helper.php on line 39
+[15-Jan-2019 14:39:38 UTC] PHP Fatal error:  Call to undefined method Levelkuldo::send() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Levelkuldo.php on line 73
+[15-Jan-2019 14:52:22 UTC] PHP Fatal error:  Call to undefined function print_debugger() in /home/zenteorg/add/epeditor.zente.org/application/libraries/Levelkuldo.php on line 71
+[15-Jan-2019 15:08:08 UTC] PHP Fatal error:  Call to a member function attach() on null in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 195
+[16-Jan-2019 12:46:56 UTC] PHP Fatal error:  Class 'PHPMailer' not found in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 193
+[16-Jan-2019 13:03:39 UTC] PHP Fatal error:  Class 'PHPMailer' not found in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 193
+[16-Jan-2019 13:21:34 UTC] PHP Parse error:  syntax error, unexpected 'use' (T_USE) in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 191
+[16-Jan-2019 13:24:35 UTC] PHP Fatal error:  Call to undefined function base_name() in /home/zenteorg/add/epeditor.zente.org/application/controllers/Epedit.php on line 202
+[18-May-2019 14:43:35 UTC] PHP Fatal error:  Class 'megjelenites' not found in /home/zenteorg/add/wsdev.zente.org/application/controllers/Fokontroller.php on line 74
+[20-May-2019 08:30:32 UTC] PHP Fatal error:  Class name must be a valid object or a string in /home/zenteorg/add/wsdev.zente.org/modules/admin/admin_modul.php on line 55
+[20-May-2019 09:40:10 UTC] PHP Fatal error:  Call to undefined function megrendelesosszarafa() in /home/zenteorg/add/wsdev.zente.org/modules/rendelesek/rendelesek_admin.php on line 470
+[20-May-2019 09:40:24 UTC] PHP Fatal error:  Call to undefined function megrendelesosszarafa() in /home/zenteorg/add/wsdev.zente.org/modules/rendelesek/rendelesek_admin.php on line 470
+[23-May-2019 10:01:09 UTC] PHP Parse error:  syntax error, unexpected '=>' (T_DOUBLE_ARROW) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 170
+[23-May-2019 11:03:48 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 125
+[23-May-2019 11:04:04 UTC] PHP Fatal error:  Cannot break/continue 1 level in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 83
+[23-May-2019 11:05:19 UTC] PHP Fatal error:  Cannot break/continue 1 level in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 83
+[23-May-2019 11:06:01 UTC] PHP Fatal error:  Call to a member function ujTablazat() on null in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 107
+[23-May-2019 11:43:39 UTC] PHP Parse error:  syntax error, unexpected 'unset' (T_UNSET) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 168
+[23-May-2019 11:44:26 UTC] PHP Parse error:  syntax error, unexpected 'unset' (T_UNSET) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 168
+[23-May-2019 11:44:37 UTC] PHP Parse error:  syntax error, unexpected 'unset' (T_UNSET) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 169
+[23-May-2019 11:44:39 UTC] PHP Parse error:  syntax error, unexpected 'unset' (T_UNSET) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 169
+[23-May-2019 11:44:43 UTC] PHP Parse error:  syntax error, unexpected 'unset' (T_UNSET) in /home/zenteorg/add/wsdev.zente.org/modules/slider/slider_admin.php on line 170

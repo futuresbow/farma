@@ -1,0 +1,16 @@
+<!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<script>
+$(document).click(function(event) {
+    var text = $(event.target).text();
+    o = $(event.target);
+    if(!text) {
+		console.log(event.target);
+	} else {
+		
+		console.log($(o).text());
+	}
+});
+</script>

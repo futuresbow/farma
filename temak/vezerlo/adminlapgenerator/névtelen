@@ -1,0 +1,3 @@
+
+<input type="checkbox" id="<?= $id ;?>" <?= ($ertek!='')?'checked':'';?> <?= @$attr;?> name="<?= $name; ?>" value="1" />
+					
