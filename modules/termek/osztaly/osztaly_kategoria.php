@@ -10,10 +10,10 @@ class Kategoriak_osztaly extends MY_Model{
 	public function kategoriaFa() {
 		$ci = getCI();
 		$lista = $ci->Sql->kategoriaFa(0);
-		foreach($lista as $k => $v) {
+		if($lista)foreach($lista as $k => $v) {
 			$lista[$k]->termekdb = $ci->Sql->getFieldValue("SELECT COUNT(*) as ossz FROM ".DBP."termekxkategoria WHERE kategoria_id = {$v->id} ", 'ossz');
 			
-		}
+		} else {			$lista = array();		}
 		
 		return $lista;
 	}

@@ -11,10 +11,39 @@ class Fokontroller extends CI_Controller {
 		
 		// élő adatbázis prefix
 
-		//defined('DBP') OR define('DBP','');
-		$beallitas = $this->Sql->get('db_prefix', "settings", 'kulcs');
-		defined('DBP') OR define('DBP',$beallitas->ertek);
+		// definíciók betöltése
+		$modulok = scandir(FCPATH.'modules');
+	
+		if($modulok) {
+			foreach($modulok as $modul) {
+				if($modul == '.' or $modul == '..') continue;
+					
+				$modulKonyvtar = FCPATH.'modules/'.$modul.'/';
+				if(!@is_dir($modulKonyvtar)) continue;
+				if(file_exists($modulKonyvtar.'definiciok.php'))  {
+					include($modulKonyvtar.'definiciok.php');
+				}
+			}
+		}
 		
+		
+		
+		
+		if(defined('MODUL_ARUHAZAK_TELEPITVE')) {
+			if(vanTabla('aruhazak')) {
+				$beallitas = $this->Sql->sqlSor("SELECT prefix FROM aruhazak WHERE aktiv = 1");
+				if($beallitas) {
+					defined('DBP') OR define('DBP',$beallitas->prefix);
+				} else {
+					defined('DBP') OR define('DBP',"");
+				}
+			} else {
+				defined('DBP') OR define('DBP',"");
+			}
+		} else {
+			defined('DBP') OR define('DBP',"");
+			
+		}
 		
 		
 		include_once(APPPATH.'core/MY_Modul.php');

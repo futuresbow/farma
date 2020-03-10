@@ -41,7 +41,22 @@ function belepesEllenorzo() {
 	if(!$tag) redirect('/login');
 	return $tag;
 }
-
+function vanTabla($tabla) {
+	if(!globalisMemoria('db_tablak')) {
+	
+		$ci = getCI();
+		
+		$sql = "SHOW TABLES";
+		$rs = $ci->Sql->sqlSorok($sql);
+		$arr = array();
+		foreach($rs as $sor) {
+			$arr[] = current($sor);
+		}
+		globalisMemoria('db_tablak', $arr);
+	}
+	return (in_array($tabla, globalisMemoria('db_tablak')));
+	
+}
 function belepettTag() {
 	$CI = & get_instance();
 	

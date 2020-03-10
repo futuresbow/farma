@@ -1,9 +1,9 @@
 <?php
 
 class Kuponok_admin extends MY_Modul {
+		
 	
-	
-	public function lista () {		globalisMemoria("Nyitott menüpont",'Termékek');
+	public function lista () {				if(!vanTabla(DBP.'kuponok')) return "A modul nincs megfelelően telepítve";				globalisMemoria("Nyitott menüpont",'Termékek');
 		globalisMemoria('utvonal', array(array('felirat' => 'Kuponok listája')));
 		$ALG = new Adminlapgenerator;
 		
@@ -18,7 +18,7 @@ class Kuponok_admin extends MY_Modul {
 		$start = 0;
 		$w = '';
 		
-		$lista = $this->sqlSorok('SELECT * FROM kuponok '.$w.' ORDER BY nev ASC LIMIT '.$start.', 30');
+		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'kuponok '.$w.' ORDER BY nev ASC LIMIT '.$start.', 30');
 		foreach($lista as $k => $sor) {
 			
 			$lista[$k]->tipus = $sor->tipus==0?' Lejáratos ':' Darabszámos ';			$lista[$k]->statusznev = $sor->statusz==0?' Kikapcsolva ':' Bekapcsolva ';			$lista[$k]->ar = $sor->ar.' '.(($sor->mukodesimod==1)?'%':PNUTO);

@@ -54,7 +54,7 @@
                     <?php $mod = 'fizetesmod'; include('kosaroldal_armodositoar.php');?>
                     </div>
                 </div>
-            </div>            <div class="form-elements">
+            </div>            <?php if(defined('MODUL_KUPONOK_TELEPITVE')):?>            <div class="form-elements">
                 <div class="form-line">
                     <div class="input-container">
                         <label for="" class="">Kupon felhasználása</label>
@@ -68,7 +68,7 @@
                     <?php $mod = 'kuponkedvezmeny'; include('kosaroldal_kuponarmodositoar.php');?>
                     </div>
                 </div>
-            </div>												
+            </div>						<?php endif; ?>						
 			
             <div class="cart-content price-summ" >
 				<?php include('kosaroldal_vegosszeg.php');?>

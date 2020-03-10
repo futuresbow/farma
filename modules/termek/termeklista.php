@@ -78,12 +78,19 @@ class Termeklista extends MY_Modul {
 		
 		
 		$kategoriak = array();
-		$termekek = $termekListaOsztaly->termekekCimkeszerint($param['cimke_id']) ;		$cimke = $this->Sql->get($param['cimke_id'], DBP."termek_cimkek",'id' );		naplozo('Termékek megtekintése cimke szerint',$param['cimke_id'],'termek_cimkek', $cimke->nev);
+		$termekek = $termekListaOsztaly->termekekCimkeszerint($param['cimke_id']) ;		$cimke = $this->Sql->get($param['cimke_id'], DBP."termek_cimkek",'id' );
+				if($cimke) {
+			naplozo('Termékek megtekintése cimke szerint',$param['cimke_id'],'termek_cimkek', $cimke->nev);
 		
-		$listacim = $cimke->nev;		
-		if($maxTalalatszam>0) {
-			// csak adott számú terméket jelenítünk meg
-			$termekek = array_slice($termekek, 0,$maxTalalatszam); 
+			$listacim = $cimke->nev;		
+			if($maxTalalatszam>0) {
+				// csak adott számú terméket jelenítünk meg
+				$termekek = array_slice($termekek, 0,$maxTalalatszam); 
+			}
+		} else {
+			naplozo('Termékek megtekintése cimke szerint',0,'termek_cimkek', 'Cimke nem létezik');
+			$listacim = 'Termékek';
+			
 		}
 		return $this->ci->load->view(FRONTENDTEMA.'html/termeklista', array('maxTalalatszam' => $maxTalalatszam, 'rendezes' => $rendezes,'start' => $start, 'limit' => $limit, 'termekdb' => $termekListaOsztaly->talalatszam, 'termekek' => $termekek, 'kategoriak' => $kategoriak, 'listacim' => $listacim ), true);
 		

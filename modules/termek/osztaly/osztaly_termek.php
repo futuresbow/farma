@@ -60,7 +60,7 @@ class Termek_osztaly extends MY_Model {
 	}
 	public function darabszamBeallitas($darab) {
 		$this->darab = $darab;
-	}	public function kosarOsszNettoKedvezmenyAr() {		if(is_null($this->darabAr)) $this->kosarDarabAr();		//print $this->darabArKedvezmeny*$this->darab;		return $this->darabArKedvezmeny*$this->darab;	}	public function kosarOsszBruttoKedvezmenyAr() {		if(is_null($this->darabAr)) $this->kosarDarabAr();		$osszNetto = $this->kosarOsszNettoKedvezmenyAr();		$ossz = round($osszNetto + ($osszNetto/100)*$this->afa,2);		return $ossz;	}
+	}	public function kosarOsszNettoKedvezmenyAr() {		if(is_null($this->darabAr)) $this->kosarDarabAr();		//print $this->darabArKedvezmeny*$this->darab;		return $this->darabArKedvezmeny*$this->darab;	}	public function kosarOsszBruttoKedvezmenyAr() {		if($this->id==0) return 0 ;		if(is_null($this->darabAr)) $this->kosarDarabAr();		$osszNetto = $this->kosarOsszNettoKedvezmenyAr();		$ossz = round($osszNetto + ($osszNetto/100)*$this->afa,2);		return $ossz;	}
 	public function kosarOsszNettoAr() {
 		if(is_null($this->darabAr)) $this->kosarDarabAr();
 		return $this->darabAr*$this->darab;
@@ -69,21 +69,20 @@ class Termek_osztaly extends MY_Model {
 		if(!empty($this->kivalasztottOpciok)) return true;
 		return false;
 	}
-	public function kosarOsszAfa() {
-		if(is_null($this->darabAr)) $this->kosarDarabAr();
+	public function kosarOsszAfa() {		if(!isset($this->id)) return 0 ;		if($this->id==0) return 0 ;				if(is_null($this->darabAr)) $this->kosarDarabAr();
 		$osszNetto = $this->darabAr*$this->darab;
 		$osszAfa = round(($osszNetto/100)*$this->afa, 0);
 		
 		return $osszAfa;
 	}
-	public function kosarOsszBruttoAr() {
+	public function kosarOsszBruttoAr() {		if(!isset($this->id)) return 0 ;		if($this->id==0) return 0 ;		
 		if(is_null($this->darabAr)) $this->kosarDarabAr();
 		$osszNetto = $this->darabAr*$this->darab;
 		$osszAfa = round(($osszNetto/100)*$this->afa, 0);
 		
 		return $osszNetto+$osszAfa;
 	}
-		public function kosarDarabAr() {
+		public function kosarDarabAr() {				if(!isset($this->ar))  return 0 ;		
 		$ar = $this->ar;
 		
 		if(!empty($this->kivalasztottValtozat)) {
@@ -354,7 +353,7 @@ class Termek_osztaly extends MY_Model {
 				}							}
 		}		
 	}
-	public function link() {
+	public function link() {		if(!isset($this->id)) return '' ;				
 		$id =  $this->id;
 		if($this->rendeles) $id = $this->termek_id;
 		return base_url().'reszletes/'.strToUrl($id.'-'.$this->jellemzo('Név'));
@@ -368,7 +367,7 @@ class Termek_osztaly extends MY_Model {
 	}
 	public function kepBetoltes() {
 		if($this->kepek) return $this->kepek[0]->file;
-		
+		if(!isset($this->id)) return false;
 		$id = $this->id;
 		if($this->rendeles) $id = $this->termek_id;
 		$sql = "WHERE termek_id = {$id} ORDER BY sorrend ASC ";
