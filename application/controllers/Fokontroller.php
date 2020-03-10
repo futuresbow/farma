@@ -29,6 +29,12 @@ class Fokontroller extends CI_Controller {
 		if(!defined('PN_ELO')) define ('PN_ELO', '');
 		if(!defined('PN_UTO')) define ('PN_UTO', ' Ft');
 		
+		if(beallitasOlvasas('oldal_karbantartas')==1) {
+			if($this->uri->segment(1)!=beallitasOlvasas('ADMINURL')) {
+				print $this->load->view('oldal_karbantartas', false, true);
+				exit;
+			}
+		}
 	}
 	
 	public function index()

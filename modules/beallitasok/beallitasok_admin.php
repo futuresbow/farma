@@ -549,15 +549,15 @@ class Beallitasok_admin extends MY_Modul{
 		
 		$doboz = $ALG->ujDoboz();
 		$doboz->dobozCim( 'Áruház beállítások', 2);
-		$gordulo1 = new Legordulo(array('felirat' => 'Alapértelmezett devize','opciok' => array('HUF' => 'Magyar forint'),'nevtomb' => 'a', 'mezonev' => 'aruhaz_alapdeviza', 'ertek' => beallitasOlvasas('aruhaz_alapdeviza')));
-		$doboz->duplaInput($gordulo1);
+		//$gordulo1 = new Legordulo(array('felirat' => 'Alapértelmezett devize','opciok' => array('HUF' => 'Magyar forint'),'nevtomb' => 'a', 'mezonev' => 'aruhaz_alapdeviza', 'ertek' => beallitasOlvasas('aruhaz_alapdeviza')));
+		//$doboz->duplaInput($gordulo1);
 		$input1 = new Szovegmezo(array('felirat' => 'Szamlazz.hu felhasználó', 'tipus' => 'szoveg','attr' => '  ','nevtomb' => 'a', 'mezonev' => 'szamlazz_user', 'ertek' => beallitasOlvasas('szamlazz_user'))) ;
 		$input2 = new Szovegmezo(array('felirat' => 'Szamlazz.hu jelszó', 'tipus' => 'jelszo','attr' => '  ','nevtomb' => 'a', 'mezonev' => 'szamlazz_jelszo', 'ertek' => beallitasOlvasas('szamlazz_jelszo'))) ;
 		$doboz->duplaInput($input1,$input2);
 				$input1 = new Szovegmezo(array('felirat' => 'Cég számlaszáma', 'tipus' => 'szoveg','attr' => '  ','nevtomb' => 'a', 'mezonev' => 'ceg_szamlaszam', 'ertek' => beallitasOlvasas('ceg_szamlaszam'))) ;
 		$doboz->szimplaInput($input1);
 
-		$pipa1 = new Jelolonegyzet(array('felirat' => 'Deviza jelölése az ár után','nevtomb' => 'cb', 'mezonev' => 'aruhaz_deviza_jeloles_arutan', 'ertek' => 1,  'attr' => (beallitasOlvasas('aruhaz_deviza_jeloles_arutan')=='1')?' checked ':''  ));
+		//$pipa1 = new Jelolonegyzet(array('felirat' => 'Deviza jelölése az ár után','nevtomb' => 'cb', 'mezonev' => 'aruhaz_deviza_jeloles_arutan', 'ertek' => 1,  'attr' => (beallitasOlvasas('aruhaz_deviza_jeloles_arutan')=='1')?' checked ':''  ));
 		$pipa2 = new Jelolonegyzet(array('felirat' => 'Külföldi irányítószám engedélyezése','nevtomb' => 'cb', 'mezonev' => 'kosar_betus_iranyitoszam', 'ertek' => 1, 'attr' => (beallitasOlvasas('kosar_betus_iranyitoszam')=='1')?' checked ':'' ));
 
 		//$pipa2 = new Jelolonegyzet(array('felirat' => 'E-mail értesítése új véleményről','nevtomb' => 'cb', 'mezonev' => 'admin_ertesites_velemenyrol', 'ertek' => 1, 'attr' => (beallitasOlvasas('admin_ertesites_velemenyrol')=='1')?' checked ':'' ));
@@ -569,9 +569,9 @@ class Beallitasok_admin extends MY_Modul{
 		
 
 		
-		$gordulo1 = new Legordulo(array('felirat' => 'Árak megjelenítési módja','opciok' => array('b' => 'Brutto', 'n' => 'Netto', 'bn' => 'Brutto + Netto'),'nevtomb' => 'a', 'mezonev' => 'aruhaz_armegjelenites', 'ertek' => beallitasOlvasas('aruhaz_armegjelenites')));
-		$input1 = new Szovegmezo(array('felirat' => 'Tizedesjegyek',  'tipus' => 'szoveg','attr' => ' maxlength="1" ','nevtomb' => 'a', 'mezonev' => 'aruhaz_armegjelenites_tizedesek', 'ertek' => beallitasOlvasas('aruhaz_armegjelenites_tizedesek'))) ;
-		$doboz->duplaInput($gordulo1, $input1);
+		//$gordulo1 = new Legordulo(array('felirat' => 'Árak megjelenítési módja','opciok' => array('b' => 'Brutto', 'n' => 'Netto', 'bn' => 'Brutto + Netto'),'nevtomb' => 'a', 'mezonev' => 'aruhaz_armegjelenites', 'ertek' => beallitasOlvasas('aruhaz_armegjelenites')));
+		//$input1 = new Szovegmezo(array('felirat' => 'Tizedesjegyek',  'tipus' => 'szoveg','attr' => ' maxlength="1" ','nevtomb' => 'a', 'mezonev' => 'aruhaz_armegjelenites_tizedesek', 'ertek' => beallitasOlvasas('aruhaz_armegjelenites_tizedesek'))) ;
+		//$doboz->duplaInput($gordulo1, $input1);
 		// termékeknél opciózás kikapcsolása
 		$gordulo1 = new Legordulo(array('felirat' => 'Változatok-opciók felvitele a termékekhez','opciok' => array('0' => 'Kikapcsolva', '1' => 'Bekapcsolva'),'nevtomb' => 'a', 'mezonev' => 'termek_valtozat_opcio_engedelyezes', 'ertek' => beallitasOlvasas('termek_valtozat_opcio_engedelyezes')));		
 		
@@ -579,21 +579,7 @@ class Beallitasok_admin extends MY_Modul{
 		
 		$ALG->tartalomDobozVege();
 		
-		/*************  SEO  **************/
-		
-		$ALG->tartalomDobozStart();
-		
-		$doboz = $ALG->ujDoboz();
-		
-		$doboz->dobozCim( 'SEO beállítások', 3);
-		$input1 = new Szovegmezo(array('felirat' => 'Főoldali seo title', 'helyorzo' => 'Maximum 60 karakter',  'tipus' => 'szoveg','attr' => ' maxlength="60" ','nevtomb' => 'a', 'mezonev' => 'soe_fooldali_title', 'ertek' => beallitasOlvasas('soe_fooldali_title'))) ;
-		$doboz->szimplaInput($input1);
-		
-		$text1 = new Szovegdoboz(array('felirat' => 'Főoldali seo description', 'helyorzo' => 'Maximum 255 karakter', 'attr' => ' maxlength="255" ','nevtomb' => 'a', 'mezonev' => 'soe_fooldali_description', 'ertek' => beallitasOlvasas('soe_fooldali_description'))) ;
-		$doboz->szimplaInput($text1);
-		
-		
-		$ALG->tartalomDobozVege();
+		
 		
 		/*************  Karbantartás  **************/
 		
