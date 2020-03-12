@@ -318,11 +318,11 @@ class Rendelesek_admin extends MY_Modul {
 		
 		if(isset($param['szamlazas'])) {
 			// készült számla már?
-			
-			ws_autoload('szamlak');
-			$szamla = new Szamla_osztaly();
-			$szamla->szamlazz($rendeles);
-			
+			if(ws_autoload('szamlak')) {
+				
+				$szamla = new Szamla_osztaly();
+				$szamla->szamlazz($rendeles);
+			}
 			
 			
 		}

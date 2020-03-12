@@ -20,7 +20,13 @@ function __f($str) {
 }
 // adott modul autoload.php fileját include-olja
 function ws_autoload($modul) {
-	include_once(FCPATH.'modules/'.$modul.'/autoload.php');
+	$file = FCPATH.'modules/'.$modul.'/autoload.php';
+	if(file_exists($file)) {
+		include_once($file);
+		return true;
+	} else {
+		return false;
+	}
 }
 function ws_seo($kulcs) {
 	$seo = globalisMemoria('seoTartalom');

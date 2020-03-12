@@ -67,6 +67,7 @@ var siteJs = {};
 			"opciok" : []
 			
 		}
+		if(isNaN(adat.db)) adat.db = 1;
 		// van valtozat?
 		v = $('.kosar_valtozat');
 		if(v[0]) {
