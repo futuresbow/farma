@@ -410,7 +410,10 @@ function widget($utvonal, $param = false) {
 	$modul = $modulEleres[0];
 	$osztaly = $modulEleres[1];
 	$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
+	$ut = FCPATH.'modules/'.$modul.'/'.$osztaly.'.php';
+	if(!file_exists($ut)) return false;
 	include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+	if(!class_exists($osztaly)) return false;
 	$o = new $osztaly;
 	
 	if(!method_exists($o, $metodus)) return "Widget nem található: ".'modules/'.$modul.'/'.$osztaly.' / '.$metodus;

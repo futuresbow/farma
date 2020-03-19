@@ -145,10 +145,10 @@
 					<div class="box-title">Termékkategóriák</div>
 					<div class="box-content">
 						<ul>
-							<?php ws_autoload('termek');$k = new Kategoriak_osztaly();$lista = $k->kategoriaLista(20,"nev ASC");?>
+							<?php if( ws_autoload('termek')): $k = new Kategoriak_osztaly();$lista = $k->kategoriaLista(20,"nev ASC");?>
 							<?php foreach($lista as $sor):?>
 							<li><a href="<?= base_url().beallitasOlvasas('termekek.oldal.url').'/'.$sor->slug; ?>" title="<?= $sor->nev; ?>"><?= $sor->nev; ?></a></li>
-							<?php endforeach ;?>
+							<?php endforeach ; endif;?>
 						</ul>
 						<p><a href="<?= base_url();?>termekek" title="" class="read-more">Minden kategória</a></p>
 					</div>

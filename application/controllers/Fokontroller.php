@@ -105,9 +105,11 @@ class Fokontroller extends CI_Controller {
 		if($seoTartalom) globalisMemoria('seoTartalom', $seoTartalom);
 		
 		/* TODO:
-		 * jogosultságkezelés
+		 * jogosultságkezelés, jelenleg a modulokon belül 
+		 * lehet kezelni a jogosultság kérdéseket
 		 */
-		 
+		
+		// adott URL-hez tartozó tartalmak iterálása
 		if(!empty($tartalmak)) {
 			$kimenet = '';
 			foreach($tartalmak as $tartalom) {
@@ -128,7 +130,14 @@ class Fokontroller extends CI_Controller {
 				$modul = $modulEleres[0];
 				$osztaly = $modulEleres[1];
 				$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
-				include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+				$ut = FCPATH.'modules/'.$modul.'/'.$osztaly.'.php';
+				
+				// ha nincs a modul a rendszerben, kihagyjuk
+				if(!file_exists($ut)) continue;
+				
+				include_once($ut);
+				
+				if(!class_exists($osztaly)) continue;
 				$o = new $osztaly;
 				
 				if($tartalom->parameter!='') {
@@ -152,6 +161,10 @@ class Fokontroller extends CI_Controller {
 			return;
 		}
 		
+		/*
+		 * komonens: olyan tartalom, ahol az url-t mereven kódoljuk a modulban, 
+		 * pl. áruház, kosár, bizonyos ajax elérések
+		 */ 
 		
 		if(!empty($modulAdatok)) {
 			foreach($modulAdatok as $modulAdat) {
@@ -178,7 +191,10 @@ class Fokontroller extends CI_Controller {
 		}
 		
 		
-		// alapértelmezett oldal
+		/* ha nincs semilyen tartalmunk az adott url-en
+		 * akkor a 404-es oldalt hívjuk
+		 */
+		
 		$tartalmak = $this->Sql->sqlSorok("SELECT * FROM oldalak WHERE url = '***' ORDER BY sorrend ASC");
 		
 		
@@ -207,7 +223,7 @@ class Fokontroller extends CI_Controller {
 			}
 			$tema = FRONTENDTEMA;
 			if(globalisMemoria('template_feluliras')) $tema = globalisMemoria('template_feluliras').'/';
-			
+			header("HTTP/1.1 404 Not Found");
 			$this->load->view($tema.'keret_view', $this->data);
 			return;
 		}
