@@ -1,4 +1,6 @@
 <?php
+
+// ez a függvény tölti be a view-t úgy hogy ha nincs az adott témamappában, akkor a közös elemek mappában is megnézi 
 function ws_frontendView($file, $adat = null, $kimenet = false) {
 	$ci = getCI();
 	$filenev = $file;
@@ -14,7 +16,7 @@ function ws_frontendView($file, $adat = null, $kimenet = false) {
 	return $ci->load->view('kozos_elemek/'.$file, $adat, $kimenet);
 }
 
-// fordító függvény
+// fordító függvény, nincs implementálva
 function __f($str) {
 	return $str;
 }
@@ -28,10 +30,12 @@ function ws_autoload($modul) {
 		return false;
 	}
 }
+// a globális memóriából adja vissza az adott kilcshoz tartozó seo adtokat (title, description)
 function ws_seo($kulcs) {
 	$seo = globalisMemoria('seoTartalom');
 	return @$seo->$kulcs;
 }
+// felhasználói tevékenység loggolása, egyszerű változat
 function ws_log($csoport, $bejegyzes) {
 	$CI = & get_instance();
 	$tagid = $CI->session->userdata('__belepett_felhasznalo');
@@ -41,12 +45,15 @@ function ws_log($csoport, $bejegyzes) {
 	
 	
 }
+
+// munkamenetben kikeresi a tag adatait- ha van, egyébként loginra irányít
 function belepesEllenorzo() {
 	$CI = & get_instance();
 	$tag = $CI->session->userdata('tag');
 	if(!$tag) redirect('/login');
 	return $tag;
 }
+// adatbázis tábla meglétét ellenőrzi: áruház táblák vizsgálatához, és egyes modulok meglétének ellenőrzéséhez használjuk
 function vanTabla($tabla) {
 	if(!globalisMemoria('db_tablak')) {
 	

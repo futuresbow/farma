@@ -116,6 +116,7 @@ class Fokontroller extends CI_Controller {
 				
 				
 				
+				
 				$modulEleres = explode("/", $tartalom->moduleleres);
 				
 				// lehet modul/osztaly/metodus
@@ -164,6 +165,7 @@ class Fokontroller extends CI_Controller {
 		/*
 		 * komonens: olyan tartalom, ahol az url-t mereven kódoljuk a modulban, 
 		 * pl. áruház, kosár, bizonyos ajax elérések
+		 * ha a modul hiányzik, akkor nincs elérés, így itt nem kell figyelni a modul elérhetőségét
 		 */ 
 		
 		if(!empty($modulAdatok)) {
