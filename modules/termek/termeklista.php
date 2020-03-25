@@ -10,12 +10,25 @@ class Termeklista extends MY_Modul {
 	}	
 	var $order = ' nev ASC ';
 	
-	
+	/*
+	 * kereses
+	 * 
+	 * a kereso mudul számára adja a találatokat
+	 * 
+	 **/
 	public function kereses($keresoSzo) {
 		ws_autoload('termek');
 		$termekListaOsztaly = new Termeklista_osztaly();
 		return $termekListaOsztaly->kereses($keresoSzo);
 	}
+	
+	/*
+	 * fooldaliszurowidget
+	 * 
+	 * kategória widger a főoldalra
+	 * 
+	 **/
+	
 	public function fooldaliszurowidget($param = false) {
 		ws_autoload('termek');
 		$kategoriaOsztaly = new Kategoriak_osztaly();
@@ -24,6 +37,16 @@ class Termeklista extends MY_Modul {
 		return $this->ci->load->view(FRONTENDTEMA.'html/fooldalitermekwidget', array('kategoriak' => $kategoriak), true);
 
 	}
+	
+	/*
+	 * fooldalitermekek
+	 * 
+	 * a főoldali tartalomhoz adja a terméklistát,
+	 * általában widget-ként van meghívva a template-ből
+	 * 
+	 **/
+	
+	
 	public function fooldalitermekek($param = false) {
 		$data = array();
 		$db = beallitasOlvasas('termeklista.cimkeszerint.limitdb');
@@ -40,6 +63,15 @@ class Termeklista extends MY_Modul {
 		return $this->ci->load->view(FRONTENDTEMA.'html/fooldalitermeklista', $data, true);
 
 	}
+	
+	/*
+	 * cimketermeklista
+	 * 
+	 * adott cimkéhez (pl akcós) rendelt termékek listázása
+	 * 
+	 **/
+	 
+	 
 	public function cimketermeklista($param = false) {
 				$maxTalalatszam = (isset($param['talalatszam'])?$param['talalatszam']:0);
 		
@@ -95,7 +127,12 @@ class Termeklista extends MY_Modul {
 		return $this->ci->load->view(FRONTENDTEMA.'html/termeklista', array('maxTalalatszam' => $maxTalalatszam, 'rendezes' => $rendezes,'start' => $start, 'limit' => $limit, 'termekdb' => $termekListaOsztaly->talalatszam, 'termekek' => $termekek, 'kategoriak' => $kategoriak, 'listacim' => $listacim ), true);
 		
 	}
-	
+		/*
+	 * index
+	 * 
+	 * a terméklista oldal 
+	 * 
+	 **/
 	
 	
 	public function index($param = false) {		naplozo('Terméklista megtekintése');
@@ -171,13 +208,26 @@ class Termeklista extends MY_Modul {
 		//return $this->ci->load->view(FRONTENDTEMA.'html/'.$view, array('rendezes' => $rendezes,'start' => $start, 'limit' => $limit, 'termekdb' => $termekListaOsztaly->talalatszam, 'termekek' => $termekek, 'kategoriak' => $kategoriak ), true);
 		
 	}
-	
+	/*
+	 * sliderlista
+	 * 
+	 * kiemelt termékek megjelentése bitonyos template-eknél
+	 * 
+	 **/
 	
 	public function sliderlista($param) {
 		$termekLista = new Termeklista_osztaly();
 		return $this->ci->load->view(FRONTENDTEMA.'html/kiemeltlista', array( 'tipus' => $param['tipus'], 'lista' => $termekLista->kiemeltTermekek($param['tipus'], $param['termek_db'])), true);
 		
-	}
+	}
+	
+	/*
+	 * termeklap
+	 * 
+	 * adott termék megelenítése, árak, kosárba tétel gombok
+	 * 
+	 **/
+
 	public function termeklap() {
 		$termekLista = new Termeklista_osztaly();
 		$termekUrl = $this->ci->uri->segment(2);
