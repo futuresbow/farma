@@ -1,5 +1,5 @@
 <?php
-
+/* * Termek_osztaly *  * egy terméket reprezentáló osztáy *  */
 class Termek_osztaly extends MY_Model {
 	
 	var $jellemzok;
@@ -13,7 +13,7 @@ class Termek_osztaly extends MY_Model {
 	var $rendeles = false; // ha rendelést töltünk be, akkor a megrendelés terméktáblákból dolgozunk
 	var $kivalasztottOpciok;
 	var $termekTabla = 'termekek';
-	var $megrendeltTermekTabla = 'rendeles_termekek';
+	var $megrendeltTermekTabla = 'rendeles_termekek';		var $termekcsoport;
 	
 	public function __construct($id = false, $rendeles = false) {
 		$this->rendeles = $rendeles;
@@ -32,56 +32,55 @@ class Termek_osztaly extends MY_Model {
 		
 		$rs = $this->sqlSor($sql);
 		if($rs) {
-			foreach($rs as $k => $v) $this->$k = $v;
+			foreach($rs as $k => $v) $this->$k = $v;	
 			if($this->afa==0) {				$this->bruttoAr = $this->ar;				if(isset( $this->eredeti_ar )) $this->eredetiBruttoAr = $this->eredeti_ar;			} else {				$this->bruttoAr = $this->ar + $this->afa*($this->ar/100);				if(isset( $this->eredeti_ar )) $this->eredetiBruttoAr = $this->eredeti_ar + $this->afa*($this->eredeti_ar/100);			}
-			
+						
 			
 		} else {
 			return false;
-		}
-		// kategória
+		}		// termékcsoport 				$this->termekcsoport = $this->sqlSor("SELECT id,nev FROM ".DBP."termek_csoportok WHERE id =  $this->termek_csoport_id ");		// kategória
 		if($rendeles) {			$termekId = $this->termek_id;		} else {			$termekId = $this->id;		}		$kategoriaLista = $this->sqlSorok("SELECT * FROM ".DBP."termekxkategoria WHERE termek_id = $termekId");		if($kategoriaLista) {			foreach($kategoriaLista as $sor) {				$this->ketagoriaTagsag[$sor->kategoria_id] = $sor->kategoria_id;			}		}				// cimketagság		$this->cimkek = $this->getsIdArr(DBP."termek_cimkek", 'id', ' ');						$cimkeListas = $this->sqlSorok("SELECT * FROM ".DBP."termekxcimke x  WHERE termek_id = $termekId");		if($cimkeListas) {			foreach($cimkeListas as $sor) {				$this->cimkeTagsag[$sor->cimke_id] = $sor;			}		}		
 		
 	}
-	
-	public function kuponKedvezmeny($kupon) { 		// erre a termékre érvényes kupon		$this->kupon = $kupon;	}			public function kategoriaTag($kategoria_id) {		return isset($this->ketagoriaTagsag[$kategoria_id]);	}	public function cimkeTag($cimke_id) {		return isset($this->cimkeTagsag[$cimke_id])?$this->cimkeTagsag[$cimke_id]:false;	}	public function valtozatBeallitas($termek_armodositok_id) {
+	/*	 * kuponKedvezmeny	 * 	 * aktuális érvényben lévő kupon elmentése	 */
+	public function kuponKedvezmeny($kupon) { 		// erre a termékre érvényes kupon		$this->kupon = $kupon;	}		/*	 * kategoriaTag	 * 	 * ez a termék benn van-e az adott kategóriában?	 */		public function kategoriaTag($kategoria_id) {		return isset($this->ketagoriaTagsag[$kategoria_id]);	}		/*	 * cimkeTag	 * 	 * ez a tartmék adott cimkéhez van-e rendelve	 */		public function cimkeTag($cimke_id) {		return isset($this->cimkeTagsag[$cimke_id])?$this->cimkeTagsag[$cimke_id]:false;	}		/*	 * valtozatBeallitas	 * 	 * ennek a terméknek az elsődleges változata	 * 	 */		public function valtozatBeallitas($termek_armodositok_id) {
 		$tabla = DBP.'termek_armodositok';
 		if($this->rendeles) $tabla = DBP.'rendeles_termek_armodositok';
 		
 		$valtozat = $this->get($termek_armodositok_id, $tabla, 'id');
 		$this->kivalasztottValtozat =  $valtozat;
-	}
+	}	/*	 * valtozatBeallitas2	 * 	 * ennek a terméknek az másodlagos változata 	 * két változat is beállítható egy termékhez	 * 	 */	
 	public function valtozatBeallitas2($termek_armodositok_id) {
 		$tabla = DBP.'termek_armodositok';
 		if($this->rendeles) $tabla = DBP.'rendeles_termek_armodositok';
 		
 		$valtozat = $this->get($termek_armodositok_id, $tabla, 'id');
 		$this->kivalasztottValtozat2 =  $valtozat;
-	}
+	}	/*	 * darabszamBeallitas	 * 	 * ennek a terméknek a darabszáma (az összárszámításhoz)	 */	 
 	public function darabszamBeallitas($darab) {
 		$this->darab = $darab;
-	}	public function kosarOsszNettoKedvezmenyAr() {		if(is_null($this->darabAr)) $this->kosarDarabAr();		//print $this->darabArKedvezmeny*$this->darab;		return $this->darabArKedvezmeny*$this->darab;	}	public function kosarOsszBruttoKedvezmenyAr() {		if($this->id==0) return 0 ;		if(is_null($this->darabAr)) $this->kosarDarabAr();		$osszNetto = $this->kosarOsszNettoKedvezmenyAr();		$ossz = round($osszNetto + ($osszNetto/100)*$this->afa,2);		return $ossz;	}
+	}		/*	 * kosarOsszNettoKedvezmenyAr	 * 	 * kosárban lévő termék összes kedvezménye termékre vonatkozó kuon esetén	 */	 	public function kosarOsszNettoKedvezmenyAr() {		if(is_null($this->darabAr)) $this->kosarDarabAr();		//print $this->darabArKedvezmeny*$this->darab;		return $this->darabArKedvezmeny*$this->darab;	}		/*	 * kosarOsszBruttoKedvezmenyAr	 * 	 * összes bruttó kedvezmény (szorozva van a darabbal)	 */		public function kosarOsszBruttoKedvezmenyAr() {		if($this->id==0) return 0 ;		if(is_null($this->darabAr)) $this->kosarDarabAr();		$osszNetto = $this->kosarOsszNettoKedvezmenyAr();		$ossz = round($osszNetto + ($osszNetto/100)*$this->afa,2);		return $ossz;	}		/*	 * kosarOsszNettoAr	 * 	 * nettó egységár * darabszám	 */	 	
 	public function kosarOsszNettoAr() {
 		if(is_null($this->darabAr)) $this->kosarDarabAr();
 		return $this->darabAr*$this->darab;
-	}
+	}		/*	 * vannakKosarOpciok	 * 	 * igaz, ha választottak a termékhez opciót	 */	
 	function vannakKosarOpciok() {
 		if(!empty($this->kivalasztottOpciok)) return true;
 		return false;
-	}
+	}	/*	 * kosarOsszAfa	 * 	 * termékek áfatartalmának összesítése	 * 	 */	 
 	public function kosarOsszAfa() {		if(!isset($this->id)) return 0 ;		if($this->id==0) return 0 ;				if(is_null($this->darabAr)) $this->kosarDarabAr();
 		$osszNetto = $this->darabAr*$this->darab;
 		$osszAfa = round(($osszNetto/100)*$this->afa, 0);
 		
 		return $osszAfa;
-	}
+	}	/*	 * kosarOsszBruttoAr	 * 	 * összes bruttó át (db bruttó ár * db)	 */	 
 	public function kosarOsszBruttoAr() {		if(!isset($this->id)) return 0 ;		if($this->id==0) return 0 ;		
 		if(is_null($this->darabAr)) $this->kosarDarabAr();
 		$osszNetto = $this->darabAr*$this->darab;
 		$osszAfa = round(($osszNetto/100)*$this->afa, 0);
 		
 		return $osszNetto+$osszAfa;
-	}
+	}		/*	 * kosarDarabAr	 * 	 * abban az esetben, ha a kupon a termékhez van rendelve, akkor a kedvezményt 	 * is lesvesszük	 */
 		public function kosarDarabAr() {				if(!isset($this->ar))  return 0 ;		
 		$ar = $this->ar;
 		
@@ -98,15 +97,15 @@ class Termek_osztaly extends MY_Model {
 		$this->darabAr = $ar;
 		return $ar;
 	}
-	
+	/*	 * kosarDarabszam	 * 	 * visszaadja, adott termék darabszámát	 */
 	public function kosarDarabszam() {
 		return $this->darab;
-	}
+	}		/*	 * opcioBeallitas	 * 	 * opció beállítás, normál megjelenítés és rendelés esetén	 */
 	public function opcioBeallitas($termek_armodositok_id, $tabla = 'termek_armodositok') {
 		$opcio = $this->get(DBP.$termek_armodositok_id, $tabla, 'id');
 		$this->kivalasztottOpciok[] = $opcio;
 	}
-	
+	/*	 * kosarTermekNev	 * 	 * termék megnevezésének generálása a változat figyelembevételével	 */
 	public function kosarTermekNev() {
 		$nevKiegeszites = '';
 		if(!empty($this->kivalasztottValtozat)) {
@@ -119,7 +118,7 @@ class Termek_osztaly extends MY_Model {
 			return $this->nev.$nevKiegeszites;
 		}
 		return $this->jellemzo('Név').$nevKiegeszites;
-	}
+	}		/*	 * vannakOpciok	 * 	 * igaz, ha a termékhez van opció hozzárendelve	 */	
 	public function vannakOpciok() {
 		if(empty($this->opciok)) {
 			$this->opciokBetoltes();
@@ -130,7 +129,7 @@ class Termek_osztaly extends MY_Model {
 		}
 		return true;
 	}
-	
+	/*	 * opciok	 * 	 * visszaadja a beállított opciókat	 */
 	public function opciok() {
 		if(empty($this->opciok)) {
 			$this->opciokBetoltes();
@@ -141,14 +140,14 @@ class Termek_osztaly extends MY_Model {
 		}
 		return $this->opciok;
 	}
-	
+	/*	 * opciokBetoltes	 * 	 * a termékhez rendelhető lehetséges opciók betöltése	 */ 	
 	public function opciokBetoltes() {
 		$id = $this->id;
 		if($this->rendeles) $id = $this->termek_id;
 		
 		$sql = "SELECT * FROM ".DBP."termek_armodositok WHERE tipus = 1 AND termek_id = {$id} ORDER BY sorrend ASC ";
 		$this->opciok = $this->sqlSorok($sql);
-	}
+	}	/*	 * vannakValtozatok	 * 	 * van-e változat lehetőség	 */
 	public function vannakValtozatok() {
 		if(empty($this->valtozatok)) {
 			$this->valtozatokBetoltes();
@@ -159,7 +158,7 @@ class Termek_osztaly extends MY_Model {
 		}
 		return true;
 	}
-	
+		
 	public function vannakValtozatok2() {
 		if(empty($this->valtozatok2)) {
 			$this->valtozatokBetoltes2();
@@ -302,9 +301,9 @@ class Termek_osztaly extends MY_Model {
 	public function jellemzo($nev, $nyelv = 'hu') {
 		if(empty($this->jellemzok)) {
 			$this->jellemzoBetoltes();
-		}
+		}		
 		if(isset($this->jellemzok[$nev])) {
-			$mezo = 'ertek_'.$this->jellemzok[$nev]->tipus;
+			
 			// szöveges tartalom
 			if(isset($this->jellemzok[$nev]->adat[$nyelv])) return $this->jellemzok[$nev]->adat[$nyelv];
 			// egyéb tartalom
@@ -333,11 +332,11 @@ class Termek_osztaly extends MY_Model {
 		return false;
 	}
 	
-	public function jellemzoBetoltes() {
+	public function jellemzoBetoltes($termek_csoport_id = false) {
 		
 		if(!isset($this->id)) $this->id=0 ;
-		
-		$this->jellemzok = $this->getsIdArr(DBP.'termek_jellemzok', 'nev', ' ORDER BY sorrend ASC');
+		if(!$termek_csoport_id) $termek_csoport_id = (int)@$this->termek_csoport_id;		if($termek_csoport_id==0) {			$elsotermekcsoport = $this->sqlSor("SELECT id FROM ".DBP."termek_csoportok LIMIT 1");						$termek_csoport_id = $elsotermekcsoport->id;					}				$this->termekcsoport = $this->sqlSor("SELECT id,nev FROM ".DBP."termek_csoportok WHERE id =  $termek_csoport_id ");				$jellemzok = $this->sqlSorok("SELECT tj.* FROM ".DBP."termek_jellemzok tj, ".DBP."termek_csoportxjellemzo x 			WHERE x.termek_csoport_id = $termek_csoport_id AND			tj.id = x.termek_jellemzo_id		");
+		$this->jellemzok = array();		if($jellemzok) foreach ($jellemzok as $jellemzo)  {			$this->jellemzok[$jellemzo->nev] = $jellemzo;		}
 		
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
 		foreach($nyelvek as $nyelv) {						$adatok = $this->get($this->id, DBP.'termek_mezok_'.$nyelv, 'termek_id');									

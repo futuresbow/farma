@@ -7,6 +7,13 @@ class Termek_admin extends MY_Modul{
 		parent::__construct();
 		include_once('osztaly/osztaly_termeklista.php');
 	}
+	/*
+	 * Termékek listázása cimke alapján
+	 * 
+	 * a tartalmi elem admin beállításának validálása
+	 * 
+	 */
+	 
 	public function termeklistasliderlista_beallito ($param, $ALG) {
 		globalisMemoria("Nyitott menüpont",'Termékek');
 		$doboz = $ALG->ujDoboz();
@@ -19,7 +26,13 @@ class Termek_admin extends MY_Modul{
 		
 		$doboz->duplaInput($select, $input);
 	}
-	
+	/*
+	 * Termékek listázása cimke alapján
+	 * 
+	 * a tartalmi elem admin beállításának validálása
+	 * 
+	 */
+	 
 	public function termeklistacimketermeklista_ellenorzes  ($adat) {
 		
 		$param = unserialize($adat['parameter']);
@@ -29,7 +42,12 @@ class Termek_admin extends MY_Modul{
 		return $adat;
 		
 	}
-	
+	/*
+	 * Termékek listázása cimke alapján
+	 * 
+	 * a tartalmi elem admin beállító függvény
+	 * 
+	 */
 	public function termeklistacimketermeklista_beallito  ($param, $ALG) {
 		globalisMemoria("Nyitott menüpont",'Termékek');
 		$doboz = $ALG->ujDoboz();
@@ -43,6 +61,15 @@ class Termek_admin extends MY_Modul{
 		$doboz->szimplaInput($input1);
 		
 	}
+	
+	/*
+	 * valtozatesopcio
+	 * 
+	 * ármódosítók (változatok és opciók) panel megjelenítése 
+	 * az admin termékszerkesztőben
+	 * 
+	 */
+	 
 	public function valtozatesopcio() {
 		
 		$this->data['tid'] = $id = (int)$this->ci->uri->segment(4);
@@ -74,6 +101,12 @@ class Termek_admin extends MY_Modul{
 		return  $this->ci->load->view(ADMINTEMPLATE.'html/opcioszerkeszto', $this->data, true);
 	}
 	
+	/*
+	 * lista
+	 * 
+	 * termékek listázása az adminon
+	 * 
+	 */
 	
 	public function lista() {
 		globalisMemoria("Nyitott menüpont",'Termékek');
@@ -160,6 +193,13 @@ class Termek_admin extends MY_Modul{
 		
 	}
 	
+	/*
+	 * torles
+	 * 
+	 * termék törlése az adminon
+	 * 
+	 */
+	 
 	public function torles() {
 		
 		
@@ -179,7 +219,13 @@ class Termek_admin extends MY_Modul{
 		
 		redirect(ADMINURL.'termek/lista?m='.urlencode("Törlés sikeres"));
 	}
-	
+	/*
+	 * klonozas
+	 * 
+	 * termék többszörözése az adminon.
+	 * a klónozás után az új termék szerkesztőjébe ugrik
+	 * 
+	 */
 	public function klonozas() {
 		$ci = getCI();
 		$this->data['tid'] = $id = (int)$ci->uri->segment(4);
@@ -240,6 +286,16 @@ class Termek_admin extends MY_Modul{
 		redirect(ADMINURL.'termek/szerkesztes/'.$ujid);
 		
 	}
+	
+	/*
+	 * szerkesztes
+	 * 
+	 * termék szerkesztése
+	 * terméktörzs, árak, opciók/változatok, kategóriák, cimkék és képek hozzáadása
+	 * 
+	 * 
+	 */
+	 
 	public function szerkesztes() {
 		
 		globalisMemoria("Nyitott menüpont",'Termékek');
@@ -409,7 +465,21 @@ class Termek_admin extends MY_Modul{
 		
 		$doboz->duplaInput($select1, $select2);
 		
-		$doboz->HTMLHozzaadas('<hr><br>'.$this->load->view(ADMINTEMPLATE.'html/jellemzoformbuilder', $this->data, true).'<hr>');
+		// termékcsoport
+		$csoportok = array();
+		$rs = $this->Sql->sqlSorok("SELECT * FROM termek_csoportok ORDER BY nev ASC");
+		foreach($rs as $csoport) $csoportok[(string)$csoport->id] = $csoport->nev;
+		
+		$select1 = new Legordulo(array('attr' => ' onchange="aJs.jellemzoBetoltes($(this).val(), '.(int)(@$sor->id).');" id="jellemzotipus" ' , 'nevtomb'=>'a', 'mezonev' => 'termek_csoport_id', 'felirat' => 'Termékcsoport', 'ertek' => @$sor->termek_csoport_id, 'opciok' => $csoportok)) ;
+		$doboz->szimplaInput($select1);
+		if(isset($sor->termek_csoport_id)) {
+			$this->data['termek_csoport_id'] = $sor->termek_csoport_id;
+		} else {
+			// vesszük az első csoportot
+			$this->data['termek_csoport_id'] = $rs[0]->id;	
+		}
+		
+		$doboz->HTMLHozzaadas('<hr><br><div id="jellemzo_szerkeszto">'.$this->load->view(ADMINTEMPLATE.'html/jellemzoformbuilder', $this->data, true).'</div><hr>');
 		
 		$doboz->HTMLHozzaadas($this->load->view(ADMINTEMPLATE.'html/termekszerkeszto_kategoriak', $this->data, true).'<hr>');
 		$this->data['cimkelista'] = $this->ci->Sql->gets(DBP."termek_cimkek", " WHERE mukodesi_mod = 'manualis' ORDER BY nev ASC, nyelv ASC");
@@ -438,7 +508,26 @@ class Termek_admin extends MY_Modul{
 		return $ALG->kimenet();
 		
 	}
-	
+	function jellemzoform() {
+		ws_autoload('termekek');
+		$ALG = new Adminlapgenerator;
+		$doboz = $ALG->ujDoboz();
+		$termek = $this->Sql->get((int)$this->ci->uri->segment(4), DBP."termekek", 'id');
+		$this->data['sor'] = new Termek_osztaly($termek->id);
+		$this->data['termek_csoport_id'] = $_GET['csoportid'];
+		
+		
+		$doboz->HTMLHozzaadas($this->load->view(ADMINTEMPLATE.'html/jellemzoformbuilder', $this->data, true));
+		print $doboz->tartalomKimenet();
+	}
+	/*
+	 * imageupload
+	 * 
+	 * ajax képfeltöltés
+	 * 
+	 */
+	 
+	 
 	// képfeltöltés
 	public function imageupload() {
 		$tid = $this->ci->uri->segment(4);
@@ -520,6 +609,15 @@ class Termek_admin extends MY_Modul{
 		
 	}
 	// adott levél kéének törlése
+	
+	/*
+	 * keptorles
+	 * 
+	 * ajax képtörlés (terméklapról)
+	 * 
+	 */
+	 
+	
 	function keptorles() {
 		include_once('osztaly/osztaly_termekkep.php');
 		
@@ -529,7 +627,13 @@ class Termek_admin extends MY_Modul{
 		$tk->kepTorles($kepid);
 		
 	}
-	// adott levél képeinek listázása
+	
+	/*
+	 * keplista
+	 * 
+	 * ajax képlista (terméklapra)
+	 * 
+	 */
 	function keplista() {
 		include_once('osztaly/osztaly_termekkep.php');
 		$tk = new Termekkep_osztaly();

@@ -61,11 +61,16 @@
 
         <div class="details">
 			
+			<?php if($termek->termekcsoport->nev=="Cipők"):?>
 			
-			<h1><?= $termek->jellemzo('Név'); ?> 
+			<h1>Cipők: <?= $termek->jellemzo('Név'); ?> </h1>
+			<?php else: ?>
+			<h1>Gyógyszerek: <?= $termek->jellemzo('Név'); ?> </h1>
+			
+			<?php endif; ?>
 			
 			
-			</h1>
+			
             <div class="subtitle">
             <?= ($termek->jellemzo('Szín')!='')?' szín: '.$termek->jellemzo('Szín'):''; ?> 
 			<?= ($termek->jellemzo('Méret')!='')?' Méret: '.$termek->jellemzo('Méret'):''; ?> 

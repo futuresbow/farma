@@ -1,6 +1,6 @@
 <?php
 if(is_null($sor)) $sor = new Termek;
-$sor->jellemzoBetoltes();
+$sor->jellemzoBetoltes($termek_csoport_id);
 $index = 0;
 
 if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):

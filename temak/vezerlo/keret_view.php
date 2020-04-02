@@ -421,6 +421,15 @@ function adminJs() {
 		$('#bruttoertek').val(brutto);
 		return brutto;
 	}
+	this.jellemzoBetoltes = function(csoportid, tid) {
+		
+		
+		$('#jellemzo_szerkeszto').load('<?= ADMINURL; ?>termek/jellemzoform/'+tid+'?ajax=1&csoportid='+csoportid );
+
+	};
+		
+		
+	
 	this.nettoSzamitas = function() {
 		
 		ar = Number($('#bruttoertek').val());
