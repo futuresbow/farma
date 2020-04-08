@@ -60,14 +60,7 @@
         </div>
 
         <div class="details">
-			
-			<?php if($termek->termekcsoport->nev=="Cipők"):?>
-			
-			<h1>Cipők: <?= $termek->jellemzo('Név'); ?> </h1>
-			<?php else: ?>
-			<h1>Gyógyszerek: <?= $termek->jellemzo('Név'); ?> </h1>
-			
-			<?php endif; ?>
+			<h1><?= $termek->jellemzo('Név'); ?> </h1>
 			
 			
 			
@@ -89,9 +82,20 @@
             
             <?= $termek->jellemzo('Leírás');?>
         </div>
-
+		
     </div>
-
+	
+	<div style="background:yellow;">
+				<h3>Autómatikus termékjellemzők (<?= $termek->termekcsoport->nev;?> csoport):</h3>
+				<?php foreach($termek->jellemzok as $jellemzo): ?>
+				
+					<b><?= $jellemzo->nev;?></b><br>
+					<?= strip_tags($termek->jellemzo($jellemzo->nev)); ?><br><br>
+				
+				<?php endforeach;?>
+				
+	</div>
+			
 
     <div class="similar-products">
         <div class="products-heading">
@@ -124,7 +128,9 @@
                
 
             </ul>
-
+			
+			
+			
         </div>
     </div>
 

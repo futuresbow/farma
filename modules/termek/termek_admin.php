@@ -467,7 +467,7 @@ class Termek_admin extends MY_Modul{
 		
 		// termékcsoport
 		$csoportok = array();
-		$rs = $this->Sql->sqlSorok("SELECT * FROM termek_csoportok ORDER BY nev ASC");
+		$rs = $this->Sql->sqlSorok("SELECT * FROM ".DBP."termek_csoportok ORDER BY nev ASC");
 		foreach($rs as $csoport) $csoportok[(string)$csoport->id] = $csoport->nev;
 		
 		$select1 = new Legordulo(array('attr' => ' onchange="aJs.jellemzoBetoltes($(this).val(), '.(int)(@$sor->id).');" id="jellemzotipus" ' , 'nevtomb'=>'a', 'mezonev' => 'termek_csoport_id', 'felirat' => 'Termékcsoport', 'ertek' => @$sor->termek_csoport_id, 'opciok' => $csoportok)) ;
@@ -645,5 +645,535 @@ class Termek_admin extends MY_Modul{
 		}
 		
 		print json_encode($lista);
+	}
+	
+	/********
+	 * termekcsoportlista
+	 * 
+	 * termék mezők csoportosítása
+	 * 
+	 */
+	function termekcsoportlista() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Termékcsoportok listája')));
+
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Termékcsoportok");
+
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekcsoportszerkesztes/0', 'felirat' => 'Új érték felvitele'));
+
+		
+
+		$ALG->tartalomDobozStart();
+
+		
+
+		// táblázat adatok összeállítása
+
+		$adatlista = array();
+
+		$start = 0;
+
+		$w = '';
+
+		
+
+		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'termek_csoportok '.$w.' ORDER BY nev ASC ');
+
+		foreach($lista as $sor) {
+
+			
+
+			
+
+		}
+
+		// táblázat beállítás
+
+		$tablazat = $ALG->ujTablazat();
+
+		
+
+		
+
+		$keresoMezok = false;
+
+		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
+
+		$tablazat->adatBeallitas('szerkeszto_url', 'termek/termekcsoportszerkesztes/');
+
+		$tablazat->adatBeallitas('torles_url', 'termek/termekcsoporttorles/');
+
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név','szerkesztes' => 'Szerkesztés',  'torles' => 'Törlés' ));
+
+		
+		
+
+		$tablazat->adatBeallitas('lista', $lista);
+
+		
+
+		
+
+		$ALG->tartalomDobozVege();
+
+		return $ALG->kimenet();
+
+		
+
+	}
+	
+	function termekcsoportszerkesztes() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('url' => 'termek/termekcsoportlista','felirat' => 'Termékcsoportok listája'),array('felirat' => 'Termékcsoport szerkesztés')));
+
+		
+
+		$id = (int)$this->ci->uri->segment(4);
+
+		
+
+		if($this->ci->input->post('a')) {
+			$mezok = $this->Sql->gets(DBP.'termek_jellemzok', " ORDER BY nev ASC ");
+			$kapcsolok = $this->Sql->getsIdArr(DBP.'termek_csoportxjellemzo',"termek_jellemzo_id", " WHERE termek_csoport_id = ".$id);
+			$a = $this->ci->input->post('a');
+			$b = $this->ci->input->post('b');
+			
+			if($id == 0) {
+
+				$id = $this->Sql->sqlSave($a, DBP.'termek_csoportok');
+
+			} else {
+
+				$a['id'] = $id;
+
+				$this->Sql->sqlUpdate($a, DBP.'termek_csoportok');
+
+					
+
+			}
+
+			
+			foreach($b as $jellemzo_id => $ertek) {
+				if($ertek == 0) {
+					if(isset($kapcsolok[$jellemzo_id])) {
+						// törölni kell
+						$this->db->query("DELETE FROM ".DBP."termek_csoportxjellemzo WHERE id = ".$kapcsolok[$jellemzo_id]->id);
+						
+					}
+				} else {
+					if(!isset($kapcsolok[$jellemzo_id])) {
+						// fel kell vinni
+						$this->db->query("INSERT INTO ".DBP."termek_csoportxjellemzo  SET termek_csoport_id = $id, termek_jellemzo_id = $jellemzo_id");
+						
+						
+					}
+					
+				}
+			}
+			redirect(ADMINURL.'termek/termekcsoportlista?m=Sikeres módosítás');
+
+			return;
+
+		}
+
+		
+
+		
+		$sor = $this->Sql->get($id, DBP."termek_csoportok", 'id');
+		
+		
+
+		$ALG = new Adminlapgenerator;
+
+		$ALG->adatBeallitas('lapCim', "Termékcsoport elemeinek szerkesztése");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekcsoportlista', 'felirat' => 'Vissza'));
+
+		$ALG->urlapStart(array('attr' => 'method="post" '));
+
+		$ALG->tartalomDobozStart();
+
+		$kapcsolok = $this->Sql->gets(DBP.'termek_csoportxjellemzo', " WHERE termek_csoport_id = ".$id);
+		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', " ORDER BY nev ASC ");
+		
+		$mezoArr = array();
+		foreach($mezok as $mezo) {
+			$mezo->csatolva = 0;
+			$mezoArr[$mezo->id] = $mezo;
+		}
+		
+		if($kapcsolok) foreach($kapcsolok as $kapcsolo) {
+			$mezoArr[$kapcsolo->termek_jellemzo_id]->csatolva = 1;
+		}
+		
+		$doboz = $ALG->ujDoboz();
+
+		$doboz->dobozCim( 'Termékcsoport', 2);
+
+		
+
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nev', 'felirat' => 'Megnevezés', 'ertek'=> @$sor->nev));
+		$doboz->szimplaInput($input1);
+
+		
+		
+		$doboz->HTMLHozzaadas($this->ci->load->view(ADMINTEMPLATE."html/termekcsoport_mezok", array('mezoArr' => $mezoArr),true));
+		
+		
+		
+		$ALG->tartalomDobozVege();
+
+		$ALG->urlapGombok(array(
+
+			0 => array(
+
+				'tipus' => 'hivatkozas',
+
+				'felirat' => 'Mégsem',
+
+				'link' => ADMINURL.'termek/termekcsoportlista',
+
+				'onclick' => "if(confirm('Biztos vagy benne?')==false) return false;"
+
+			),
+
+			1 => array(
+
+				'tipus' => 'submit',
+
+				'felirat' => 'Mentés',
+
+				'link' => '',
+
+				'osztaly' => 'btn-ok',
+
+				
+
+			),
+
+		));
+
+		
+
+		$ALG->urlapVege();
+
+		return $ALG->kimenet();
+	}
+	
+	function termekmezolista() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Termékmező lista')));
+		
+		if(isset($_GET['sorrend'])) {
+			$idArr = explode(',',$_GET['sorrend']) ;
+			$i = 0;
+			
+			foreach($idArr as $sid) {
+				$sid = (int)$sid;
+				$this->db->query("UPDATE termek_jellemzok SET sorrend = $i WHERE id = $sid LIMIT 1");
+				$i = $i+10;
+			}
+		}
+		
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Termékmezők");
+
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekmezoszerkesztes/0', 'felirat' => 'Új érték felvitele'));
+
+		
+
+		$ALG->tartalomDobozStart();
+
+		
+
+		// táblázat adatok összeállítása
+
+		$adatlista = array();
+
+		$start = 0;
+
+		$w = '';
+
+		
+
+		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'termek_jellemzok '.$w.' ORDER BY sorrend ASC ');
+
+		foreach($lista as $sor) {
+
+			switch($sor->tipus) {
+				case 0: 
+					$sor->tipus = 'Egész szám';
+				break;
+				
+				case 1: 
+					$sor->tipus = 'Nem egész szám';
+				break;
+				
+				case 2: 
+					$sor->tipus = 'Rövid szöveg';
+				break;
+				
+				case 3: 
+					$sor->tipus = 'Hosszú szöveg';
+				break;
+				
+				
+			}
+			
+			
+
+		}
+
+		// táblázat beállítás
+
+		$tablazat = $ALG->ujTablazat();
+
+		
+
+		
+
+		$keresoMezok = false;
+
+		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
+
+		$tablazat->adatBeallitas('szerkeszto_url', 'termek/termekmezoszerkesztes/');
+
+		$tablazat->adatBeallitas('torles_url', 'termek/termekmezotorles/');
+
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'slug' => 'Db mezőnév','tipus' => 'Típus','sorrend' => 'Sorrend',  'szerkesztes' => 'Szerkesztés',  'torles' => 'Törlés' ));
+
+		$tablazat->adatBeallitas('cellaAttr', array('alapertelmezett' => ' style="text-align:center" ' ));
+
+		$tablazat->sorrendezheto();
+
+		$tablazat->adatBeallitas('lista', $lista);
+
+		$doboz = $ALG->ujDoboz();
+		$doboz->dobozCim( 'Szinkronizálás', 2);
+		$doboz->HTMLHozzaadas('<br><a class="btn btn-danger " href="'.ADMINURL.'termek/termekmezoszinkronizalas">Szinkronizálás indítása</a>');
+
+		
+
+		$ALG->tartalomDobozVege();
+
+		return $ALG->kimenet();
+	}
+	function termekmezoszinkronizalas() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Termékmező szinkron')));
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Termékmező szinkron");
+
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekmezolista', 'felirat' => 'Vissza a listához'));
+
+		include('osztaly/osztaly_mezogenerator.php');
+		$mg = new Mezogenerator_osztaly;
+		
+		$ALG->tartalomDobozStart();
+		
+		$doboz = $ALG->ujDoboz();
+		$doboz->dobozCim( 'Szinkronizálás', 2);
+		$doboz->HTMLHozzaadas('Szinkron start...<br>');
+		
+		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
+		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', '');
+		foreach($nyelvek as $nyelvKod) {
+				$doboz->HTMLHozzaadas('Nyelv: '.$nyelvKod.'<br>');
+				
+				// tábla mező beolvasása
+				$tabla = 'termek_mezok_'.$nyelvKod;
+				if(!$mg->letezik($tabla)) {
+						$doboz->HTMLHozzaadas('<b style="color:red">Tábla nem létezik: '.$tabla.', létrehoztam!</b><br>');
+						$mb->termekLeiroLetrehoz($tabla);
+				
+				}
+				
+				$mg->betolt($tabla);
+				
+				$doboz->HTMLHozzaadas('Tábla megnyitva: '.$tabla.'<br>');
+				
+				$lepesek = $mg->szinkronizalas($tabla);
+				foreach($lepesek as $lepes) {
+					$doboz->HTMLHozzaadas('Szinkron: '.$lepes.'<br>');
+				
+				}
+		}
+		
+
+		$ALG->tartalomDobozVege();
+
+		return $ALG->kimenet();
+	}
+	function termekmezoszerkesztes() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		$ci = getCI();
+
+		$id = (int)$ci->uri->segment(4);
+
+		globalisMemoria('utvonal', array(array('url' => 'termek/termekmezolista', 'felirat' => 'Termék mezők') , array('felirat'=> 'Termék mező szerkesztése')));
+
+		
+
+		if($ci->input->post('a')) {
+
+			$a = $ci->input->post('a') ;
+
+			if($id == 0) {
+
+				$this->Sql->sqlSave($a, DBP.'termek_jellemzok');
+
+			} else {
+
+				$a['id'] = $id;
+
+				$this->Sql->sqlUpdate($a, DBP.'termek_jellemzok');
+
+					
+
+			}
+
+			redirect(ADMINURL.'termek/termekmezolista?m='.urlencode("A módosítások rögzítésre kerültek."));
+
+		}
+
+		
+
+		$sor = $this->Sql->get($id, DBP.'termek_jellemzok', 'id');
+
+		
+
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Termékmező szerkesztése");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekmezolista', 'felirat' => 'Vissza') );
+
+		
+
+		$ALG->urlapStart(array('attr'=> ' action="" enctype="multipart/form-data" method="post" '));
+
+		
+
+		$ALG->tartalomDobozStart();
+
+		$doboz = $ALG->ujDoboz();
+
+		$doboz->dobozCim( 'Jellemzők', 2);
+
+		
+
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nev', 'felirat' => 'Megnevezés', 'ertek'=> @$sor->nev));
+
+		$input2 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'slug', 'felirat' => 'Adatbázis mezőnév', 'ertek'=> @$sor->slug));
+
+		
+
+		$doboz->duplaInput($input1, $input2);
+
+		
+
+		
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'sorrend', 'felirat' => 'Sorrend', 'ertek'=> @$sor->sorrend));
+
+		$select1 = new Legordulo(array('nevtomb' => 'a', 'mezonev' => 'tipus', 'felirat' => 'Típus', 'ertek'=> @$sor->tipus, 'opciok' => array(0=>'Egész szám', 1=>'Valós szám', 2 => 'Rövid szöveg', 3 => 'hosszú szöveg')));
+
+		
+		$doboz->duplaInput($input1,$select1);
+
+		
+
+		
+
+		
+
+		$ALG->tartalomDobozVege();
+
+		$ALG->urlapGombok(array(
+
+			0 => array(
+
+				'tipus' => 'hivatkozas',
+
+				'felirat' => 'Mégse',
+
+				'link' => ADMINURL.'termek/termekmezolista',
+
+				'onclick' => "if(confirm('Biztos vagy benne?')==false) return false;"
+
+			),
+
+			1 => array(
+
+				'tipus' => 'submit',
+
+				'felirat' => 'Mentés',
+
+				'link' => '',
+
+				'osztaly' => 'btn-ok',
+
+				
+
+			),
+
+		));
+
+		$ALG->urlapVege();
+
+		return $ALG->kimenet();
+
+	}
+	
+	function termekmezotorles() {
+		$ci = getCI();
+
+		$id = (int)$ci->uri->segment(4);
+
+		
+		$van = $this->Sql->sqlSor('SELECT x.id, cs.nev FROM '.DBP.'termek_csoportxjellemzo x, termek_csoportok cs WHERE x.termek_csoport_id = cs.id AND termek_jellemzo_id = '.$id." LIMIT 1");
+		if($van) {
+			redirect(ADMINURL.'termek/termekmezolista?m='.urlencode('A mező nem törölhető, mert van olyan termékcsoport ('.$van->nev.'), ami tartalmazza ezt a mezőt!!'));
+			return;
+		}
+
+		$this->db->query("DELETE FROM ".DBP."termek_jellemzok WHERE id =  ".$id);
+
+		redirect(ADMINURL.'termek/termekmezolista?m='.urlencode('Sikeres törlés!'));
+
+		return;
+	}
+	function termekcsoporttorles() {
+		$ci = getCI();
+
+		$id = (int)$ci->uri->segment(4);
+
+		$van = $this->Sql->sqlSor('SELECT id FROM '.DBP.'termekek WHERE termek_csoport_id = '.$id." LIMIT 1");
+		if($van) {
+			redirect(ADMINURL.'termek/termekcsoportlista?m='.urlencode('A csoport nem törölhető, mert van olyan termék, ami ebbe a csoportba tertozik!'));
+			return;
+		}
+		$this->db->query("DELETE FROM ".DBP."termek_csoportok WHERE id =  ".$id);
+
+		redirect(ADMINURL.'termek/termekcsoportlista?m='.urlencode('Sikeres törlés!'));
+
+		return;
 	}
 }
