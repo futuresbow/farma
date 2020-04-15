@@ -41,17 +41,33 @@ class Admin_modul extends MY_Modul {
 					globalisMemoria("Nyitott menüpont",$modul.'/'.$metodus);
 				}
 			}
-			
+						
 			
 			$class = $modul.'_admin';
 			if( is_file(FCPATH.'modules/'.$modul.'/'.$class.'.php')) {
-				
+
 				include_once(FCPATH.'modules/'.$modul.'/'.$class.'.php');
 				$obj = new $class;
 				
-				if(method_exists($obj, $metodus) ){
-					
-					$this->data['modulKimenet'] = $obj->$metodus();
+				if(method_exists($obj, $metodus) ){					
+					$jogkorRs = $this->Sql->sqlSor("SELECT * FROM hozzaferesek WHERE eleres = '".$modul.'/'.$class.'/'.$metodus."' LIMIT 1");
+					$jogkor = 0;
+					if(!$jogkorRs) {
+						// nincs még ilyen hozzáférési opció, ezért felvisszük szuperadmin johkörrel, hogy adminisztrálható legyen
+						$a = array('eleres' => $modul.'/'.$class.'/'.$metodus, 'jogkor' => JOG_SUPERADMIN );
+						
+						$this->Sql->sqlSave($a, 'hozzaferesek', 'id');
+						$jogkor = 0;
+					} else {
+						$jogkor = $jogkorRs->jogkor;
+					}
+					
+					
+					$tag = belepettTag();
+					if(  !$tag->is( $jogkor ) )  {
+						$this->data['modulKimenet'] = '<b>Nincs megfelelő jogosultságod.</b>';
+					} else {
+						$this->data['modulKimenet'] = $obj->$metodus();					}
 				}
 			}
 		} else {

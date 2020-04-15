@@ -50,6 +50,7 @@ function ws_log($csoport, $bejegyzes) {
 function belepesEllenorzo() {
 	$CI = & get_instance();
 	$tag = $CI->session->userdata('tag');
+	
 	if(!$tag) redirect('/login');
 	return $tag;
 }
