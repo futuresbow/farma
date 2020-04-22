@@ -335,7 +335,7 @@ class Termek_osztaly extends MY_Model {
 	public function jellemzoBetoltes($termek_csoport_id = false) {
 		
 		if(!isset($this->id)) $this->id=0 ;
-		if(!$termek_csoport_id) $termek_csoport_id = (int)@$this->termek_csoport_id;		if($termek_csoport_id==0) {			$elsotermekcsoport = $this->sqlSor("SELECT id FROM ".DBP."termek_csoportok LIMIT 1");						$termek_csoport_id = $elsotermekcsoport->id;					}				$this->termekcsoport = $this->sqlSor("SELECT id,nev FROM ".DBP."termek_csoportok WHERE id =  $termek_csoport_id ");				$jellemzok = $this->sqlSorok("SELECT tj.* FROM ".DBP."termek_jellemzok tj, ".DBP."termek_csoportxjellemzo x 			WHERE x.termek_csoport_id = $termek_csoport_id AND			tj.id = x.termek_jellemzo_id		");
+		if(!$termek_csoport_id) $termek_csoport_id = (int)@$this->termek_csoport_id;		if($termek_csoport_id==0) {			$elsotermekcsoport = $this->sqlSor("SELECT id FROM ".DBP."termek_csoportok LIMIT 1");						$termek_csoport_id = $elsotermekcsoport->id;					}				$this->termekcsoport = $this->sqlSor("SELECT id,nev FROM ".DBP."termek_csoportok WHERE id =  $termek_csoport_id ");				$jellemzok = $this->sqlSorok("SELECT tj.* FROM ".DBP."termek_jellemzok tj, ".DBP."termek_csoportxjellemzo x 			WHERE x.termek_csoport_id = $termek_csoport_id AND			tj.id = x.termek_jellemzo_id ORDER BY sorrend ASC		");
 		$this->jellemzok = array();		if($jellemzok) foreach ($jellemzok as $jellemzo)  {			$this->jellemzok[$jellemzo->nev] = $jellemzo;		}
 		
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));

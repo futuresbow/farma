@@ -478,7 +478,7 @@ class Termek_admin extends MY_Modul{
 			// vesszük az első csoportot
 			$this->data['termek_csoport_id'] = $rs[0]->id;	
 		}
-		
+		$this->data['nyelvek'] =  explode(',', beallitasOlvasas('nyelvek'));
 		$doboz->HTMLHozzaadas('<hr><br><div id="jellemzo_szerkeszto">'.$this->load->view(ADMINTEMPLATE.'html/jellemzoformbuilder', $this->data, true).'</div><hr>');
 		
 		$doboz->HTMLHozzaadas($this->load->view(ADMINTEMPLATE.'html/termekszerkeszto_kategoriak', $this->data, true).'<hr>');
@@ -513,7 +513,9 @@ class Termek_admin extends MY_Modul{
 		$ALG = new Adminlapgenerator;
 		$doboz = $ALG->ujDoboz();
 		$termek = $this->Sql->get((int)$this->ci->uri->segment(4), DBP."termekek", 'id');
-		$this->data['sor'] = new Termek_osztaly($termek->id);
+		$id = 0;
+		if($termek) $id = $termek->id;
+		$this->data['sor'] = new Termek_osztaly($id);
 		$this->data['termek_csoport_id'] = $_GET['csoportid'];
 		
 		
