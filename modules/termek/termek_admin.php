@@ -410,6 +410,8 @@ class Termek_admin extends MY_Modul{
 				
 			}
 			
+			ws_hookFuttatas('termek.keresostrfrissites', array('id'=> $id ) );
+			
 			
 			redirect(ADMINURL.'termek/lista');
 			//die();
@@ -912,7 +914,7 @@ class Termek_admin extends MY_Modul{
 		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'termek_jellemzok '.$w.' ORDER BY sorrend ASC ');
 
 		foreach($lista as $sor) {
-
+			if($sor->keresheto==1) $sor->keresheto = 'Igen'; else $sor->keresheto = 'Nem'; 
 			switch($sor->tipus) {
 				case 0: 
 					$sor->tipus = 'Egész szám';
@@ -953,7 +955,7 @@ class Termek_admin extends MY_Modul{
 
 		$tablazat->adatBeallitas('torles_url', 'termek/termekmezotorles/');
 
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'slug' => 'Db mezőnév','tipus' => 'Típus','sorrend' => 'Sorrend',  'szerkesztes' => 'Szerkesztés',  'torles' => 'Törlés' ));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'slug' => 'Db mezőnév','tipus' => 'Típus','keresheto' => 'Keresés','sorrend' => 'Sorrend',  'szerkesztes' => 'Szerkesztés',  'torles' => 'Törlés' ));
 
 		$tablazat->adatBeallitas('cellaAttr', array('alapertelmezett' => ' style="text-align:center" ' ));
 
@@ -965,7 +967,10 @@ class Termek_admin extends MY_Modul{
 		$doboz->dobozCim( 'Szinkronizálás', 2);
 		$doboz->HTMLHozzaadas('<br><a class="btn btn-danger " href="'.ADMINURL.'termek/termekmezoszinkronizalas">Szinkronizálás indítása</a>');
 
-		
+		$doboz = $ALG->ujDoboz();
+		$doboz->dobozCim( 'Kereső mezők frissítése', 2);
+		$doboz->HTMLHozzaadas('<br><a class="btn btn-warning " href="'.ADMINURL.'termek/termekkeresofrissites">Kereső mezők frissítése</a>');
+
 
 		$ALG->tartalomDobozVege();
 
@@ -999,7 +1004,7 @@ class Termek_admin extends MY_Modul{
 				$doboz->HTMLHozzaadas('Nyelv: '.$nyelvKod.'<br>');
 				
 				// tábla mező beolvasása
-				$tabla = 'termek_mezok_'.$nyelvKod;
+				$tabla = DBP.'termek_mezok_'.$nyelvKod;
 				if(!$mg->letezik($tabla)) {
 						$doboz->HTMLHozzaadas('<b style="color:red">Tábla nem létezik: '.$tabla.', létrehoztam!</b><br>');
 						$mb->termekLeiroLetrehoz($tabla);
@@ -1022,6 +1027,84 @@ class Termek_admin extends MY_Modul{
 
 		return $ALG->kimenet();
 	}
+	function termekkeresofrissites() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Kereső string frissítés')));
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Kereső string frissítés");
+
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/termekmezolista', 'felirat' => 'Vissza a listához'));
+
+		
+		$ALG->tartalomDobozStart();
+		
+		$doboz = $ALG->ujDoboz();
+		$doboz->dobozCim( 'Kereső string frissítés', 2);
+		$doboz->HTMLHozzaadas('Frissítés indul...<br>');
+		
+		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
+		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', '');
+		
+		$termekek = $this->Sql->gets(DBP.'termekek');
+		
+		foreach($termekek as $t) {
+			$doboz->HTMLHozzaadas('Termék: '.$t->cikkszam.' ('.$t->id.')  <br>');
+			// tábla mező beolvasása
+			
+			
+			ws_hookFuttatas('termek.keresostrfrissites', array('id'=> $t->id ) );
+			
+			
+
+		}
+
+		$ALG->tartalomDobozVege();
+
+		return $ALG->kimenet();
+	}
+	
+	function keresostr_hook($data) {
+		$id = $data['id'];
+		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
+		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', '');
+		
+		
+		foreach($nyelvek as $nyelvKod) {
+			$tabla = DBP.'termek_mezok_'.$nyelvKod;
+					
+			$sor = $this->Sql->get($id, $tabla, ' termek_id ');
+			
+			$str = '';
+			foreach($mezok as $mezo) {
+				if($mezo->keresheto == 0) continue;
+				
+				$str .= $sor->{$mezo->slug}.' ';
+				
+			}
+			$str = strip_tags($str);
+			/*
+			 * TODO: ha adott nyelven nincs kereső tábla létrehozhatná autómatikusan
+			 */
+			$keresoTabla = DBP.'termek_kereso_'.$nyelvKod;
+			$van = $this->Sql->get($id, $keresoTabla, ' termek_id ');
+			if($van) {
+				$a = array('id' => $van->id, 'keresostr' => $str);
+				$this->Sql->sqlUpdate($a,$keresoTabla, 'id');
+			} else {
+				$a = array( 'keresostr' => $str, 'termek_id' => $id);
+				$this->Sql->sqlSave($a,$keresoTabla, 'id');
+				
+			}
+		}
+		
+	}
+	
+	
 	function termekmezoszerkesztes() {
 		globalisMemoria("Nyitott menüpont",'Termékek');
 		$ci = getCI();
@@ -1099,6 +1182,12 @@ class Termek_admin extends MY_Modul{
 
 		
 		$doboz->duplaInput($input1,$select1);
+
+		
+		$select1 = new Legordulo(array('nevtomb' => 'a', 'mezonev' => 'keresheto', 'felirat' => 'Kereshető tartalom?', 'ertek'=> @$sor->keresheto, 'opciok' => array(0=>'Nem', 1=>'Igen')));
+
+		
+		$doboz->duplaInput($select1);
 
 		
 

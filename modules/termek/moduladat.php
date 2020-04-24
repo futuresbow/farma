@@ -99,4 +99,13 @@ $beepulok[] = 'termek/rendelesek/kosarajax';
 
 
 $keresesiPontok[] = 'termek/termeklista/kereses';
-
+/*
+ * termék módosításkor frissítjük a kereső stringet
+ */
+// hook
+
+$hookBelepesipontok = globalisMemoria('hookBelepesipontok');
+
+$hookBelepesipontok['termek.keresostrfrissites'][] = 'termek/termek_admin/keresostr_hook';
+
+globalisMemoria('hookBelepesipontok' , $hookBelepesipontok);
