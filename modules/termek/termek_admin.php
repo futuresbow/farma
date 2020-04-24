@@ -121,14 +121,17 @@ class Termek_admin extends MY_Modul{
 		
 		// keresések
 		$keresestorles = false;
+		$nyelv = $_SESSION['CMS_NYELV'];
+		
 		if(isset($sr['keresoszo'])) if($sr['keresoszo']!='') {
 			
 			$mod = (int)$sr['keresomezo'];
 			if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==1) $w = ' j.termek_id = t.id AND j.ertek_2 LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==2) $w = ' j.termek_id = t.id AND j.ertek_3 LIKE "%'.$sr['keresoszo'].'%" ';
+			if($mod==1) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
+			if($mod==2) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
 			
-			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."jellemzok j WHERE $w";
+			
+			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_kereso_$nyelv j WHERE $w";
 			
 			if($mod==3) {
 				$w = ' t.id = x.termek_id and x.cimke_id = c.id AND c.nev LIKE "%'.$sr['keresoszo'].'%" ';
@@ -161,13 +164,14 @@ class Termek_admin extends MY_Modul{
 		$adatlista = array();
 		$start = 0;
 		
-		$sql = "SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." GROUP BY t.id  ORDER BY nev ASC";
+		$sql = "SELECT t.id FROM  ".DBP."termekek t WHERE $w 1 = 1  ";
 		
 		$lista = $this->sqlSorok($sql);
 		
 		foreach($lista as $sor) {
 			$termek = new Termek_osztaly($sor->id);
 			$sor->nev = $termek->jellemzo('Név');
+			$sor->cikkszam = $termek->cikkszam;
 			$sor->masolas = '<a onclick="if(!confirm(\'Biztosan?\')) return false;" href="'.ADMINURL.'termek/klonozas/'.$sor->id.'">Klónozás</a>';
 			$adatlista[] = $sor;
 		}

@@ -32,38 +32,26 @@
             </div>
             <?php endif; ?>
             <div class="details">
-                <h1><?= $termek->jellemzo('Név'); ?></h1>
-                <div class="sr-num"><?= $termek->cikkszam; ?></div>
-                
+                
+    			
+				
+	            
+                
                 <?php
 					include('termeklap_kosar.php');
 				?>
                 				
                 
-                <div class="description">
-                    
-                <h2>Termék ismertetése</h1>
-                <?= $termek->jellemzo('Leírás');?>
+                <div class="description">					<div class="sr-num">Cikkszám: <?= $termek->cikkszam; ?></div>
+                    <?php foreach($termek->jellemzok as $jellemzo): if(trim(strip_tags($termek->jellemzo($jellemzo->nev)))=='') continue; ?>
+				
+						<h4><?= $jellemzo->nev;?></h4>
+						<?= nl2br(strip_tags($termek->jellemzo($jellemzo->nev))); ?><br><br>
+					
+					<?php endforeach;?>
+					
+					
 
-                <div class="sr-num"><?= $termek->cikkszam; ?></div>
-				<div class="subtitle">
-            <?= ($termek->jellemzo('Szín')!='')?' szín: '.$termek->jellemzo('Szín'):''; ?> 
-			<?= ($termek->jellemzo('Méret')!='')?' Méret: '.$termek->jellemzo('Méret'):''; ?> 
-            </div>
-                    <?php if(trim($termek->jellemzo('Adattábla'))!=''):?>
-					<ul>
-						<?php foreach(explode("\n", $termek->jellemzo('Adattábla')) as $sor):?>
-						<li>
-							<?php $adatok = explode(':', $sor);?>
-							<b><?= $adatok[0]?></b>: 
-							<?= @$adatok[1]?>
-						</li>
-						<?php endforeach;?>
-					</ul>
-					<?php endif;?>
-                    
-                   
-                    <p><?= $termek->jellemzo('Leirás');?></p>
                 </div>
                 <div class="additional-info">
                     <?= $termek->jellemzo('További információ');?>
