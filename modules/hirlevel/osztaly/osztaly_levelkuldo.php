@@ -87,8 +87,7 @@ class Levelkuldo_osztaly extends MY_Model  {
 			ob_end_clean();
 			$this->helyorzo('Terméklista',$termekek);
 			
-		}
-		
+		}
 		$this->helyorzo('Levél tartalom', $this->helyorzoCsere($sor->tartalom));
 		$level = $this->helyorzoCsere($level);
 		
