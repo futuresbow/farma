@@ -99,7 +99,7 @@ switch (ENVIRONMENT)
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
  */
-	$system_path = 'system';
+	$system_path = '../system';
 
 /*
  *---------------------------------------------------------------
@@ -116,7 +116,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = 'application';
+	$application_folder = '../application';
 
 /*
  *---------------------------------------------------------------
@@ -131,7 +131,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$view_folder = '';
+	$view_folder = 'temak';
 
 
 /*
@@ -230,7 +230,8 @@ switch (ENVIRONMENT)
 
 	// Path to the system directory
 	define('BASEPATH', $system_path);
-
+	define('ROOTPATH', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR);
+	
 	// Path to the front controller (this file) directory
 	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 

@@ -44,9 +44,9 @@ class Admin_modul extends MY_Modul {
 						
 			
 			$class = $modul.'_admin';
-			if( is_file(FCPATH.'modules/'.$modul.'/'.$class.'.php')) {
+			if( is_file(ROOTPATH.'modules/'.$modul.'/'.$class.'.php')) {
 
-				include_once(FCPATH.'modules/'.$modul.'/'.$class.'.php');
+				include_once(ROOTPATH.'modules/'.$modul.'/'.$class.'.php');
 				$obj = new $class;
 				
 				if(method_exists($obj, $metodus) ){					
@@ -71,7 +71,7 @@ class Admin_modul extends MY_Modul {
 				}
 			}
 		} else {
-			include_once(FCPATH.'modules/admin/admin_admin.php');
+			include_once(ROOTPATH.'modules/admin/admin_admin.php');
 			$obj = new Admin_admin;
 				
 			$this->data['modulKimenet'] = $obj->index();

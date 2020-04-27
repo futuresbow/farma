@@ -41,7 +41,7 @@ class Megjelenites extends MY_Modul{
 
 		
 
-				include(FCPATH.'modules/hirlevel/autoload.php');
+				include(ROOTPATH.'modules/hirlevel/autoload.php');
 
 				$level = new Levelkuldo_osztaly;
 

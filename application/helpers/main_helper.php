@@ -22,7 +22,7 @@ function __f($str) {
 }
 // adott modul autoload.php fileját include-olja
 function ws_autoload($modul) {
-	$file = FCPATH.'modules/'.$modul.'/autoload.php';
+	$file = ROOTPATH.'modules/'.$modul.'/autoload.php';
 	if(file_exists($file)) {
 		include_once($file);
 		return true;
@@ -234,7 +234,7 @@ function ws_hookFuttatas($belepesipont, $param) {
 		$modul = $belepesipont[0];
 		$osztaly = $belepesipont[1];
 		$metodus = $belepesipont[2];
-		$file = FCPATH.'modules/'.$modul.'/'.$osztaly.'.php';
+		$file = ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php';
 		if(file_exists($file)) {
 			include_once($file);
 			$o = new $osztaly() ;
@@ -312,7 +312,7 @@ function getCI() {
 // modul kinézet töltés
 function modulView($modul,$file, $data = array()) {
 	$ci = getCI();
-	$modulViewFile = FCPATH.'modules/'.$modul.'/view/'.$modul.'_'.$file.'.php'; 
+	$modulViewFile = ROOTPATH.'modules/'.$modul.'/view/'.$modul.'_'.$file.'.php'; 
 	if(@file_exists($modulViewFile)) {
 		explode($data);
 		ob_start();
@@ -358,7 +358,7 @@ function ws_moduladatok() {
 	global $keresesiPontok;
 	global $hookBelepesipontok;
 	
-	$modulok = scandir(FCPATH.'modules');
+	$modulok = scandir(ROOTPATH.'modules');
 		
 	if(!empty($modulAdatok)) return $modulAdatok;
 	
@@ -368,12 +368,12 @@ function ws_moduladatok() {
 	$keresesiPontok = array();
 	$tartalomkezeloAdatok = array();
 	
-	$modulok = scandir(FCPATH.'modules');
+	$modulok = scandir(ROOTPATH.'modules');
 	if($modulok) {
 		foreach($modulok as $modul) {
 			if($modul == '.' or $modul == '..') continue;
 				
-			$modulKonyvtar = FCPATH.'modules/'.$modul.'/';
+			$modulKonyvtar = ROOTPATH.'modules/'.$modul.'/';
 			if(!is_dir($modulKonyvtar)) continue;
 			if(file_exists($modulKonyvtar.'moduladat.php')) include($modulKonyvtar.'moduladat.php');
 				// szegmens routing
@@ -388,17 +388,17 @@ function ws_moduladminadatok() {
 	global $adminAdatok;
 	
 	
-	$modulok = scandir(FCPATH.'modules');
+	$modulok = scandir(ROOTPATH.'modules');
 		
 	if(!empty($modulAdatok)) return $modulAdatok;
 	$adminAdatok = array();
 	
-	$modulok = scandir(FCPATH.'modules');
+	$modulok = scandir(ROOTPATH.'modules');
 	if($modulok) {
 		foreach($modulok as $modul) {
 			if($modul == '.' or $modul == '..') continue;
 				
-			$modulKonyvtar = FCPATH.'modules/'.$modul.'/';
+			$modulKonyvtar = ROOTPATH.'modules/'.$modul.'/';
 			if(!is_dir($modulKonyvtar)) continue;
 			if(file_exists($modulKonyvtar.'adminadat.php')) include($modulKonyvtar.'adminadat.php');
 				// szegmens routing
@@ -418,9 +418,9 @@ function widget($utvonal, $param = false) {
 	$modul = $modulEleres[0];
 	$osztaly = $modulEleres[1];
 	$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
-	$ut = FCPATH.'modules/'.$modul.'/'.$osztaly.'.php';
+	$ut = ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php';
 	if(!file_exists($ut)) return false;
-	include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+	include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 	if(!class_exists($osztaly)) return false;
 	$o = new $osztaly;
 	

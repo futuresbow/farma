@@ -344,7 +344,7 @@ class Rendelesek_admin extends MY_Modul {
 
 		
 
-				include(FCPATH.'modules/hirlevel/autoload.php');
+				include(ROOTPATH.'modules/hirlevel/autoload.php');
 
 				$level = new Levelkuldo_osztaly;
 
@@ -382,7 +382,7 @@ class Rendelesek_admin extends MY_Modul {
 				$adattabla = $rendeles->megrendelesAdatTablak();
 		
 		
-				include(FCPATH.'modules/hirlevel/autoload.php');
+				include(ROOTPATH.'modules/hirlevel/autoload.php');
 				$level = new Levelkuldo_osztaly;
 				$level->helyorzo('Teljes név', $rendeles->vevo->vezeteknev.' '.$rendeles->vevo->keresztnev);
 				$level->helyorzo('Keresztnév', $rendeles->vevo->keresztnev);
@@ -407,7 +407,7 @@ class Rendelesek_admin extends MY_Modul {
 				$adattabla = $rendeles->megrendelesAdatTablak();
 		
 				
-				include(FCPATH.'modules/hirlevel/autoload.php');
+				include(ROOTPATH.'modules/hirlevel/autoload.php');
 				$level = new Levelkuldo_osztaly;
 				$level->helyorzo('Teljes név', $rendeles->vevo->vezeteknev.' '.$rendeles->vevo->keresztnev);
 				$level->helyorzo('Keresztnév', $rendeles->vevo->keresztnev);
@@ -436,7 +436,7 @@ class Rendelesek_admin extends MY_Modul {
 	public function statszbeallitas() {
 		
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		
 		$ci = getCI();
 		$id = (int)$ci->uri->segment(4);
@@ -559,7 +559,7 @@ class Rendelesek_admin extends MY_Modul {
 	public function szerkesztes() {
 		
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		
 		$ci = getCI();
 		$id = (int)$ci->uri->segment(4);
@@ -734,7 +734,7 @@ class Rendelesek_admin extends MY_Modul {
 		// termék
 		$tid = (int)$this->ci->input->get('tid');
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		
 		$termek = new Termek_osztaly($tid);
 		
@@ -759,7 +759,7 @@ class Rendelesek_admin extends MY_Modul {
 		// ajaxos terméklista az admin rendelés szerkesztő oldalra
 		
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		
 		
 		// rendelés azonosító
@@ -1022,7 +1022,7 @@ class Rendelesek_admin extends MY_Modul {
 		// termék
 		$tid = (int)$this->ci->input->get('tid');
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		$mod = (int)$this->ci->input->get('mod');
 		
 		$sor = $ci->Sql->get($tid, DBP.'rendeles_termekek', 'id');
@@ -1044,7 +1044,7 @@ class Rendelesek_admin extends MY_Modul {
 		// termék
 		$tid = (int)$this->ci->input->get('tid');
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		// változat id
 		$vid = (int)$this->ci->input->get('vid');
 		
@@ -1097,7 +1097,7 @@ class Rendelesek_admin extends MY_Modul {
 		// termék
 		$tid = (int)$this->ci->input->get('tid');
 		// termékek bootstrap
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		// változat id
 		$oid = (int)$this->ci->input->get('oid');
 		

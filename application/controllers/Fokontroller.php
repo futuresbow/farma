@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('ROOTPATH') OR exit('No direct script access allowed');
 
 class Fokontroller extends CI_Controller {
 	var $data = array();
@@ -12,13 +12,15 @@ class Fokontroller extends CI_Controller {
 		// élő adatbázis prefix
 
 		// definíciók betöltése
-		$modulok = scandir(FCPATH.'modules');
-	
+		
+		
+		$modulok = scandir(ROOTPATH.'modules');
+		
 		if($modulok) {
 			foreach($modulok as $modul) {
 				if($modul == '.' or $modul == '..') continue;
 					
-				$modulKonyvtar = FCPATH.'modules/'.$modul.'/';
+				$modulKonyvtar = ROOTPATH.'modules/'.$modul.'/';
 				if(!@is_dir($modulKonyvtar)) continue;
 				if(file_exists($modulKonyvtar.'definiciok.php'))  {
 					include($modulKonyvtar.'definiciok.php');
@@ -86,7 +88,7 @@ class Fokontroller extends CI_Controller {
 				$modul = $modulEleres[0];
 				$osztaly = $modulEleres[1];
 				$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
-				include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+				include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 				$o = new $osztaly;
 				
 				$o->{$metodus}();
@@ -131,7 +133,7 @@ class Fokontroller extends CI_Controller {
 				$modul = $modulEleres[0];
 				$osztaly = $modulEleres[1];
 				$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
-				$ut = FCPATH.'modules/'.$modul.'/'.$osztaly.'.php';
+				$ut = ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php';
 				
 				// ha nincs a modul a rendszerben, kihagyjuk
 				if(!file_exists($ut)) continue;
@@ -175,11 +177,11 @@ class Fokontroller extends CI_Controller {
 					if(isset($modulAdat->eleresek[$this->uri->segment(1)])) {
 						// modul által lefoglalt URL
 						$controllerNev = $modulAdat->nev.'_modul';
-						if(file_exists(FCPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php')) {
-							include_once(FCPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php');
+						if(file_exists(ROOTPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php')) {
+							include_once(ROOTPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php');
 						} else {
 							$controllerNev = $modulAdat->nev;
-							include_once(FCPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php');
+							include_once(ROOTPATH.'modules/'.$modulAdat->nev.'/'.$controllerNev.'.php');
 						}
 						
 						$m = new $controllerNev;
@@ -208,7 +210,7 @@ class Fokontroller extends CI_Controller {
 				$modul = $modulEleres[0];
 				$osztaly = $modulEleres[1];
 				$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
-				include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+				include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 				$o = new $osztaly;
 				
 				if($tartalom->parameter!='') {

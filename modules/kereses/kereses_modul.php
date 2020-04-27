@@ -13,7 +13,7 @@ class Kereses_modul extends MY_Modul {
 		foreach($keresesiPontok as $eleres) {
 			$eleres = explode('/', $eleres);
 			if(@$eleres[0]=='' or @$eleres[1]=='' or @$eleres[2]=='') continue;
-			include_once(FCPATH.'modules/'.$eleres[0].'/'.$eleres[1].'.php');
+			include_once(ROOTPATH.'modules/'.$eleres[0].'/'.$eleres[1].'.php');
 			$o = new $eleres[1];
 			
 			$eredmenyek[$eleres[0].'_'.$eleres[1].'_'.$eleres[2]] = $o->{$eleres[2]}($keresoSzo);

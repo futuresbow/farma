@@ -346,10 +346,10 @@ class Oldalak_admin extends MY_Modul {
 				'elemnev' => '',
 			);
 			
-			if(!file_exists(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
+			if(!file_exists(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
 				$tartalombeallitas = false;
 			} else {
-				include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+				include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 				$o = new $osztaly;
 				// ha van ellenőrző metódus, lefuttatjuk, ha nincs, akkor mehet a mentés
 				if(method_exists($o, $metodus)) {
@@ -408,16 +408,16 @@ class Oldalak_admin extends MY_Modul {
 		$osztaly = trim($modulEleres[0].'_admin');
 		$metodus = trim($modulEleres[1].(isset($modulEleres[2])?$modulEleres[2]:'index').'_beallito');
 		
-		if(!file_exists(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
+		if(!file_exists(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
 			$tartalombeallitas = false;
 		} else {
 		
-			include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+			include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 			$o = new $osztaly;
 			
 			
 			if(!method_exists($o, $metodus)) $tartalombeallitas = false;
-			//print $osztaly.'  osztály:' .FCPATH.'modules/'.$modul.'/'.$osztaly.'.php'."\n";
+			//print $osztaly.'  osztály:' .ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php'."\n";
 			//var_dump($tartalombeallitas);
 			//print "\n". $metodus;
 			//exit;
@@ -524,12 +524,12 @@ class Oldalak_admin extends MY_Modul {
 
 			
 			$tartalombeallitas = true;
-			if(!file_exists(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
+			if(!file_exists(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php')) {
 
 				$tartalombeallitas = false;
 
 			} else {
-				include_once(FCPATH.'modules/'.$modul.'/'.$osztaly.'.php');
+				include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
 
 				$o = new $osztaly;
 

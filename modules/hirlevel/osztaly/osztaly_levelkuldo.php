@@ -69,7 +69,7 @@ class Levelkuldo_osztaly extends MY_Model  {
 		return $level;
 	}
 	public function hirleveleloKeszites($id) {
-		include_once(FCPATH.'modules/termek/autoload.php');
+		include_once(ROOTPATH.'modules/termek/autoload.php');
 		
 		$this->hirlevelSor = $sor = $this->get($id, 'hirlevelek', 'id');
 		$level = file_get_contents(FCPATH.'assets/email/index.html');

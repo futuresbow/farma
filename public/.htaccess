@@ -1,0 +1,24 @@
+
+<IfModule mod_php5.c>
+    php_value always_populate_raw_post_data -1
+</IfModule>
+
+ServerSignature Off
+RewriteEngine On
+
+#RewriteCond %{HTTPS} off
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#RewriteCond %{HTTP_HOST} !^www\.
+#RewriteRule .* https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+#RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]
+#RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=302,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /farma/public/index.php/$1 [L]
+
+#AuthType Basic
+#AuthName "webshop"
+#AuthUserFile "/home/zenteorg/.htpasswds/add/wsdev.zente.org/passwd"
+#require valid-user

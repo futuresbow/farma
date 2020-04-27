@@ -35,8 +35,10 @@ class Termeklista_osztaly extends MY_Model {
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	}
-	public function kiemeltTermekek($tipus, $darab=3) {
-		$lista = $this->sqlSorok("SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." GROUP BY t.id ORDER BY RAND() LIMIT ".$darab );
+	public function kiemeltTermekek($tipus, $darab=3) {		
+		$nyelv = $_SESSION['CMS_NYELV'] ;
+		
+		$lista = $this->sqlSorok("SELECT t.id, m.nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t WHERE m.termek_id = t.id GROUP BY t.id ORDER BY RAND() LIMIT ".$darab );
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	}
@@ -61,8 +63,10 @@ class Termeklista_osztaly extends MY_Model {
 
 	}
 	public function kategoriaTermekek($szegmens, $limit, $start) {
-		$szegmens = ($szegmens);
-		$kategoria = $this->sqlSor("SELECT * FROM ".DBP."kategoriak WHERE slug = '$szegmens' LIMIT 1");
+		$szegmens = ($szegmens);		
+		$kategoria = $this->sqlSor("SELECT * FROM ".DBP."kategoriak WHERE slug = '$szegmens' LIMIT 1");		
+		
+		
 		if($kategoria) {
 			$termekek = $katTermekek = $this->kategoriaTermekekByKategoriaId($kategoria->id, array(), $limit, $start);
 			
@@ -86,9 +90,10 @@ class Termeklista_osztaly extends MY_Model {
 		if($alKategoriak) foreach($alKategoriak as $alKategoria) {
 			$termekek = $this->kategoriaTermekekByKategoriaId($alKategoria->id, $termekek);
 		}
+				$nyelv = $_SESSION['CMS_NYELV'];
 		
-		
-		$sql = "SELECT t.id, j.ertek_2 as nev FROM ".DBP."termekek t,".DBP."jellemzok j, ".DBP."termekxkategoria x WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." AND  t.aktiv = 1 AND t.id = x.termek_id AND x.kategoria_id = {$id} {$this->where} GROUP BY t.id ORDER BY ".$this->order;
+		$sql = "SELECT t.id FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} m, ".DBP."termekxkategoria x WHERE m.termek_id = t.id AND x.termek_id = t.id AND x.kategoria_id = $id ORDER BY m.nev";
+		
 		$lista = $this->sqlSorok($sql );
 		
 		if($lista) {
@@ -113,7 +118,10 @@ class Termeklista_osztaly extends MY_Model {
 		
 	}
 	
-	public function termekek($limit = 9, $start = 0 ) {		$sql = "SELECT COUNT(DISTINCT(t.id))as ossz FROM `".DBP."jellemzok` j, ".DBP."termekek t  WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." ".$this->where;
+	public function termekek($limit = 9, $start = 0 ) {
+		
+		$nyelv = $_SESSION['CMS_NYELV'];
+				$sql = "SELECT COUNT(DISTINCT(t.id))as ossz FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t  WHERE m.termek_id = t.id  ".$this->where;
 		//print $sql;
 		$talalatszam = $this->sqlSor($sql );		$this->talalatszam = $talalatszam->ossz;
 		//print '<br>'.$this->talalatszam.'<br>';
@@ -133,14 +141,14 @@ class Termeklista_osztaly extends MY_Model {
 		$w = ' AND 1 = 2 ';
 		if(!empty($idLista)) {
 			$w = " AND t.id IN (".implode(',', $idArr).") ";
-		}		
-		$sql = "SELECT COUNT(t.id) as ossz FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." $w ";
+		}		$nyelv = $_SESSION['CMS_NYELV'];
+		$sql = "SELECT COUNT(t.id) as ossz FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  $w ";
 		//print $sql;
 		$talalatszam = $this->sqlSor($sql );
 		$this->talalatszam = $talalatszam->ossz;
 		
 		
-		$lista = $this->sqlSorok("SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." $w GROUP BY t.id ORDER BY ".$this->order." LIMIT $limit " );
+		$lista = $this->sqlSorok("SELECT t.id, j.nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  $w GROUP BY t.id ORDER BY ".$this->order." LIMIT $limit " );
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	

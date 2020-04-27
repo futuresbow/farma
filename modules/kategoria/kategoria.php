@@ -5,7 +5,7 @@ class Kategoria extends MY_Modul{
 	
 	public function __construct() {
 		parent::__construct();
-		include_once(FCPATH.'modules/termek/osztaly/osztaly_kategoria.php');
+		include_once(ROOTPATH.'modules/termek/osztaly/osztaly_kategoria.php');
 	}
 	
 	
