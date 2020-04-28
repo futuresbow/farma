@@ -95,7 +95,8 @@ class Termek_admin extends MY_Modul{
 		} else {
 			$this->data['opc'] = $opc;
 		}
-		$sql = "SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE  j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." GROUP BY t.id  ORDER BY nev ASC";
+		$nyelv = $_SESSION['CMS_NYELV'];
+		$sql = "SELECT t.id, j.nev , t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  j.termek_id = t.id  GROUP BY t.id  ORDER BY nev ASC";
 		$this->data['termeklista'] = $this->sqlSorok($sql);
 		
 		return  $this->ci->load->view(ADMINTEMPLATE.'html/opcioszerkeszto', $this->data, true);

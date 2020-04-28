@@ -168,12 +168,13 @@ class Termeklista extends MY_Modul {
 		$termekListaOsztaly->rendezesBeallitas($rendezes);
 		if(isset($_GET['artol'])) $termekListaOsztaly->szukites("SELECT id as tid FROM ".DBP."termekek WHERE (ar+(ar/100) * afa) > ".(int)$_GET['artol']." AND  (ar+(ar/100) * afa) < ".(int)$_GET['arig']  );
 		if(isset($_GET['meret'])) {
-			
+			die("Nincs implementálva a méretszűrés");
 			$jidArr = array();
 			
 			foreach($_GET['meret'] as $jid => $ertek) {
 				$ertekArr[] = $ertek;
 			}
+			
 			$termekListaOsztaly->szukites("SELECT termek_id as tid FROM ".DBP."jellemzok WHERE ertek_2 IN ('".implode("','", $ertekArr)."') ");
 				
 		}

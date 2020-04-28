@@ -21,17 +21,18 @@ class Keszletek_admin extends MY_Modul{
 		// kereshető lapozható terméklista
 		// keresések
 		$sr = $this->ci->input->get('sr');
-		
+		$nyelv = $_SESSION['CMS_NYELV'];
 		$keresestorles = false;
 		if(isset($sr['keresoszo'])) if($sr['keresoszo']!='') {
 			
 			$mod = (int)$sr['keresomezo'];
 			if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==1) $w = ' j.termek_id = t.id AND j.ertek_2 LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==2) $w = ' j.termek_id = t.id AND j.ertek_3 LIKE "%'.$sr['keresoszo'].'%" ';
-			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."jellemzok j WHERE $w";
+			if($mod==1) $w = ' j.nev LIKE "%'.$sr['keresoszo'].'%" ';
+			if($mod==2) $w = ' j.leiras LIKE "%'.$sr['keresoszo'].'%" ';
+			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} j WHERE t.id = j.termek_id AND $w";
 			$idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
-			
+			//print($sql);
+			//exit;
 			if($idArr) {
 				$w = "  t.id IN (".implode(',', $idArr).") AND ";
 				
@@ -48,11 +49,11 @@ class Keszletek_admin extends MY_Modul{
 		$start = 0;
 		if(isset($_GET['start'])) $start = (int)$_GET['start'];
 		$limit = beallitasOlvasas('admin.lapozo.limit');
-		$sql = "SELECT COUNT( DISTINCT(t.id)) as ossz FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." ";
+		$sql = "SELECT COUNT( DISTINCT(t.id)) as ossz FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id  ";
 		$osszSorok = $this->sqlSor($sql);
 		if($start>$osszSorok->ossz) $start = 0;
-		$sql = "SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." GROUP BY t.id  ORDER BY nev ASC LIMIT $start, $limit";
-		//print $sql;
+		$sql = "SELECT t.id, j.nev as nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id  GROUP BY t.id  ORDER BY nev ASC LIMIT $start, $limit";
+		//die( $sql);
 		$lista = $this->sqlSorok($sql);
 		
 		foreach($lista as $k => $sor) {

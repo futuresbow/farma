@@ -621,8 +621,8 @@ class Rendelesek_admin extends MY_Modul {
 		$ALG->tartalomDobozStart();
 		$doboz = $ALG->ujDoboz();
 		
-		$doboz->dobozCim( 'Termékek', 2);
-		$termekek = $this->Sql->sqlSorok("SELECT DISTINCT(t.id), j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." ORDER BY nev ASC");
+		$doboz->dobozCim( 'Termékek', 2);		$nyelv = $_SESSION['CMS_NYELV'];
+		$termekek = $this->Sql->sqlSorok("SELECT DISTINCT(t.id), j.nev as nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  ORDER BY nev ASC");
 		$lista = array(0 => 'Válassz terméket');
 		foreach($termekek as  $t) $lista[$t->id] = $t->nev." (".$t->ar." Ft)";
 		$select = new Legordulo(array('attr' => ' onchange="aJs.termekHozzaadas('.$id.',this);" ', 'nevtomb' => '', 'mezonev' => 'termek_id', 'felirat' => 'Termék hozzáadása', 'opciok' => $lista));

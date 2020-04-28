@@ -208,8 +208,8 @@ class Hirlevel_admin extends MY_Modul {
 		
 		
 		$doboz->duplaInput($select, $input1);
-		include_once(ROOTPATH.'modules/termek/autoload.php');
-		$termekek = $this->Sql->sqlSorok('SELECT t.id FROM '.DBP.'termekek t, '.DBP.'jellemzok j WHERE j.termek_jellemzo_id = "'.beallitasOlvasas('termeknev.termekjellemzo_id').'" AND j.termek_id = t.id ORDER By ertek_2 ASC  ');
+		include_once(ROOTPATH.'modules/termek/autoload.php');		$nyelv = $_SESSION['CMS_NYELV'];
+		$termekek = $this->Sql->sqlSorok('SELECT t.id FROM '.DBP.'termekek t, '.DBP.'termek_mezok_'.$nyelv.' j WHERE  j.termek_id = t.id ORDER By nev ASC  ');
 		$opcioLista = array('0' => 'Válassz terméket');
 		foreach($termekek as $termek) {
 			$t = new Termek_osztaly($termek->id);

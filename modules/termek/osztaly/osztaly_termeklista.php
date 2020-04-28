@@ -125,7 +125,8 @@ class Termeklista_osztaly extends MY_Model {
 		//print $sql;
 		$talalatszam = $this->sqlSor($sql );		$this->talalatszam = $talalatszam->ossz;
 		//print '<br>'.$this->talalatszam.'<br>';
-		$sql = "SELECT t.id, j.ertek_2 as nev, t.* FROM `".DBP."jellemzok` j, ".DBP."termekek t WHERE j.termek_id = t.id AND j.termek_jellemzo_id = ".beallitasOlvasas("termeknev.termekjellemzo_id")." ".$this->where." GROUP BY t.id ORDER BY ".$this->order." LIMIT $start,$limit ";
+		$nyelv = $_SESSION['CMS_NYELV'];
+		$sql = "SELECT t.id, j.nev , t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  ".$this->where." GROUP BY t.id ORDER BY ".$this->order." LIMIT $start,$limit ";
 		$lista = $this->sqlSorok($sql );		
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
