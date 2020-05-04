@@ -6,7 +6,26 @@
 <div class="box-item double">
 				<div class="input-container">
 					<div class="label-container">
-						<label >Méretek másolása</label>
+						<label >Változatcsoport betölése</label>
+						
+					</div>
+					<div class="input-select-container">
+						<div class="styled-select">
+							<select name="termekOpcioHozzadas2" onchange="aJs.opcioBetoltes2(<?= $tid; ?>, $(this).val());">
+							<option value="0">Válassz</option>
+							<?php foreach($amlista as $sor):?>
+							<option value="<?= $sor->id; ?>"><?= $sor->nev; ?></option>
+							<?php endforeach;?>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+								<div class="input-container">
+					<div class="label-container">
+						<label >Méretek/változatok másolása</label>
 						
 					</div>
 					<div class="input-select-container">
@@ -21,6 +40,11 @@
 					</div>
 				</div>
 </div>
+<div class="box-item double">
+	
+	<p style="text-align:center;width:100%;">vagy adj meg új méretet:</p>
+	
+</div>	
 <div class="box-item double">
 				
 				
@@ -28,7 +52,7 @@
 				
                 <div class="input-container">
                     <div class="label-container">
-                        <label >Méret megnevezése</label>
+                        <label >Méret/változat megnevezése</label>
                         
                     </div>
                     <div class="input-select-container">
@@ -114,7 +138,7 @@
             
  
 
-<button type="button" class="btn btn-info" onclick="aJs.opcioHozzaadas(<?= $tid; ?>, 1)">Új méret rögzítése</button><br><br>
+<button type="button" class="btn btn-info" onclick="aJs.opcioHozzaadas(<?= $tid; ?>, 1)">Új méret/változat rögzítése</button><br><br>
 <div class="box-item">
 
 

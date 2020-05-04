@@ -191,12 +191,30 @@ function adminJs() {
 			$('.valtozat_es_opcio').html(r);
 		});
 	}
-	this.opcioBetoltes = function(tid, tid2) {
-		adatok = $('.termekForm').serialize() ;
-		$.post('<?= ADMINURL?>termek/valtozatesopcio/'+tid+'?ajax=1&masolat='+tid2, adatok, function(r){
-			$('.valtozat_es_opcio').html(r);
-		});
-	}
+	this.opcioBetoltes = function(tid, tid2) {
+
+		adatok = $('.termekForm').serialize() ;
+
+		$.post('<?= ADMINURL?>termek/valtozatesopcio/'+tid+'?ajax=1&masolat='+tid2, adatok, function(r){
+
+			$('.valtozat_es_opcio').html(r);
+
+		});
+
+	}
+	
+	this.opcioBetoltes2 = function(tid, tid2) {
+
+		adatok = $('.termekForm').serialize() ;
+
+		$.post('<?= ADMINURL?>termek/valtozatesopcio/'+tid+'?ajax=1&amcsoportid='+tid2, adatok, function(r){
+
+			$('.valtozat_es_opcio').html(r);
+
+		});
+
+	}
+
 	
 	this.kelFeltoltes = function(mpid) {
 		 var fd = new FormData();

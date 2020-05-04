@@ -7,6 +7,209 @@ class Termek_admin extends MY_Modul{
 		parent::__construct();
 		include_once('osztaly/osztaly_termeklista.php');
 	}
+	
+	/*
+	 * termek_armodositocsoportlista
+	 * 
+	 * termék változatok csoportosítása
+	 */
+	 function armodositocsoportszerkesztes() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		$ci = getCI();
+
+		$id = (int)$ci->uri->segment(4);
+
+		globalisMemoria('utvonal', array(array('url' => 'termek/armodositocsoportlista', 'felirat' => 'Változatcsoportok') , array('felirat'=> 'Változatcsoportok szerkesztése')));
+
+		
+
+		if($ci->input->post('a')) {
+
+			$a = $ci->input->post('a') ;
+
+			if($id == 0) {
+
+				$this->Sql->sqlSave($a, DBP.'termek_armodositocsoportok');
+
+			} else {
+
+				$a['id'] = $id;
+
+				$this->Sql->sqlUpdate($a, DBP.'termek_armodositocsoportok');
+
+					
+
+			}
+
+			redirect(ADMINURL.'termek/armodositocsoportlista?m='.urlencode("A módosítások rögzítésre kerültek."));
+
+		}
+
+		
+
+		$sor = $this->Sql->get($id, DBP.'termek_armodositocsoportok', 'id');
+
+		
+
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Változatcsoportok szerkesztése");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/armodositocsoportlista', 'felirat' => 'Vissza') );
+
+		
+
+		$ALG->urlapStart(array('attr'=> ' action="" enctype="multipart/form-data" method="post" '));
+
+		
+
+		$ALG->tartalomDobozStart();
+
+		$doboz = $ALG->ujDoboz();
+
+		$doboz->dobozCim( 'Jellemzők', 2);
+
+		
+
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nev', 'felirat' => 'Megnevezés', 'ertek'=> @$sor->nev));
+
+		$input2 = new Legordulo(array('nevtomb' => 'a', 'mezonev' => 'nyelv', 'felirat' => 'Nyelv', 'ertek'=> @$sor->nyelv, 'opciok' => array('hu'=>'Magyar')));
+
+		
+
+		$doboz->duplaInput($input1, $input2);
+
+		
+
+		
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nevlista', 'felirat' => 'Sorrend', 'ertek'=> @$sor->nevlista));
+
+		
+		
+		$doboz->szimplaInput($input1);
+
+
+		$ALG->tartalomDobozVege();
+
+		$ALG->urlapGombok(array(
+
+			0 => array(
+
+				'tipus' => 'hivatkozas',
+
+				'felirat' => 'Mégse',
+
+				'link' => ADMINURL.'termek/armodositocsoportlista',
+
+				'onclick' => "if(confirm('Biztos vagy benne?')==false) return false;"
+
+			),
+
+			1 => array(
+
+				'tipus' => 'submit',
+
+				'felirat' => 'Mentés',
+
+				'link' => '',
+
+				'osztaly' => 'btn-ok',
+
+				
+
+			),
+
+		));
+
+		$ALG->urlapVege();
+
+		return $ALG->kimenet();
+
+		
+
+	}
+	
+	
+	
+	
+	function armodositocsoportlista() {
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Változatcsoportok listája')));
+
+		$ALG = new Adminlapgenerator;
+
+		
+
+		$ALG->adatBeallitas('lapCim', "Változatcsoportok");
+
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+
+		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/armodositocsoportszerkesztes/0', 'felirat' => 'Új érték felvitele'));
+
+		
+
+		$ALG->tartalomDobozStart();
+
+		
+
+		// táblázat adatok összeállítása
+
+		$adatlista = array();
+
+		$start = 0;
+
+		$w = '';
+
+		
+
+		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'termek_armodositocsoportok '.$w.' ORDER BY nev ASC ');
+
+		foreach($lista as $sor) {
+
+			
+
+			
+
+		}
+
+		// táblázat beállítás
+
+		$tablazat = $ALG->ujTablazat();
+
+		
+
+		
+
+		$keresoMezok = false;
+
+		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
+
+		$tablazat->adatBeallitas('szerkeszto_url', 'termek/armodositocsoportszerkesztes/');
+
+		$tablazat->adatBeallitas('torles_url', 'termek/termekcsoporttorles/');
+
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név','nyelv' => 'Nyelv','szerkesztes' => 'Szerkesztés',  'torles' => 'Törlés' ));
+
+		
+		
+
+		$tablazat->adatBeallitas('lista', $lista);
+
+		
+
+		
+
+		$ALG->tartalomDobozVege();
+
+		return $ALG->kimenet();
+
+		
+
+	}
+	
+	
 	/*
 	 * Termékek listázása cimke alapján
 	 * 
@@ -84,6 +287,31 @@ class Termek_admin extends MY_Modul{
 			unset($_POST['opc']);
 			if($opc) foreach($opc as $k => $v) $opc[$k]->id = 0;
 		}
+		if(isset($_POST['termekOpcioHozzadas2']))if($_POST['termekOpcioHozzadas2']!='0') {
+			$sql = "SELECT * FROM ".DBP."termek_armodositocsoportok WHERE id = ".(int)$_POST['termekOpcioHozzadas2']." LIMIT 1";
+			$opcRs = $this->sqlSor($sql);
+			unset($_POST['opc']);
+			
+			$adat = explode(";", $opcRs->nevlista);
+			$opc = array() ;
+			foreach($adat as $ix => $opcNev) {
+				if(trim($opcNev)!="") {
+					$arr = (object)array(
+						'id' => 0,
+						'tipus' => 0,
+						'nev' => trim($opcNev),
+						'leiras' => '',
+						'nyelv' => $opcRs->nyelv,
+						'ar' => 0,
+						'sorrend' => $ix*10,
+						'termek_id' => $id
+					);
+					$opc[] = $arr;
+				}
+				
+			}
+			
+		}
 		
 		if(!$opc) $opc = array();
 		if(isset($_POST['opc'])) {
@@ -98,6 +326,10 @@ class Termek_admin extends MY_Modul{
 		$nyelv = $_SESSION['CMS_NYELV'];
 		$sql = "SELECT t.id, j.nev , t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  j.termek_id = t.id  GROUP BY t.id  ORDER BY nev ASC";
 		$this->data['termeklista'] = $this->sqlSorok($sql);
+		
+		$sql = "SELECT * FROM `".DBP."termek_armodositocsoportok` ORDER BY nev ASC";
+		$this->data['amlista'] = $this->sqlSorok($sql);
+		
 		
 		return  $this->ci->load->view(ADMINTEMPLATE.'html/opcioszerkeszto', $this->data, true);
 	}
