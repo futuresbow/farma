@@ -66,8 +66,8 @@ if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):
 		break;
 		case 3:
 			foreach($nyelvek as $nyelvKod):
-				
-					$index++;
+				$txt = $sor->jellemzo($v->nev, $nyelvKod);				if(beallitasOlvasas("Termek-HTML-szerkeszto")!=1) {					$txt = strip_tags($txt);				} else {					$txt = nl2br($txt);				}				
+				$index++;
 		?>
 			<div class="box-item fw">
 
@@ -76,7 +76,7 @@ if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):
                         <label class=""><?= $v->nev;?> (<?= $nyelvKod; ?>)</label>
                     </div>
                     <div class="input-select-container">
-                       	<textarea id="fedit<?= $index; ?>" name="tj[<?= $nyelvKod;?>][<?= $v->slug?>]"  ><?= $sor->jellemzo($v->nev, $nyelvKod); ?></textarea>
+                       	<textarea id="fedit<?= $index; ?>" name="tj[<?= $nyelvKod;?>][<?= $v->slug?>]"  ><?= $txt; ?></textarea>
 					</div>
 				</div>
 
@@ -87,8 +87,8 @@ if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):
 		break;
 		case 4:
 			foreach($nyelvek as $nyelvKod):
-				
-		?>
+				$txt = $sor->jellemzo($v->nev, $nyelvKod);				if(beallitasOlvasas("Termek-HTML-szerkeszto")!=1) $txt = strip_tags($txt);
+						?>
 			<div class="box-item fw">
 
                 <div class="input-container">
@@ -96,7 +96,7 @@ if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):
                         <label class=""><?= $v->nev;?> (<?= $nyelvKod; ?>) <small>Kiválaszthat VÁLTOZAT: minden sorba egy elem : ár módosító, pl. <i>kiveheto ajtó:1000</i></small></label>
                     </div>
                     <div class="input-select-container">						
-                       	<textarea class="form-control" name="tj[<?= $nyelvKod;?>][<?= $v->slug?>]"  ><?= $sor->jellemzo($v->nev, $nyelvKod); ?></textarea>
+                       	<textarea class="form-control" name="tj[<?= $nyelvKod;?>][<?= $v->slug?>]"  ><?= $txt;?></textarea>
 					</div>
 				</div>
 
@@ -127,8 +127,8 @@ if($sor->jellemzok) foreach($sor->jellemzok as $k => $v):
 		break;
 	}
 endforeach;
-?>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.css">
+?><?php if(beallitasOlvasas("Termek-HTML-szerkeszto")==1): ?>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.js"></script>
 <script>
 	$().ready(function(){
@@ -151,3 +151,4 @@ endforeach;
 	});
 
 </script>
+<?php endif; ?>

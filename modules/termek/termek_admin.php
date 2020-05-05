@@ -545,6 +545,21 @@ class Termek_admin extends MY_Modul{
 		
 		if($ci->input->post('a')) {
 			$a = $ci->input->post('a');
+			
+			// gyártó felvitel?
+			if(isset($_POST['gyartonev'])) {
+				$van = $this->Sql->sqlSor("SELECT id FROM ".DBP."gyartok WHERE nev LIKE '{$_POST['gyartonev']}' LIMIT 1") ;
+				if($van) {
+					$a['gyarto_id'] = $van->id;
+				} else {
+					$gyArr = array('nev' => $_POST['gyartonev']);
+					$a['gyarto_id'] = $this->Sql->sqlSave($gyArr, DBP.'gyartok');
+				}
+			}
+			
+			
+			
+			
 			if($id==0) {
 				$id = $this->sqlSave($a, DBP.'termekek');
 			} else {
@@ -700,9 +715,11 @@ class Termek_admin extends MY_Modul{
 		$rs = $this->Sql->sqlSorok("SELECT * FROM ".DBP."gyartok ORDER BY nev ASC");
 		foreach($rs as $gyartosor) $gyartok[(string)$gyartosor->id] = $gyartosor->nev;
 		$select1 = new Legordulo(array('attr' => '' , 'nevtomb'=>'a', 'mezonev' => 'gyarto_id', 'felirat' => 'Gyártó', 'ertek' => @$sor->gyarto_id, 'opciok' => $gyartok)) ;
-		$select2 = new Legordulo(array('nevtomb'=>'a', 'mezonev' => 'aktiv', 'felirat' => 'Megjelenítve', 'ertek' => @$sor->aktiv, 'opciok' => array('0' => 'NEM', '1' => 'Igen'))) ;
+		$input = new Szovegmezo(array('nevtomb' => '', 'mezonev' => 'gyartonev', 'felirat' => 'vagy új gyártó neve', 'ertek' => "", 'attr' => ' "  '));
 		
-		$doboz->duplaInput($select1, $select2);
+		$doboz->duplaInput($select1, $input);
+		
+		
 		
 		// termékcsoport
 		$csoportok = array();
@@ -710,7 +727,10 @@ class Termek_admin extends MY_Modul{
 		foreach($rs as $csoport) $csoportok[(string)$csoport->id] = $csoport->nev;
 		
 		$select1 = new Legordulo(array('attr' => ' onchange="aJs.jellemzoBetoltes($(this).val(), '.(int)(@$sor->id).');" id="jellemzotipus" ' , 'nevtomb'=>'a', 'mezonev' => 'termek_csoport_id', 'felirat' => 'Termékcsoport', 'ertek' => @$sor->termek_csoport_id, 'opciok' => $csoportok)) ;
-		$doboz->szimplaInput($select1);
+		$select2 = new Legordulo(array('attr' => "", 'nevtomb'=>'a', 'mezonev' => 'aktiv', 'felirat' => 'Megjelenítve', 'ertek' => @$sor->aktiv, 'opciok' => array('0' => 'NEM', '1' => 'Igen'))) ;
+		
+		$doboz->duplaInput($select1,$select2);
+		
 		if(isset($sor->termek_csoport_id)) {
 			$this->data['termek_csoport_id'] = $sor->termek_csoport_id;
 		} else {

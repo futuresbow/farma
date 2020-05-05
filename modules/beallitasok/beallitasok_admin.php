@@ -576,6 +576,9 @@ class Beallitasok_admin extends MY_Modul{
 		$gordulo1 = new Legordulo(array('felirat' => 'Változatok-opciók felvitele a termékekhez','opciok' => array('0' => 'Kikapcsolva', '1' => 'Bekapcsolva'),'nevtomb' => 'a', 'mezonev' => 'termek_valtozat_opcio_engedelyezes', 'ertek' => beallitasOlvasas('termek_valtozat_opcio_engedelyezes')));		
 		
 		$doboz->szimplaInput($gordulo1, $input1);
+		$gordulo1 = new Legordulo(array('felirat' => 'HTML termékjellemzők engedélyezve','opciok' => array('0' => 'Kikapcsolva', '1' => 'Bekapcsolva'),'nevtomb' => 'a', 'mezonev' => 'Termek-HTML-szerkeszto', 'ertek' => beallitasOlvasas('Termek-HTML-szerkeszto')));		
+		
+		$doboz->szimplaInput($gordulo1, $input1);
 		
 		$ALG->tartalomDobozVege();
 		

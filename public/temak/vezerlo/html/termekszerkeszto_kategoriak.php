@@ -10,7 +10,7 @@
                     <?php if(isset($_GET['szulo_id'])) { $sor = new stdClass;$sor->szulo_id=(int)$_GET['szulo_id']; } ?>
 	
 					<?php if($lista)foreach($lista as $kat):?>
-					<div style="margin-left: <?= ($kat->szint+1)*20;?>px"  class="kategoriaValasztoSor">
+					<div onclick="var cd = $(this).find('input').prop('checked');$(this).find('input').prop('checked', !cd);" style="margin-left: <?= ($kat->szint+1)*20;?>px"  class="kategoriaValasztoSor">
 						<input type="checkbox" value="<?= $kat->id; ?>" class="" name="k[]" <?= (isset($termekXKategoria[$kat->id]))?' checked ':''; ?> /> - <?= $kat->nev;?>
 					</div>	
 					<?php endforeach; ?>
