@@ -15,7 +15,7 @@
 						
 						foreach($mezoArr as $id => $mezo):
 						?>
-						<div onclick="jogkorszamolas(this)" data-jogkor="<?= $mezo->id;?>" class="<?= ($mezo->csatolva)==1?'selected':'';?>"><?= $mezo->nev ;?></div>
+						<div onclick="jogkorszamolas(this)" data-jogkor="<?= $mezo->id;?>" class="<?= ($mezo->csatolva)==1?'selected':'';?>"><?= $mezo->nev ;?> (<?= $mezo->slug ;?>)</div>
 						<input name="b[<?= $mezo->id;?>]" value="<?= $mezo->csatolva;?>" type="hidden"/>
 						<?php endforeach; ?>
 						

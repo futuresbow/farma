@@ -32,7 +32,7 @@
 		</div>
 		<div class="logo-container">
 			<a href="?lap=" title="" class="logo">
-				<img src="<?= $stilusUrl;?>img/logo-sample.svg" alt="LOGO">
+				<img src="<?= $stilusUrl;?>img/logo-sample.png" alt="LOGO">
 			</a>
 		</div>
 		<div class="control-container">

@@ -359,28 +359,43 @@ class Termek_admin extends MY_Modul{
 		if(isset($sr['keresoszo'])) if($sr['keresoszo']!='') {
 			
 			$mod = (int)$sr['keresomezo'];
-			if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==1) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
-			if($mod==2) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
 			
-			
-			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_kereso_$nyelv j WHERE $w";
-			
-			if($mod==3) {
-				$w = ' t.id = x.termek_id and x.cimke_id = c.id AND c.nev LIKE "%'.$sr['keresoszo'].'%" ';
-				$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_cimkek c, ".DBP."termekxcimke x WHERE $w";
-			
-			}
-			$idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
-			
-			if($idArr) {
-				$w = "  t.id IN (".implode(',', $idArr).") AND ";
+			if($mod!=2)  {
+				if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
+				if($mod==1) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
 				
-			} else {
-				$tabla = $ALG->ujTablazat();
-				$tabla->keresoTorles();
-				redirect(ADMINURL."termek/lista?m=".urlencode("Nincs a keresésnek megfelelő találat!"));
-				return;
+				if($mod<2) $sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_kereso_$nyelv j WHERE $w";
+				
+				
+				if($mod==3) {
+					$w = ' t.id = x.termek_id and x.cimke_id = c.id AND c.nev LIKE "%'.$sr['keresoszo'].'%" ';
+					$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_cimkek c, ".DBP."termekxcimke x WHERE $w";
+					
+				}
+				$idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
+				
+				if($idArr) {
+					$w = "  t.id IN (".implode(',', $idArr).") AND ";
+					
+				} else {
+					$tabla = $ALG->ujTablazat();
+					$tabla->keresoTorles();
+					redirect(ADMINURL."termek/lista?m=".urlencode("Nincs a keresésnek megfelelő találat!"));
+					return;
+				}
+			} elseif($mod==2) {
+				$sql = "SELECT id FROM ".DBP."termek_csoportok WHERE nev LIKE '{$sr['keresoszo']}'";
+				$csoport = $this->Sql->sqlSor($sql);
+				if(isset($csoport->id)) {
+				
+					$w = ' t.termek_csoport_id = '.$csoport->id.' AND ';
+				} else {
+					$tabla = $ALG->ujTablazat();
+					$tabla->keresoTorles();
+					redirect(ADMINURL."termek/lista?m=".urlencode("Nincs a keresésnek megfelelő találat!"));
+					return;
+				}
+			
 			}
 		}
 		
@@ -413,8 +428,8 @@ class Termek_admin extends MY_Modul{
 		
 		$keresoMezok = array(
 			array('felirat' => 'Cikkszám', 'mezonev' => 'cikkszam'),
-			array('felirat' => 'Terméknév', 'mezonev' => 'nev'),
-			array('felirat' => 'Leírás', 'mezonev' => 'leiras'),
+			array('felirat' => 'Szöveges', 'mezonev' => 'nev'),
+			array('felirat' => 'Termékcsoport', 'mezonev' => 'csoport'),
 			array('felirat' => 'Cimke', 'mezonev' => 'cimke'),
 		);
 		
@@ -804,7 +819,7 @@ class Termek_admin extends MY_Modul{
 			$filename = date('YmdHi').rand(1000,9999).'.jpg';
 			$location = $termekMappa.$filename;
 			
-			$imageData = base64_decode(str_replace('data:image/jpeg;base64,', '', $_POST['file']));
+			$imageData = base64_decode($_POST['file']);
 			$source = imagecreatefromstring($imageData);
 			if(imagejpeg($source, FCPATH.$location)) {
 				$a = array('file' => $location, 'termek_id' => $tid);

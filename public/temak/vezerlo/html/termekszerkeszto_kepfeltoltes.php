@@ -15,7 +15,7 @@
 
                <div class="kepkonyvtar"></div>				
 			</div>
-			<div class="box-item fw">
+			<div class="box-item fw" style="display:none;">
 
 
 

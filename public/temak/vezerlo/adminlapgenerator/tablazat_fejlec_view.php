@@ -10,16 +10,16 @@
 								<div class="styled-select">
 									<select name="sr[keresomezo]" id="sel01">
 										<?php if($keresoMezok): foreach($keresoMezok as $k => $mezo): ?>
-										<option <?= @$_GET['keresomezo'] == $k?' selected ':''; ?> value="<?= $k; ?>"><?= $mezo['felirat']; ?></option>
+										<option <?= @$_GET['sr']['keresomezo'] == $k?' selected ':''; ?> value="<?= $k; ?>"><?= $mezo['felirat']; ?></option>
 										<?php endforeach; endif; ?>
 									</select>
 								</div>
 							</div>
 						</div>
 					</div>
-
+
 					<div class="table-top-input">
-						<input name="sr[keresoszo]" class="keresoInput" type="text" value="<?= @$_GET['keresoszo']; ?>" placeholder="Keresés...">
+						<input name="sr[keresoszo]" class="keresoInput" type="text" value="<?= @$_GET['sr']['keresoszo']; ?>" placeholder="Keresés...">
 						<label></label>
 						<a href="javascript:void();" onclick="$('.keresoInput').val();$('.keresoUrlap').submit();" title="Keresés törlése" class="search-delete" style="display:none"></a> <!-- display:block if not empty -->
 					</div>
