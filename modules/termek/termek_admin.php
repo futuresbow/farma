@@ -471,6 +471,17 @@ class Termek_admin extends MY_Modul{
 		
 		redirect(ADMINURL.'termek/lista?m='.urlencode("Törlés sikeres"));
 	}
+	
+	function egyediCikkszam($cikkszam, $tid = 0) {
+		$van = $this->Sql->sqlSor("SELECT cikkszam FROM ".DBP."termekek WHERE id != $tid AND cikkszam = '$cikkszam'");
+		if(!$van) return $cikkszam;
+		$i = 1;
+		while($van) {
+			$van = $this->Sql->sqlSor("SELECT cikkszam FROM ".DBP."termekek WHERE id != $tid AND cikkszam = '{$cikkszam}_{$i}'");
+			$i++;
+		}
+		return $cikkszam.'-'.$i;
+	}
 	/*
 	 * klonozas
 	 * 
@@ -487,11 +498,22 @@ class Termek_admin extends MY_Modul{
 		$termekxcimke = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termekxcimke WHERE termek_id = $id");
 		$termekxkategoria = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termekxkategoria WHERE termek_id = $id");
 		$termek_kepek = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termek_kepek WHERE termek_id = $id");
-		$jellemzok = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."jellemzok WHERE termek_id = $id");
+		
+		// TODO többnyelvűsíteni
+		$jellemzok = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termek_mezok_hu WHERE termek_id = $id LIMIT 1");
 		
 		$termek = (array)$termek;
 		unset($termek['id']);
+		
+		$termek['cikkszam'] = $this->egyediCikkszam($termek['cikkszam']);
+		
 		$ujid = $this->Sql->sqlSave($termek, DBP.'termekek');
+		
+		
+		
+		
+		
+		
 		if($armodositok) foreach($armodositok as $armodosito) {
 			$armodosito = (array)$armodosito;
 			$armodosito['termek_id'] = $ujid;
@@ -506,7 +528,7 @@ class Termek_admin extends MY_Modul{
 		if($jellemzok) foreach($jellemzok as $sor) {
 			$sor = (array)$sor;
 			$sor['termek_id'] = $ujid;
-			$this->Sql->sqlSave($sor, DBP.'jellemzok');
+			$this->Sql->sqlSave($sor, DBP.'termek_mezok_hu');
 		}
 		
 		if($termekxkategoria) foreach($termekxkategoria as $sor) {
@@ -573,7 +595,8 @@ class Termek_admin extends MY_Modul{
 			}
 			
 			
-			
+			// cikkszám vizsgálat
+			$a['cikkszam'] = $this->egyediCikkszam($a['cikkszam'], $id);
 			
 			if($id==0) {
 				$id = $this->sqlSave($a, DBP.'termekek');
