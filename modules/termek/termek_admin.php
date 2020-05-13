@@ -477,9 +477,13 @@ class Termek_admin extends MY_Modul{
 		if(!$van) return $cikkszam;
 		$i = 1;
 		while($van) {
-			$van = $this->Sql->sqlSor("SELECT cikkszam FROM ".DBP."termekek WHERE id != $tid AND cikkszam = '{$cikkszam}_{$i}'");
-			$i++;
+			$sql = "SELECT cikkszam FROM ".DBP."termekek WHERE id != $tid AND cikkszam = '{$cikkszam}-{$i}'";
+			//print $sql."<br>";
+			$van = $this->Sql->sqlSor($sql);
+			//var_dump($van);
+			if($van) $i++;
 		}
+		//exit;
 		return $cikkszam.'-'.$i;
 	}
 	/*
