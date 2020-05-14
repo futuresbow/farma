@@ -840,13 +840,20 @@ class Termek_admin extends MY_Modul{
 		$termekMappa = $tk->mappakeszites($tid);
 		
 		
+		
 		// postként jön D&D képként?
 		if(isset($_POST['file'])) {
 			// igen
+			
+			//var_dump(count($_POST['file']));
+			
 			$filename = date('YmdHi').rand(1000,9999).'.jpg';
 			$location = $termekMappa.$filename;
-			
-			$imageData = base64_decode($_POST['file']);
+			$imageData = explode(',' , $_POST['file']);
+			if(!isset($imageData[1])) return 0;
+			$imageData = base64_decode($imageData[1]);
+			//file_put_contents(FCPATH.'assets/termekkepek/teszt.jpg', $imageData);
+			//print $imageData;
 			$source = imagecreatefromstring($imageData);
 			if(imagejpeg($source, FCPATH.$location)) {
 				$a = array('file' => $location, 'termek_id' => $tid);

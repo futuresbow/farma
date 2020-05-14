@@ -218,7 +218,7 @@ function adminJs() {
 	
 	this.kelFeltoltes = function(mpid) {
 		 var fd = new FormData();
-		var files = $('#imgupload')[0].files[0];
+		var files = $('#imgupload')[0].files;
 		fd.append('file',files);
 		fd.append('request',1);
 		fd.append('mpid',mpid);
