@@ -15,8 +15,13 @@
 		<?php foreach($lista as $t):?>
         <div class="slide sale">
             <div class="item">
-                <div class="sale-badge">Akció</div>
-                <div class="new-badge">Új</div>
+                 <?php foreach($t->cimkek as $cimke):?>
+							<?php if($cimke->cimkeosztaly!='' and $t->cimkeTag($cimke->id)) : $c = $t->cimkeTag($cimke->id);?>
+								<div class="<?= $cimke->cimkeosztaly;?>"><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
+							
+							<?php endif;?>
+                     <?php endforeach;?>
+                    
                 <div class="img-container">
                     <a href="<?= $t->link();?>" title="<?= $t->jellemzo('Név');?>" >
 						<img src="<?= ws_image($t->fokep(),'mediumboxed');?>" title="<?= $t->jellemzo('Név');?>">

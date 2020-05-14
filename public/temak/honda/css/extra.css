@@ -120,4 +120,39 @@ box-shadow: rgba(220,24,45, 1) 1.5em 0 0 0, rgba(220,24,45, 1) 1.1em 1.1em 0 0, 
     -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
-}
+}
+.offer-slider .slider .slide .item .new-badge {
+    top: 41px;
+    display:block;
+}
+.offer-slider .slider .slide .item .new-badge2 {
+    position: absolute;
+    left: -5px;
+    background-color: #248a51;
+    font-family: 'ProximaNovaExCnSbold';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: .25px;
+    color: white;
+    width: auto;
+    height: 24px;
+    padding: 0 10px;
+}
+.item .new-badge2 {
+    top: 74px;
+    display: block;
+}
+.offer-slider .slider .slide .item .new-badge2:after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-image: url(../img/icon-new-badge.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    left: 0;
+    bottom: -5px;
+}
