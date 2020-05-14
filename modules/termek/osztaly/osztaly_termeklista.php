@@ -37,7 +37,7 @@ class Termeklista_osztaly extends MY_Model {
 	}
 	public function kiemeltTermekek($tipus, $darab=3) {		
 		$nyelv = $_SESSION['CMS_NYELV'] ;
-		$sql = "SELECT t.id, m.nev FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t, ".DBP."termekxcimke x WHERE x.cimke_id = $tipus AND x.termek_id = t.id AND t.id = m.termek_id LIMIT $darab";
+		$sql = "SELECT t.id, m.nev FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t, ".DBP."termekxcimke x WHERE x.cimke_id = $tipus AND x.termek_id = t.id AND t.id = m.termek_id ORDER BY RAND() LIMIT $darab";
 		$lista = $this->sqlSorok($sql);
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
