@@ -157,3 +157,6 @@ box-shadow: rgba(220,24,45, 1) 1.5em 0 0 0, rgba(220,24,45, 1) 1.1em 1.1em 0 0, 
     left: 0;
     bottom: -5px;
 }
+.product-list .prod-container .products li .item .new-badge {
+    display: none;
+}
