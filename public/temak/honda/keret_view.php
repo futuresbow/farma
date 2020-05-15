@@ -83,7 +83,7 @@
 					<div class="login">
 						<?php $tag = ws_belepesEllenorzes(); if($tag):?>
 						<a href="<?= base_url();?>?logout" title="Kilépés">Kilépés</a>
-						<a href="<?= base_url();?>?fiokom" title="Kilépés">Fiókom</a>
+						<a href="<?= base_url();?>fiokom" title="Kilépés">Fiókom</a>
 						
 						<?php if($tag->adminjogok>0):?>
 						

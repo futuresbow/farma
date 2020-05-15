@@ -84,7 +84,7 @@ class Termek_admin extends MY_Modul{
 		
 
 		
-		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nevlista', 'felirat' => 'Sorrend', 'ertek'=> @$sor->nevlista));
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'nevlista', 'felirat' => 'Változatok listája, pontosvesszővel elválasztva', 'ertek'=> @$sor->nevlista));
 
 		
 		
