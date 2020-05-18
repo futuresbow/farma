@@ -6,7 +6,7 @@
                         <label class="">Képfeltöltés (maximum 15 kép, jpg formátumban)</label>
                     </div>
                     <div class="input-select-container">
-                       	<input type="file" class="form-control " name="imgupload" id="imgupload" onchange="aJs.kelFeltoltes(<?= $tid;?>)" />
+                       	<input type="file" class="form-control " name="imgupload" id="imgupload" onchange="aJs.kelFeltoltes(<?= $tid;?>, 1)" />
                     </div>
 				</div>
 				

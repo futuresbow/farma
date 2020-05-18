@@ -107,7 +107,7 @@ class Kategoria_admin extends MY_Modul{
 		$this->data['lista'] = $ci->Sql->kategoriaFa(0);
 		$sor = $this->data['sor'] = $this->get($id, DBP.'kategoriak', 'id');
 		$ALG = new Adminlapgenerator;
-		$ALG->adatBeallitas('lapCim', "Kategória szerkesztése");
+		$ALG->adatBeallitas('lapCim', ((@$_GET['szulo_id']>0)?'Alkategória':"Kategória")." szerkesztése");
 		$ALG->urlapStart(array('attr'=> ' action="" enctype="multipart/form-data" method="post" '));
 		$ALG->tartalomDobozStart();
 		

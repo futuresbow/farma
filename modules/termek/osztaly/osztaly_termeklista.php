@@ -44,13 +44,15 @@ class Termeklista_osztaly extends MY_Model {
 	}
 	
 	public function kereses($keresoSzo, $darab=30) {
-
-		$lista = $this->sqlSorok("SELECT termek_id as id   FROM `".DBP."termek_kereso_hu`  WHERE keresostr LIKE '%$keresoSzo%'  LIMIT ".$darab );
+		$sql = "SELECT termek_id as id   FROM `".DBP."termek_kereso_hu`  WHERE keresostr LIKE '%$keresoSzo%'  LIMIT ".$darab;
+		
+		$lista = $this->sqlSorok($sql );
 
 		$termekek = $this->termekOszalyLista($lista);
 		$out = array();
 		
 		if($termekek) foreach($termekek as $t) {
+			
 			$out[] = array(
 				'cim' => $t->jellemzo('Név'),
 				'leiras' => $t->cikkszam,

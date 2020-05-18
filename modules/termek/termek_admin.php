@@ -468,6 +468,13 @@ class Termek_admin extends MY_Modul{
 		$tk->osszesKepTorlese($id);
 		
 		$ci->db->query("DELETE FROM ".DBP."termekek WHERE id = $id");
+		// bentmaradt jellemzők
+		
+		$sql = "DELETE FROM ".DBP."termek_kereso_hu WHERE termek_id NOT IN (SELECT id FROM termekek)";
+		$ci->db->query($sql);
+		$sql = "DELETE FROM ".DBP."termek_mezok_hu WHERE termek_id NOT IN (SELECT id FROM termekek)";
+		$ci->db->query($sql);
+		
 		
 		redirect(ADMINURL.'termek/lista?m='.urlencode("Törlés sikeres"));
 	}
@@ -497,14 +504,31 @@ class Termek_admin extends MY_Modul{
 		$ci = getCI();
 		$this->data['tid'] = $id = (int)$ci->uri->segment(4);
 		$termek = $ci->Sql->sqlSor("SELECT * FROM ".DBP."termekek WHERE id = $id");
+		//print_r($termek);
 		
 		$armodositok = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termek_armodositok WHERE termek_id = $id");
+		
+		//print_r($armodositok);
+		
+		
 		$termekxcimke = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termekxcimke WHERE termek_id = $id");
+		
+		//print_r($termekxcimke);
+		
+		
 		$termekxkategoria = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termekxkategoria WHERE termek_id = $id");
+		
+		//print_r($termekxkategoria);
+		
+		
+		
 		$termek_kepek = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termek_kepek WHERE termek_id = $id");
 		
+		//print_r($termek_kepek);
+		
+		
 		// TODO többnyelvűsíteni
-		$jellemzok = $ci->Sql->sqlSorok("SELECT * FROM ".DBP."termek_mezok_hu WHERE termek_id = $id LIMIT 1");
+		$jellemzok = $ci->Sql->sqlSor("SELECT * FROM ".DBP."termek_mezok_hu WHERE termek_id = $id LIMIT 1");
 		
 		$termek = (array)$termek;
 		unset($termek['id']);
@@ -514,37 +538,39 @@ class Termek_admin extends MY_Modul{
 		$ujid = $this->Sql->sqlSave($termek, DBP.'termekek');
 		
 		
-		
+		$jellemzok = (array)$jellemzok;
+		$jellemzok['termek_id'] = $ujid;
+		unset($jellemzok['id']);
+		$this->Sql->sqlSave($jellemzok, DBP.'termek_mezok_hu', 'id');
 		
 		
 		
 		if($armodositok) foreach($armodositok as $armodosito) {
 			$armodosito = (array)$armodosito;
 			$armodosito['termek_id'] = $ujid;
+			unset($armodositok['id']);
 			$this->Sql->sqlSave($armodosito, DBP.'termek_armodositok');
 		}
 		
 		if($termekxcimke) foreach($termekxcimke as $sor) {
 			$sor = (array)$sor;
 			$sor['termek_id'] = $ujid;
+			unset($sor['id']);
 			$this->Sql->sqlSave($sor, DBP.'termekxcimke');
 		}
-		if($jellemzok) foreach($jellemzok as $sor) {
-			$sor = (array)$sor;
-			$sor['termek_id'] = $ujid;
-			$this->Sql->sqlSave($sor, DBP.'termek_mezok_hu');
-		}
+		
 		
 		if($termekxkategoria) foreach($termekxkategoria as $sor) {
 			$sor = (array)$sor;
 			$sor['termek_id'] = $ujid;
+			unset($sor['id']);
 			$this->Sql->sqlSave($sor, DBP.'termekxkategoria');
 		}
 		ws_autoload('termek');
 		if($termek_kepek) foreach($termek_kepek as $sor) {
 			$sor = (array)$sor;
 			$sor['termek_id'] = $ujid;
-			
+			unset($sor['id']);
 			$kep = file_get_contents(FCPATH.$sor['file']);
 			$filename = basename($sor['file']);
 			
@@ -634,7 +660,8 @@ class Termek_admin extends MY_Modul{
 				}
 				
 			}
-				
+			
+			//opciók
 			
 			if($ci->input->post('opc')) {
 				foreach($ci->input->post('opc') as $opcSor) {
@@ -654,6 +681,8 @@ class Termek_admin extends MY_Modul{
 				}
 			}
 			
+			// Kategóriák
+			
 			if($ci->input->post('k')) {
 				$termekXKategoriaId = array();
 				foreach($ci->input->post('k') as $kategoria_id) {
@@ -667,6 +696,9 @@ class Termek_admin extends MY_Modul{
 					}
 				}
 				$this->db->query("DELETE FROM ".DBP."termekxkategoria WHERE termek_id = $id AND id NOT IN (".implode(",", $termekXKategoriaId).")");
+			} else {
+				// nincs bejelölve egy sem
+				$this->db->query("DELETE FROM ".DBP."termekxkategoria WHERE termek_id = $id ");
 			}
 			// cimkék
 			$valasztottCimkek = $this->ci->Sql->gets(DBP."termekxcimke", " WHERE termek_id = {$id} ");
@@ -722,7 +754,7 @@ class Termek_admin extends MY_Modul{
 		$ALG->adatBeallitas('lapCim', "Termék szerkesztése");
 		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/lista', 'felirat' => 'Vissza'));
 		
-		$ALG->urlapStart(array('attr' => 'method="post" onsubmit="return false;" id="termekForm" class="termekForm"'));
+		$ALG->urlapStart(array('attr' => 'method="post" onsubmit="return false;" id="termekForm" class="termekForm" enctyle="multipart/form-data"'));
 		$ALG->tartalomDobozStart();
 		
 		$doboz = $ALG->ujDoboz();
@@ -918,6 +950,95 @@ class Termek_admin extends MY_Modul{
 		}
 		
 	}
+	
+	// képfeltöltés 2
+	public function imageupload2() {
+		$tid = $this->ci->uri->segment(4);
+		
+		include_once('osztaly/osztaly_termekkep.php');
+		$tk = new Termekkep_osztaly();
+		$termekMappa = $tk->mappakeszites($tid);
+		
+		
+		
+		// postként jön D&D képként?
+		if(isset($_POST['file'])) {
+			// igen
+			
+			//var_dump(count($_POST['file']));
+			
+			$filename = date('YmdHi').rand(1000,9999).'.jpg';
+			$location = $termekMappa.$filename;
+			$imageData = explode(',' , $_POST['file']);
+			if(!isset($imageData[1])) return 0;
+			$imageData = base64_decode($imageData[1]);
+			//file_put_contents(FCPATH.'assets/termekkepek/teszt.jpg', $imageData);
+			//print $imageData;
+			$source = imagecreatefromstring($imageData);
+			if(imagejpeg($source, FCPATH.$location)) {
+				$a = array('file' => $location, 'termek_id' => $tid);
+				$this->Sql->sqlSave($a, DBP.'termek_kepek');
+				
+				$this->keplista();
+				return;
+				
+			
+			}
+			
+			print 0;
+			
+			
+			return;
+		}
+		/**
+		 * 
+		 $file = str_replace('data:image/jpeg;base64,','', $_POST['file']);
+			print $file;
+			$source = imagecreatefromstring($file);
+			if(imagejpeg($source, FCPATH.$location)) {
+				$a = array('file' => $location, 'termek_id' => $tid);
+				$this->Sql->sqlSave($a, 'termek_kepek');
+				
+				$this->keplista();
+				return;
+				
+				
+			}
+			print 0;
+			
+			return;
+		 */
+		
+		
+		$filename = strToUrl(ws_withoutext($_FILES['file']['name'])).'.'.strtolower(ws_ext($_FILES['file']['name']));
+		$location = $termekMappa.$filename;
+		
+		$uploadOk = 1;
+		$imageFileType = pathinfo( $_FILES['file']['name'],PATHINFO_EXTENSION);
+
+		// Check image format
+		$imageFileType = strtolower($imageFileType);
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+			&& $imageFileType != "gif" ) {
+			$uploadOk = 0;
+		}
+		
+		if($uploadOk == 0){
+			echo 0;
+		}else{
+			 /* Upload file */
+			 if(move_uploaded_file($_FILES['file']['tmp_name'],$location)){
+				$a = array('file' => $location, 'termek_id' => $tid);
+				$this->Sql->sqlSave($a, DBP.'termek_kepek');
+				
+				$this->keplista();
+			}else{
+				echo 0;
+			}
+		}
+		
+	}
+	
 	// adott levél kéének törlése
 	
 	/*
@@ -1368,7 +1489,15 @@ class Termek_admin extends MY_Modul{
 			
 
 		}
-
+		
+		// feleslegek eltávolítása
+		$sql = "DELETE FROM ".DBP."termek_kereso_hu WHERE termek_id NOT IN (SELECT id FROM termekek)";
+		$this->db->query($sql);
+		$sql = "DELETE FROM ".DBP."termek_mezok_hu WHERE termek_id NOT IN (SELECT id FROM termekek)";
+		$this->db->query($sql);
+		
+		
+		
 		$ALG->tartalomDobozVege();
 
 		return $ALG->kimenet();
@@ -1378,14 +1507,14 @@ class Termek_admin extends MY_Modul{
 		$id = $data['id'];
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
 		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', '');
-		
+		$termek = $this->Sql->get($id, DBP.'termekek', 'id');
 		
 		foreach($nyelvek as $nyelvKod) {
 			$tabla = DBP.'termek_mezok_'.$nyelvKod;
 					
 			$sor = $this->Sql->get($id, $tabla, ' termek_id ');
 			
-			$str = '';
+			$str = $termek->cikkszam.' ';
 			foreach($mezok as $mezo) {
 				if($mezo->keresheto == 0) continue;
 				

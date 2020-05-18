@@ -11,7 +11,7 @@
 	
 					<?php if($lista)foreach($lista as $kat):?>
 					<div onclick="var cd = $(this).find('input').prop('checked');$(this).find('input').prop('checked', !cd);" style="margin-left: <?= ($kat->szint+1)*20;?>px"  class="kategoriaValasztoSor">
-						<input type="checkbox" value="<?= $kat->id; ?>" class="" name="k[]" <?= (isset($termekXKategoria[$kat->id]))?' checked ':''; ?> /> - <?= $kat->nev;?>
+						<input type="checkbox"  value="<?= $kat->id; ?>" name="k[]" <?= (isset($termekXKategoria[$kat->id]))?' checked ':''; ?> class="kategoria-cbbox" /><div ></div> - <?= $kat->nev;?>
 					</div>	
 					<?php endforeach; ?>
                     

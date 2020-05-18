@@ -216,13 +216,37 @@ function adminJs() {
 	}
 
 	
-	this.kelFeltoltes = function(mpid) {
+	this.kelFeltoltes = function(mpid, nemdd) {
 		 var fd = new FormData();
-		var files = $('#imgupload')[0].files;
+		var files = $('#imgupload')[0].files;		
 		fd.append('file',files);
 		fd.append('request',1);
 		fd.append('mpid',mpid);
-
+		// nem dragdrop
+		if(nemdd == 1) {
+			var fileInput = document.getElementById('imgupload');
+			var file = fileInput.files[0];
+			var formData = new FormData();
+			formData.append('file', file);
+			console.log(formData);
+			url = '<?= ADMINURL; ?>termek/imageupload/'+mpid+'?ajax=1';
+			var xhr = new XMLHttpRequest();
+			// Add any event handlers here...
+			xhr.open('POST', url, true);
+			
+			
+			xhr.onreadystatechange = function() {
+			  if (xhr.readyState == 4 && xhr.status == 200) {
+				
+				aJs.kepgaleria(xhr.responseText);
+			  }
+			}
+			xhr.send(formData);
+			
+			
+			
+			return 0;
+		}
 		// AJAX request
 		$.ajax({
 			url: '<?= ADMINURL; ?>termek/imageupload/'+mpid+'?ajax=1',

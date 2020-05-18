@@ -17,6 +17,7 @@ class Termeklista extends MY_Modul {
 	 * 
 	 **/
 	public function kereses($keresoSzo) {
+		
 		ws_autoload('termek');
 		$termekListaOsztaly = new Termeklista_osztaly();
 		return $termekListaOsztaly->kereses($keresoSzo);

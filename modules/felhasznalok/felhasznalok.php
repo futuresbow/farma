@@ -292,7 +292,13 @@ class Felhasznalok extends MY_Modul {
 					$rs = $this->Sql->sqlSor($sql);
 					if(isset($rs->id)) {
 						ws_hookFuttatas('felhasznalo.beleptetes', array('felhasznalo_id' => $rs->id));
-						redirect(base_url().'fiokom');
+						
+						if($rs->adminjogok>0){
+							redirect(base_url().beallitasOlvasas("ADMINURL"));
+						} else {
+							redirect(base_url().'fiokom');
+						}
+					
 						
 						naplozo('Belépés oldal sikeres belépés', $rs->id, 'felhasznalok');
 						return;

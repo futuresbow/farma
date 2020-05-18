@@ -3,7 +3,7 @@
 class Kereses_modul extends MY_Modul {
 	public function index() {
 		
-		$data['keresoSzo'] = $keresoSzo = $this->ci->uri->segment(2);
+		$data['keresoSzo'] = $keresoSzo = urldecode($this->ci->uri->segment(2));
 		
 		naplozo('Keresés', 0, '',$keresoSzo);
 		
