@@ -269,9 +269,21 @@ var siteJs = {};
 			}
 			
 		}
-		$('.kosar_osszar').html(ar+" Ft");
+		
+		$('.kosar_osszar').html(this.formatMoney(ar));
 	};
-	
+	siteJs.formatMoney = function(number) {
+		
+		if(typeof Intl.NumberFormat() !=="object") return number;
+		
+		const formatter = new Intl.NumberFormat('hu-HU', {
+			style: 'currency',
+			currency: 'HUF',
+			minimumFractionDigits: 0
+		})
+		return formatter.format(number);
+	}
+
 	siteJs.kosarTermekTorles = function(kosarId) {
 		$.post(base_url()+'/kosarajax', {'termektorles':kosarId} , function(e) {
 			siteJs.kosarOldalTermeklistaFrissites();

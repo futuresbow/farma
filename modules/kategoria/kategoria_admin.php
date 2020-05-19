@@ -113,12 +113,12 @@ class Kategoria_admin extends MY_Modul{
 		
 		$doboz = $ALG->ujDoboz();
 		$doboz->dobozCim('Kategória adatai');
-		$input1 = new Szovegmezo(array('felirat' => 'Kategória neve', 'ertek' => @$sor->nev, 'nevtomb' => 'a', 'mezonev' => 'nev'));
-		$input2 = new Szovegmezo(array('felirat' => 'Kategória elérés url szegmens (slug)', 'ertek' => @$sor->slug, 'nevtomb' => 'a', 'mezonev' => 'slug'));
+		$input1 = new Szovegmezo(array('felirat' => 'Kategória neve', 'ertek' => @$sor->nev, 'nevtomb' => 'a', 'mezonev' => 'nev', 'attr' => ' onkeyup="aJs.slugJs(this.value, \'katslug\');" '));
+		$input2 = new Szovegmezo(array('felirat' => 'Kategória elérés url szegmens (slug)', 'ertek' => @$sor->slug, 'nevtomb' => 'a', 'mezonev' => 'slug', 'attr' => ' id="katslug" '));
 		
 		$doboz->duplaInput($input1, $input2)  ;
 		
-		$input1 = new Filefeltolto(array('felirat' => 'Kategória kép', 'nevtomb' => '', 'mezonev' => 'kep'));
+		$input1 = new Filefeltolto(array('felirat' => 'Kategória kép', 'nevtomb' => '', 'mezonev' => 'kep', 'attr' => ""));
 		$input2 = new Szovegmezo(array('felirat' => 'Sorrend (egész szám)', 'ertek' => @$sor->sorrend, 'nevtomb' => 'a', 'mezonev' => 'sorrend'));
 		
 		$doboz->duplaInput($input1, $input2)  ;

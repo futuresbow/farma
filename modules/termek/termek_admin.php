@@ -751,7 +751,12 @@ class Termek_admin extends MY_Modul{
 		
 		$ALG = new Adminlapgenerator;
 		
-		$ALG->adatBeallitas('lapCim', "Termék szerkesztése");
+		if(@$sor->id>0) {
+			$ALG->adatBeallitas('lapCim', "Termék szerkesztése - ".@$sor->jellemzo("Név"));
+		} else {
+			$ALG->adatBeallitas('lapCim', "Termék szerkesztése");
+		}
+		
 		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'termek/lista', 'felirat' => 'Vissza'));
 		
 		$ALG->urlapStart(array('attr' => 'method="post" onsubmit="return false;" id="termekForm" class="termekForm" enctyle="multipart/form-data"'));

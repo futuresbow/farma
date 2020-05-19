@@ -469,8 +469,23 @@ function adminJs() {
 		$('#jellemzo_szerkeszto').load('<?= ADMINURL; ?>termek/jellemzoform/'+tid+'?ajax=1&csoportid='+csoportid );
 
 	};
+	
+	this.RemoveAccents = function (s) {
+		var i = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖŐòóôõöőÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜŰùúûüűÑñŠšŸÿýŽž'.split('');
+		var o = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUUuuuuuNnSsYyyZz'.split('');
+		var map = {};
+		i.forEach((i, idx) => map[i] = o[idx]);
+		str = s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
+		str = str.replace(/\W/g, '_')
+		str = str.replace(' ', '_');
 		
 		
+		return str.toLowerCase();
+	}
+	
+	this.slugJs = function(str, id) {
+		$("#"+id).val(this.RemoveAccents(str));
+	}
 	
 	this.nettoSzamitas = function() {
 		
