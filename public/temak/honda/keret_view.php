@@ -175,7 +175,7 @@
 					<div class="box">
 						<div class="box-title"><?= $doboz3_cim;?></div>
 						<div class="box-content">
-							<div class="fb-page" data-href="<?= $doboz3_fburl;?>" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="<?= $doboz3_fburl;?>" class="fb-xfbml-parse-ignore"><a href="<?= $doboz3_fburl;?>">Honda Szallerbeck márkakereskedés és szerviz</a></blockquote></div>
+							<div class="fb-page" data-href="<?= $doboz3_fburl;?>" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="<?= $doboz3_fburl;?>" class="fb-xfbml-parse-ignore"><a href="<?= $doboz3_fburl;?>"><?= $doboz3_fburl;?></a></blockquote></div>
 						</div>
 					</div>
 				</div>
