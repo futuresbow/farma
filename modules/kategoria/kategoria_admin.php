@@ -64,7 +64,7 @@ class Kategoria_admin extends MY_Modul{
 		$id = (int)$ci->uri->segment(4);
 		
 		if($ci->input->post('a')) {
-			$a = $ci->input->post('a');
+			$a = $ci->input->post('a');			if(trim($a['slug'])=='') {				$a['slug'] = strToUrl($a['nev']);			}			
 			if($id==0) {
 				$id = $this->sqlSave($a, DBP.'kategoriak');								$a['id'] = $id;
 			} else {
@@ -113,7 +113,7 @@ class Kategoria_admin extends MY_Modul{
 		
 		$doboz = $ALG->ujDoboz();
 		$doboz->dobozCim('Kategória adatai');
-		$input1 = new Szovegmezo(array('felirat' => 'Kategória neve', 'ertek' => @$sor->nev, 'nevtomb' => 'a', 'mezonev' => 'nev', 'attr' => ' onkeyup="aJs.slugJs(this.value, \'katslug\');" '));
+		$input1 = new Szovegmezo(array('felirat' => 'Kategória neve', 'ertek' => @$sor->nev, 'nevtomb' => 'a', 'mezonev' => 'nev', 'attr' => ' id="katnev" onkeyup="aJs.slugJs(this.value, \'katslug\');" '));
 		$input2 = new Szovegmezo(array('felirat' => 'Kategória elérés url szegmens (slug)', 'ertek' => @$sor->slug, 'nevtomb' => 'a', 'mezonev' => 'slug', 'attr' => ' id="katslug" '));
 		
 		$doboz->duplaInput($input1, $input2)  ;
@@ -147,7 +147,7 @@ class Kategoria_admin extends MY_Modul{
 				'felirat' => 'Mentés',
 				'link' => '',
 				'osztaly' => 'btn-ok',
-				
+				'onclick' => "if($('#katnev').val().trim()=='') { alert('A kategória nevét meg kell adni!');return false;}"
 			),
 		));
 		$ALG->urlapVege();
