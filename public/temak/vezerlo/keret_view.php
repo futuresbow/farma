@@ -476,8 +476,8 @@ function adminJs() {
 		var map = {};
 		i.forEach((i, idx) => map[i] = o[idx]);
 		str = s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
-		str = str.replace(/\W/g, '_')
-		str = str.replace(' ', '_');
+		str = str.replace(/\W/g, '-')
+		str = str.replace(' ', '-');
 		
 		
 		return str.toLowerCase();
