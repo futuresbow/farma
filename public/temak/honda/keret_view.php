@@ -39,7 +39,7 @@
 
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/style.css">
-	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css?r=1">
 		<!-- Slick -->
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick-theme.css"/>
