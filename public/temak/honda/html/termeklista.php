@@ -59,11 +59,11 @@
         <ul class="products clearfix">
 			<?php foreach($termekek as $t):?>
             <li class="">
-                <div class="item">					 <?php foreach($t->cimkek as $cimke):?>
+                <div class="item">					 <?php $i = 0; foreach($t->cimkek as $cimke):?>
 							<?php if($cimke->cimkeosztaly!='' and $t->cimkeTag($cimke->id)) : $c = $t->cimkeTag($cimke->id);?>
-								<div class="<?= $cimke->cimkeosztaly;?>"><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
-							
-							<?php endif;?>
+								<div class="<?= $cimke->cimkeosztaly. ' badge-pos'.$i;?> "><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
+								
+							<?php $i++; endif;?>
                      <?php endforeach;?>
                     
                     

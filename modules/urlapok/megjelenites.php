@@ -6,9 +6,14 @@ class Megjelenites extends MY_Modul{
 		if(($this->ci->input->post('a'))) {
 			$a = $this->ci->input->post('a');
 			$hiba = false;
+			//print_r($a);
 			if(strlen($a['nev'])<3) {
 				$hiba = true;
 				$data['h']['nev'] = __f("Kérem, add meg a nevedet.");
+			}
+			if(strlen($a['telefon'])<3) {
+				$hiba = true;
+				$data['h']['telefon'] = __f("Kérem, add meg a telefonszámodat.");
 			}
 			
 			if(strlen($a['text'])<3) {
@@ -49,9 +54,9 @@ class Megjelenites extends MY_Modul{
 
 				
 
-				$level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), $targy);
-				return $this->load->view(ws_temahtml().'kapcsolat_sikereskuldes.php', $data, true);
-
+				if($level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), $targy))
+					return $this->load->view(ws_temahtml().'kapcsolat_sikereskuldes.php', $data, true);
+				
 			}
 			
 			

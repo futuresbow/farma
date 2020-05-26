@@ -7,7 +7,7 @@
 
 				
 
-        <form method="post" id="kontakturlap" onsubmit="">
+        <form method="post" id="kontakturlap" onsubmit="" action="#kontakturlap">
 
             
 
@@ -59,7 +59,19 @@
 				
 						</div>
 					</div>
-					
+					<div class="input-line">
+						<div class="input-container <?= (isset($h['telefon']))?' error ':'';?> ">
+						
+							<label for="" class="important"><?= __f('Telefonszám'); ?></label>
+							
+							<input type="hidden" name="m[telefon]" value="Név" />
+							
+							<input type="text" id="nev" name="a[telefon]" value="<?= @$_POST['a']['telefon'];?>">
+
+							<div class="error-msg"><?= __f('Kérjük, add meg a telefonszámot!');?></div>
+
+						</div>
+                    </div>
                     <div class="input-line">
 						<div class="input-container <?= (isset($h['text']))?' error ':'';?>">
 

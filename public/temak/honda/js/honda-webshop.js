@@ -162,9 +162,11 @@ $(document).ready(function () {
 	$('.main-banner .slider').slick({
 		  dots: true,
 		  infinite: true,
-		  speed: 300,
+		  speed: 1000,
 		  slidesToShow: 1,
-		  adaptiveHeight: true
+		  adaptiveHeight: true,
+		  autoplay: true,
+		  autoplaySpeed: 4000,
 		});
 
 

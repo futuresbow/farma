@@ -47,7 +47,7 @@
 
 	<!-- jQuery & jQUI for sortable -->
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
+	<?= globalisMemoria("fejlec-scriptek");?>
 </head>
 <body id="top">
 	<div class="loading">Loading&#8230;</div>
@@ -63,7 +63,8 @@
 
 			<div class="header-container">
 
-				<a href="" title="" class="logo logo-motor"></a>
+				<a href="<?= base_url();?>" title="" class="logo logo-motor"></a>
+				<a href="<?= base_url();?>" title="" class="karsa-logo"></a>
 
 				<div class="mobile-menu"></div>
 				<div class="login-menu"></div>
@@ -465,7 +466,7 @@ var siteJs = {};
 	siteJs.kosarPanelFrissites();
 	$().ready(function(){ siteJs.fatyolStop(); window.onbeforeunload = function(event) {  siteJs.fatyolStart(); };});
 	</script>
-	
+	<?= globalisMemoria('lablec-scriptek'); ?>
 </body>
 </html>
 

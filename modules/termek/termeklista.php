@@ -125,7 +125,7 @@ class Termeklista extends MY_Modul {
 			$listacim = 'Termékek';
 			
 		}
-		return $this->ci->load->view(FRONTENDTEMA.'html/termeklista', array('maxTalalatszam' => $maxTalalatszam, 'rendezes' => $rendezes,'start' => $start, 'limit' => $limit, 'termekdb' => $termekListaOsztaly->talalatszam, 'termekek' => $termekek, 'kategoriak' => $kategoriak, 'listacim' => $listacim ), true);
+		return $this->ci->load->view(FRONTENDTEMA.'html/termeklista', array('maxTalalatszam' => $maxTalalatszam, 'rendezes' => $rendezes,'start' => $start, 'limit' => $limit, 'termekdb' => $termekListaOsztaly->talalatszam, 'termekek' => $termekek, 'kategoriak' => $kategoriak, 'listacim' => $listacim." termékek" ), true);
 		
 	}
 		/*
@@ -251,7 +251,12 @@ class Termeklista extends MY_Modul {
 		if(isset($arr[1])) $leiras .= '...';
 		$seoTartalom->leiras = $leiras;
 		
-		globalisMemoria('seoTartalom', $seoTartalom);
+		globalisMemoria('seoTartalom', $seoTartalom);
+		globalisMemoria('fejlec-scriptek', '
+		<link rel="stylesheet" type="text/css" href="'.base_url().'js/slicklightbox/slick-lightbox.css"/>
+		<script src="'.base_url().'js/slicklightbox/slick-lightbox.min.js"></script>
+		');
+		globalisMemoria('lablec-scriptek', '<script>$(".main-img-slider").slickLightbox({src: "src",itemSelector: ".slide img"});</script>');
 				return ws_frontendView('html/termeklap', array('termek' => $termek), true);
 		//return $this->ci->load->view(FRONTENDTEMA.'html/termeklap', array('termek' => $termek), true);
 		

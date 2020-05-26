@@ -9,6 +9,10 @@ class Kategoria extends MY_Modul{
 	}
 	
 	
+	public function kiemeltkategoriak() { 
+		$lista = $this->Sql->gets(DBP."kategoriak", ' WHERE kiemeles > 0 ORDER BY kiemeles ASC  ');
+		return $this->load->view(FRONTENDTEMA.'html/kiemelt_kategoriak', array('kategoriak' => $lista), true);
+	}
 	public function szurowidget_termeklista() {
 		$ci = getCI();
 		$kategoriak = new Kategoriak_osztaly();

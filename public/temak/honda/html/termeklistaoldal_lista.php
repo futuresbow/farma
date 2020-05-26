@@ -14,9 +14,12 @@
 
                 <div class="item">
 
-                    <div class="sale-badge">Akció</div>
-
-                    <div class="new-badge">Új</div>
+                     <?php $i = 0; foreach($t->cimkek as $cimke):?>
+							<?php if($cimke->cimkeosztaly!='' and $t->cimkeTag($cimke->id)) : $c = $t->cimkeTag($cimke->id);?>
+								<div class="<?= $cimke->cimkeosztaly. ' badge-pos'.$i;?> "><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
+								
+							<?php $i++; endif;?>
+                     <?php endforeach;?>
 
                     <div class="img-container">
 

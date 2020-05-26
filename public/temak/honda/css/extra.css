@@ -160,3 +160,116 @@ box-shadow: rgba(220,24,45, 1) 1.5em 0 0 0, rgba(220,24,45, 1) 1.1em 1.1em 0 0, 
 .product-list .prod-container .products li .item .new-badge {
     display: none;
 }
+.karsa-logo {
+	display: block;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    top: 0;
+    left: 110px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../img/karasna_logo.png");
+}
+.header .nav {
+    left: 230px;
+}
+.header .back-to-homepage {
+    left: 230px;
+}
+@media screen and (max-width: 960px) {
+.karsa-logo {
+	display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    top: 0px;
+    left: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../img/karasna_logo.png");
+}
+
+}
+
+.fooldalikategoriak {
+	width:100%!important;
+}
+.fooldalikategoriak ul{
+	text-align: center;
+}
+@media screen and (min-width: 960px) {
+	.fooldalikategoriak li{
+		width:20%!important;
+		float: none!important;
+		display: inline-block!important;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.karsa-logo {
+		width:50%!important;
+	}
+}
+.offer-slider .slider .slide .item .new-badge2 {
+    display: block;
+}
+
+.product-list .prod-container .products li .item .sale-badge {
+    display: block;
+}
+.product-list .prod-container .products li .item .new-badge {
+    display: block;
+}
+.product-list .prod-container .products li .item .new-badge2 {
+    display: block;
+    position: absolute;
+    left: -5px;
+    background-color: #D38901;
+    font-family: 'ProximaNovaExCnSbold';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: .25px;
+    color: white;
+    width: auto;
+    height: 24px;
+    padding: 0 10px;
+
+
+}
+.product-list .prod-container .products li .item .new-badge2:after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-image: url(../img/icon-sale-badge.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    left: 0;
+    bottom: -5px;
+}
+
+.badge-pos0 {
+	top:10px!important;
+}
+.badge-pos1 {
+	top:40px!important;
+}
+.badge-pos2 {
+	top:70px!important;
+}
+.badge-pos3 {
+	top:100px!important;
+}
+.slide img {
+    cursor:pointer;
+}
+
+

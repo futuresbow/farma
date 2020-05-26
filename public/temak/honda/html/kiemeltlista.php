@@ -15,11 +15,11 @@
 		<?php foreach($lista as $t):?>
         <div class="slide sale">
             <div class="item">
-                 <?php foreach($t->cimkek as $cimke):?>
+                 <?php $i = 0; foreach($t->cimkek as $cimke):?>
 							<?php if($cimke->cimkeosztaly!='' and $t->cimkeTag($cimke->id)) : $c = $t->cimkeTag($cimke->id);?>
-								<div class="<?= $cimke->cimkeosztaly;?>"><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
+								<div class="<?= $cimke->cimkeosztaly. ' badge-pos'.$i;?>"><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
 							
-							<?php endif;?>
+							<?php $i++;endif;?>
                      <?php endforeach;?>
                     
                 <div class="img-container">

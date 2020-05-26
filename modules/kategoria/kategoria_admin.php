@@ -121,7 +121,7 @@ class Kategoria_admin extends MY_Modul{
 		$input1 = new Filefeltolto(array('felirat' => 'Kategória kép', 'nevtomb' => '', 'mezonev' => 'kep', 'attr' => ""));
 		$input2 = new Szovegmezo(array('felirat' => 'Sorrend (egész szám)', 'ertek' => @$sor->sorrend, 'nevtomb' => 'a', 'mezonev' => 'sorrend'));
 		
-		$doboz->duplaInput($input1, $input2)  ;
+		$doboz->duplaInput($input1, $input2)  ;		$kiemelesOpciok = array(0 => 'Nincs kiemelés');		for($i = 1;$i<20;$i++ ) {			$kiemelesOpciok[$i] = $i.'. helyen kiemelve';				}		 		$select = new Legordulo(array('felirat' => 'Kiemelés sorrend', 'ertek' => @$sor->kiemeles, 'nevtomb' => 'a', 'mezonev' => 'kiemeles', 'attr' => '', 'opciok' => $kiemelesOpciok));				$doboz->szimplaInput($select)  ;
 		
 		if(@$sor->kep!='') {
 			$doboz = $ALG->ujDoboz();
