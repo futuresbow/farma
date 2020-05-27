@@ -345,6 +345,15 @@ class Termek_admin extends MY_Modul{
 		globalisMemoria("Nyitott menüpont",'Termékek');
 		$w = '';
 		$sr = $this->ci->input->get('sr');
+		
+		if($sr) {
+			$_SESSION['termekszuro'] = $sr;
+		} else {
+			if(isset($_SESSION['termekszuro'])){
+				$_GET['sr'] = $sr = $_SESSION['termekszuro'];
+			}
+		}
+		
 		globalisMemoria('utvonal', array(array('felirat' => 'Termékek listája')));
 		$ALG = new Adminlapgenerator;
 		
@@ -392,6 +401,7 @@ class Termek_admin extends MY_Modul{
 				} else {
 					$tabla = $ALG->ujTablazat();
 					$tabla->keresoTorles();
+					unset($_SESSION['termekszuro']); 
 					redirect(ADMINURL."termek/lista?m=".urlencode("Nincs a keresésnek megfelelő találat!"));
 					return;
 				}
@@ -419,8 +429,10 @@ class Termek_admin extends MY_Modul{
 		foreach($lista as $sor) {
 			$termek = new Termek_osztaly($sor->id);
 			$sor->nev = $termek->jellemzo('Név');
+			if($termek->termekszulo_id!=0) $sor->nev = '<span style="color:#5F00D8">'.$sor->nev.'</span>';
 			$sor->cikkszam = $termek->cikkszam;
 			$sor->masolas = '<a onclick="if(!confirm(\'Biztosan?\')) return false;" href="'.ADMINURL.'termek/klonozas/'.$sor->id.'">Klónozás</a>';
+			$sor->valtozat = '<a  href="'.ADMINURL.'termek/ujvaltozat/'.$sor->id.'">Új változat</a>';
 			$adatlista[] = $sor;
 		}
 		// táblázat beállítás
@@ -494,13 +506,21 @@ class Termek_admin extends MY_Modul{
 		return $cikkszam.'-'.$i;
 	}
 	/*
+	 * ujvaltozat
+	 * 
+	 * termék változat készítése
+	 */
+	public function ujvaltozat() {
+		$this->klonozas(true);
+	}
+	/*
 	 * klonozas
 	 * 
 	 * termék többszörözése az adminon.
 	 * a klónozás után az új termék szerkesztőjébe ugrik
 	 * 
 	 */
-	public function klonozas() {
+	public function klonozas($valtozat = false) {
 		$ci = getCI();
 		$this->data['tid'] = $id = (int)$ci->uri->segment(4);
 		$termek = $ci->Sql->sqlSor("SELECT * FROM ".DBP."termekek WHERE id = $id");
@@ -534,7 +554,11 @@ class Termek_admin extends MY_Modul{
 		unset($termek['id']);
 		
 		$termek['cikkszam'] = $this->egyediCikkszam($termek['cikkszam']);
-		
+		if($valtozat) {
+			if($termek['termekszulo_id']==0) {
+				$termek['termekszulo_id'] = $id;
+			}
+		}
 		$ujid = $this->Sql->sqlSave($termek, DBP.'termekek');
 		
 		
@@ -614,7 +638,7 @@ class Termek_admin extends MY_Modul{
 			$a = $ci->input->post('a');
 			
 			// gyártó felvitel?
-			if(isset($_POST['gyartonev'])) {
+			if(($_POST['gyartonev'])!="") {
 				$van = $this->Sql->sqlSor("SELECT id FROM ".DBP."gyartok WHERE nev LIKE '{$_POST['gyartonev']}' LIMIT 1") ;
 				if($van) {
 					$a['gyarto_id'] = $van->id;
