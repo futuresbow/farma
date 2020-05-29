@@ -3,7 +3,8 @@ include_once('osztaly_termek.php');
 
 class Termeklista_osztaly extends MY_Model {
 	
-	public $order = 'id ASC';
+	public $order = 'id ASC';	//private $listaKorlatozok = " ( t.statusz = 0 AND t.termekszulo_id = 0 ) ";
+	private $listaKorlatozok = " ( t.aktiv = 1  ) ";
 	public $where = '';
 	public $talalatszam = 0;
 	public function jellemzoFajtak($nev, $tipus = 2) {
@@ -31,20 +32,20 @@ class Termeklista_osztaly extends MY_Model {
 		
 	}
 	public function termekAjanlo($termek_id, $darab=3) {
-		$lista = $this->sqlSorok("SELECT t.id FROM ".DBP."termekek t WHERE statusz = 0 ORDER BY RAND() LIMIT ".$darab );
+		$lista = $this->sqlSorok("SELECT t.id FROM ".DBP."termekek t WHERE {$this->listaKorlatozok} ORDER BY RAND() LIMIT ".$darab );
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	}
 	public function kiemeltTermekek($tipus, $darab=3) {		
 		$nyelv = $_SESSION['CMS_NYELV'] ;
-		$sql = "SELECT t.id, m.nev FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t, ".DBP."termekxcimke x WHERE x.cimke_id = $tipus AND x.termek_id = t.id AND t.id = m.termek_id ORDER BY RAND() LIMIT $darab";
+		$sql = "SELECT t.id, m.nev FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t, ".DBP."termekxcimke x WHERE {$this->listaKorlatozok} AND x.cimke_id = $tipus AND x.termek_id = t.id AND t.id = m.termek_id ORDER BY RAND() LIMIT $darab";
 		$lista = $this->sqlSorok($sql);
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	}
 	
 	public function kereses($keresoSzo, $darab=30) {
-		$sql = "SELECT termek_id as id   FROM `".DBP."termek_kereso_hu`  WHERE keresostr LIKE '%$keresoSzo%'  LIMIT ".$darab;
+		$sql = "SELECT termek_id as id   FROM `".DBP."termek_kereso_hu` k, ".DBP."termekek t  WHERE {$this->listaKorlatozok} AND k.termek_id = t.id AND k.keresostr LIKE '%$keresoSzo%'  LIMIT ".$darab;
 		
 		$lista = $this->sqlSorok($sql );
 
@@ -54,6 +55,7 @@ class Termeklista_osztaly extends MY_Model {
 		if($termekek) foreach($termekek as $t) {
 			
 			$out[] = array(
+				'id' => $t->id,
 				'cim' => $t->jellemzo('Név'),
 				'leiras' => $t->cikkszam,
 				'kep' => $t->fokep(),
@@ -94,7 +96,7 @@ class Termeklista_osztaly extends MY_Model {
 		}
 				$nyelv = $_SESSION['CMS_NYELV'];
 		
-		$sql = "SELECT t.id FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} m, ".DBP."termekxkategoria x WHERE m.termek_id = t.id AND x.termek_id = t.id AND x.kategoria_id = $id ORDER BY m.nev";
+		$sql = "SELECT t.id FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} m, ".DBP."termekxkategoria x WHERE {$this->listaKorlatozok}  AND m.termek_id = t.id AND x.termek_id = t.id AND x.kategoria_id = $id ORDER BY m.nev";
 		
 		$lista = $this->sqlSorok($sql );
 		
@@ -123,12 +125,12 @@ class Termeklista_osztaly extends MY_Model {
 	public function termekek($limit = 9, $start = 0 ) {
 		
 		$nyelv = $_SESSION['CMS_NYELV'];
-				$sql = "SELECT COUNT(DISTINCT(t.id))as ossz FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t  WHERE m.termek_id = t.id  ".$this->where;
+				$sql = "SELECT COUNT(DISTINCT(t.id))as ossz FROM `".DBP."termek_mezok_{$nyelv}` m, ".DBP."termekek t  WHERE {$this->listaKorlatozok} AND m.termek_id = t.id  ".$this->where;
 		//print $sql;
 		$talalatszam = $this->sqlSor($sql );		$this->talalatszam = $talalatszam->ossz;
 		//print '<br>'.$this->talalatszam.'<br>';
 		$nyelv = $_SESSION['CMS_NYELV'];
-		$sql = "SELECT t.id, j.nev , t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  ".$this->where." GROUP BY t.id ORDER BY ".$this->order." LIMIT $start,$limit ";
+		$sql = "SELECT t.id, j.nev , t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE {$this->listaKorlatozok} AND j.termek_id = t.id  ".$this->where." GROUP BY t.id ORDER BY ".$this->order." LIMIT $start,$limit ";
 		$lista = $this->sqlSorok($sql );		
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
@@ -138,7 +140,7 @@ class Termeklista_osztaly extends MY_Model {
 		
 		
 		
-		$idLista = $this->sqlSorok("SELECT DISTINCT(t.id) FROM  ".DBP."termekek t, ".DBP."termekxcimke x WHERE x.termek_id = t.id AND x.cimke_id = ".$cimke_id);
+		$idLista = $this->sqlSorok("SELECT DISTINCT(t.id) FROM  ".DBP."termekek t, ".DBP."termekxcimke x WHERE {$this->listaKorlatozok} AND x.termek_id = t.id AND x.cimke_id = ".$cimke_id);
 		$idArr = array();
 		if(!empty($idLista)) foreach($idLista as $idSor) $idArr[] = $idSor->id;
 		$w = ' AND 1 = 2 ';
@@ -151,7 +153,7 @@ class Termeklista_osztaly extends MY_Model {
 		$this->talalatszam = $talalatszam->ossz;
 		
 		
-		$lista = $this->sqlSorok("SELECT t.id, j.nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE j.termek_id = t.id  $w GROUP BY t.id ORDER BY ".$this->order." LIMIT $limit " );
+		$lista = $this->sqlSorok("SELECT t.id, j.nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE {$this->listaKorlatozok} AND j.termek_id = t.id  $w GROUP BY t.id ORDER BY ".$this->order." LIMIT $limit " );
 		$termekek = $this->termekOszalyLista($lista);
 		return $termekek;
 	
@@ -163,7 +165,7 @@ class Termeklista_osztaly extends MY_Model {
 			
 			foreach($lista as $sor) {
 				
-				$t = new Termek_osztaly($sor->id);
+				$t = new Termek_osztaly($sor->id);				
 				$termekek[] = $t;
 			}
 		}

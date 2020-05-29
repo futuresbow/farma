@@ -149,7 +149,7 @@
 <?php if(!empty($opc)):?>
  <div class="adminOpciosTabla">
 
-	<?php $i = 0;foreach($opc as $opcSor):$i++;?>		<input name="opc[<?= $i; ?>][tipus]"  value="0" type="hidden"/>
+	<?php $i = 0;foreach($opc as $opcSor):$i++; ?>		<input name="opc[<?= $i; ?>][tipus]"  value="0" type="hidden"/>
 		<?php /*
 		<select name="opc[<?= $i; ?>][tipus]"  class="" >
 
@@ -166,7 +166,7 @@
 	<tr>
 	<td><input name="opc[<?= $i; ?>][id]" value="<?= $opcSor->id; ?>" type="hidden" ><b >Megnevezés:</b><br><input class="ov_nev" name="opc[<?= $i; ?>][nev]" value="<?= $opcSor->nev; ?>" class="" ></td>
 	<td><b >Sorrend:</b><br><input name="opc[<?= $i; ?>][sorrend]" value="<?= $opcSor->sorrend; ?>" class="" ></td>
-	<td><b >Leírás:</b><br><textarea name="opc[<?= $i; ?>][leiras]" value="<?= $opcSor->leiras; ?>" class="" ></textarea></td>
+	<td><b >Leírás:</b><br><input  name="opc[<?= $i; ?>][leiras]" value="<?= $opcSor->leiras; ?>" class="" ></td>
 	</tr><tr>
 	<td><b >Ár:</b><br><input name="opc[<?= $i; ?>][ar]" value="<?= $opcSor->ar; ?>" class="" ></td>
 	

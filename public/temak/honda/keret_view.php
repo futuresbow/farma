@@ -246,7 +246,14 @@ var siteJs = {};
 		$('.kosar_valtozat').change(function(){ siteJs.arKalkulacio();})
 		$('.kosar_opcio').change(function(){ siteJs.arKalkulacio();})
 		$('.kosar_elkuldes').click(function(){ siteJs.kosarMentes();})
+		$('#termekvaltozat').change(function(){ siteJs.termekValtozatAtiranyitas(this);})
 	};
+	siteJs.termekValtozatAtiranyitas = function(o) {
+		db = parseInt($('.kosar_db').val());
+		link = ($(o.options[o.selectedIndex]).attr("data-link"));
+		if (typeof link === 'undefined')  return;
+		window.location.href=link+"?db="+db;
+	}
 	
 	siteJs.arKalkulacio = function() {
 		alapar = parseInt($('#kosar_alapar').val());

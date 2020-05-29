@@ -14,10 +14,10 @@ class Termek_osztaly extends MY_Model {
 	var $kivalasztottOpciok;
 	var $termekTabla = 'termekek';
 	var $megrendeltTermekTabla = 'rendeles_termekek';		var $termekcsoport;
-	
+	var $termekValtozatok = null;
 	public function __construct($id = false, $rendeles = false) {
 		$this->rendeles = $rendeles;
-		if($id === false) {
+		if($id == false) {
 			$this->id = 0;
 			return false;
 		}
@@ -41,7 +41,7 @@ class Termek_osztaly extends MY_Model {
 		}		// termékcsoport 				$this->termekcsoport = $this->sqlSor("SELECT id,nev FROM ".DBP."termek_csoportok WHERE id =  $this->termek_csoport_id ");		// kategória
 		if($rendeles) {			$termekId = $this->termek_id;		} else {			$termekId = $this->id;		}		$kategoriaLista = $this->sqlSorok("SELECT * FROM ".DBP."termekxkategoria WHERE termek_id = $termekId");		if($kategoriaLista) {			foreach($kategoriaLista as $sor) {				$this->ketagoriaTagsag[$sor->kategoria_id] = $sor->kategoria_id;			}		}				// cimketagság		$this->cimkek = $this->getsIdArr(DBP."termek_cimkek", 'id', ' ');						$cimkeListas = $this->sqlSorok("SELECT * FROM ".DBP."termekxcimke x  WHERE termek_id = $termekId");		if($cimkeListas) {			foreach($cimkeListas as $sor) {				$this->cimkeTagsag[$sor->cimke_id] = $sor;			}		}		
 		
-	}
+	}		/*	 * vannakTermekValtozatok	 * 	 * megvizsgálja és betölti az al és főtermékeket	 */	 	public function vannakTermekValtozatok() {		if($this->termekValtozatok == Null) {			$this->loadTermekValtozatok();		}		if(!empty($this->termekValtozatok)) {			return true;		} else {			return false;		}	}			public function termekvaltozatok() {		if($this->termekValtozatok == Null) {			$this->loadTermekValtozatok();		}		return $this->termekValtozatok;	}	public function loadTermekValtozatok() {		if($this->termekValtozatok == Null) {			// ez egy főtermék?			if($this->termekszulo_id==0) {				// igen								$this->termekValtozatok[0] = new stdClass();				$this->termekValtozatok[0]->id = $this->id;								$lista = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE termekszulo_id = ".$this->id." ORDER BY altermek_sorrend ASC");				if(!empty($lista)) {					$this->termekValtozatok = array_merge($this->termekValtozatok,$lista);				} else {					$this->termekValtozatok = array();				}			} else {				// ez egy altermek				$this->termekValtozatok = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE id = ".$this->termekszulo_id." LIMIT 1");								$altermekek = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE termekszulo_id = ".$this->termekszulo_id."   ORDER BY altermek_sorrend ASC ");				if(!empty($altermekek)) $this->termekValtozatok = array_merge($this->termekValtozatok,$altermekek);							}					}	}	
 	/*	 * kuponKedvezmeny	 * 	 * aktuális érvényben lévő kupon elmentése	 */
 	public function kuponKedvezmeny($kupon) { 		// erre a termékre érvényes kupon		$this->kupon = $kupon;	}		/*	 * kategoriaTag	 * 	 * ez a termék benn van-e az adott kategóriában?	 */		public function kategoriaTag($kategoria_id) {		return isset($this->ketagoriaTagsag[$kategoria_id]);	}		/*	 * cimkeTag	 * 	 * ez a tartmék adott cimkéhez van-e rendelve	 */		public function cimkeTag($cimke_id) {		return isset($this->cimkeTagsag[$cimke_id])?$this->cimkeTagsag[$cimke_id]:false;	}		/*	 * valtozatBeallitas	 * 	 * ennek a terméknek az elsődleges változata	 * 	 */		public function valtozatBeallitas($termek_armodositok_id) {
 		$tabla = DBP.'termek_armodositok';

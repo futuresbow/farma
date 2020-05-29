@@ -389,6 +389,7 @@ class Termek_admin extends MY_Modul{
 				} else {
 					$tabla = $ALG->ujTablazat();
 					$tabla->keresoTorles();
+					unset($_SESSION['termekszuro']);
 					redirect(ADMINURL."termek/lista?m=".urlencode("Nincs a keresésnek megfelelő találat!"));
 					return;
 				}
@@ -448,7 +449,7 @@ class Termek_admin extends MY_Modul{
 		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
 		$tablazat->adatBeallitas('szerkeszto_url', 'termek/szerkesztes/');
 		$tablazat->adatBeallitas('torles_url', 'termek/torles/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'masolas' => 'Klónozás','torles' => 'Törlés' ));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','torles' => 'Törlés' ));
 		$tablazat->adatBeallitas('lista', $adatlista);
 		// táblázat beállítás vége
 		$ALG->tartalomDobozVege();
@@ -651,7 +652,14 @@ class Termek_admin extends MY_Modul{
 			
 			// cikkszám vizsgálat
 			$a['cikkszam'] = $this->egyediCikkszam($a['cikkszam'], $id);
-			
+			// főtermék kérdés
+			if(false) if($a['termekszulo_id']!=0) {
+				// ha már főtermékvolt, de hozzárendeljük másik főtermékhez, akkor a gyerekek annak a terméknek lesznek a gyerekei:
+				$this->db->query("UPDATE ".DBP."termekek SET termekszulo_id = ".$a['termekszulo_id']." WHERE termekszulo_id = ".$id);
+				// ha egy gyerekhez rendeljük, azt főtermékké tesszük
+				$this->db->query("UPDATE ".DBP."termekek SET termekszulo_id = 0 WHERE id = ".$a['termekszulo_id']);
+				
+			}
 			if($id==0) {
 				$id = $this->sqlSave($a, DBP.'termekek');
 			} else {
@@ -764,7 +772,7 @@ class Termek_admin extends MY_Modul{
 			
 			
 			redirect(ADMINURL.'termek/lista');
-			//die();
+			return;
 		}
 		
 		$this->data['lista'] = $ci->Sql->kategoriaFa(0);
@@ -793,6 +801,17 @@ class Termek_admin extends MY_Modul{
 		$gomb = new Urlapgomb(array('attr' => 'class="btn" onclick="aJs.cikkszamGeneralas();" ', 'nevtomb'=>'', 'mezonev' => '', 'felirat' => 'Automatikus cikkszám generálás', 'ertek' => 'Generál'));
 		
 		$doboz->duplaInput($input1, $gomb);
+		
+		
+		// változat
+		/*
+		$this->data['szulo'] = false;
+		if(@$sor->termekszulo_id != 0) {
+			$this->data['szulo'] = new Termek_osztaly($sor->termekszulo_id);
+		}
+		$doboz->HTMLHozzaadas('<div id="valtozatvalaszto">'.$this->load->view(ADMINTEMPLATE.'html/valtozatvalaszto', $this->data, true).'</div>');
+		*/
+		
 		
 		$input1 = new Szovegmezo(array('attr' => ' onchange="aJs.bruttoSzamitas();" id="arertek" ' ,'nevtomb'=>'a', 'mezonev' => 'ar', 'felirat' => 'Ár (nettó)', 'ertek' => @$sor->ar));
 		$input2 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'eredeti_ar', 'felirat' => 'Eredeti ár (nettó)', 'ertek' => @$sor->eredeti_ar));
@@ -869,6 +888,48 @@ class Termek_admin extends MY_Modul{
 		
 		return $ALG->kimenet();
 		
+	}
+	function fotermekkivalasztas() {
+		// változat
+		
+		
+		$this->data = array();
+		$this->data['szulo'] = false;
+		
+		$this->data['sor'] = new Termek_osztaly(@$_GET['sajatid']);
+		if(@$_GET['sajatid']==@$_GET['id']) $_GET['id'] = 0;
+		if(@$_GET['id']!=0) {
+			
+			
+			$t = $this->data['szulo'] = new Termek_osztaly($_GET['id']);
+			if($t->termekszulo_id!=0) {
+				// módosítás a valódi főtermékre ha az nem a hívó termék
+				if($t->termekszulo_id != @$_GET['sajatid']) {
+					$this->data['szulo'] = new Termek_osztaly($t->termekszulo_id);
+				}
+			}
+			
+		}
+		
+		$this->load->view(ADMINTEMPLATE.'html/valtozatvalaszto', $this->data);
+		return;
+	}
+	function fotermekvalaszto() {
+		
+		
+		$str = trim(@$_GET['str']);
+		if(strlen($str)<3) die("Legalább 3 betű szükséges.");
+		ws_autoload('termek');
+		$termeklista = new Termeklista_osztaly();
+		$lista = $termeklista->kereses($str,10);
+		foreach($lista as $sor) {
+			$t = new Termek_osztaly($sor['id']);
+			print '<div style="clear:both;cursor:pointer;" onclick="aJs.fotermekKivalasztas('.$t->id.', '.$_GET['sajatid'].')">';
+			print '<img src="'.base_url().ws_image($t->fokep(),'smallboxed').'" style="float:left;" >';
+			print $t->jellemzo('Név').' ('.$t->cikkszam.')';
+			print '</div>';
+							
+		}
 	}
 	function jellemzoform() {
 		ws_autoload('termekek');

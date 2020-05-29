@@ -11,7 +11,7 @@ class Kategoriak_osztaly extends MY_Model{
 		$ci = getCI();
 		$lista = $ci->Sql->kategoriaFa(0);
 		if($lista)foreach($lista as $k => $v) {
-			$lista[$k]->termekdb = $ci->Sql->getFieldValue("SELECT COUNT(*) as ossz FROM ".DBP."termekxkategoria WHERE kategoria_id = {$v->id} ", 'ossz');
+			$lista[$k]->termekdb = $ci->Sql->getFieldValue("SELECT COUNT(x.id) as ossz FROM ".DBP."termekxkategoria x , ".DBP."termekek t WHERE t.aktiv = 1 AND t.id = x.termek_id AND x.kategoria_id = {$v->id} ", 'ossz');
 			
 		} else {			$lista = array();		}
 		

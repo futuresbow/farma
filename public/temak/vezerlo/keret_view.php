@@ -438,6 +438,11 @@ function adminJs() {
 		$('.rendeltTermekekDiv').load('<?= ADMINURL; ?>rendelesek/termekopciomodositas/'+rid+'?tid='+tid+'&oid='+oid+'&ajax=1', function() {
 			aJs.nemReadOnly();
 		});
+	}
+	this.fotermekKivalasztas = function(id,sajatid) {
+		$('#valtozatvalaszto').load('<?= ADMINURL; ?>termek/fotermekkivalasztas?id='+id+'&sajatid='+sajatid+'&ajax=1', function() { });
+	}	this.fotermekkereso = function(str, sajatid) {
+		$('#fotermekLista').load('<?= ADMINURL; ?>termek/fotermekvalaszto?str='+str+'&sajatid='+sajatid+'&ajax=1', function() { });
 	}
 	this.cimMasolas = function() {
 		$('#szall_nev').val($('#szaml_nev').val());

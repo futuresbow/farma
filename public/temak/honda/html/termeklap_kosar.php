@@ -2,7 +2,32 @@
 <form method="post">
 
 
-				<div class="price-container">
+				<div class="price-container">					
+					<?php if($termek->vannakTermekValtozatok()):?>
+
+                    <div class="option">
+
+                        <label>Válassz változatot</label>
+
+                        <div class="styled-select">
+
+                            <select id="termekvaltozat" class="kosar_termekvaltozat">
+								
+								<?php foreach($termek->termekvaltozatok() as $valtozat):$valtozat = new Termek_osztaly($valtozat->id); ?>
+
+								<option <?= ($termek->id==$valtozat->id)?' selected ':''; ?> data-link="<?= $valtozat->link(); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->jellemzo("Név"); ?></option>
+
+								<?php endforeach;?>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <?php endif;?>
+					
+					
 					<?php if($termek->vannakValtozatok()):?>
                     <div class="option">
                         <label>Válassz méretet</label>
@@ -45,7 +70,7 @@
                         
                         <div class="styled-input" style="line-height:20px;">
                            
-                            <input style="width: 50%;font-size:20px;text-align:center;" readonly type="number" class="kosar_db" name="k[db]" value="1" placeholder="Darabszám" name="db" /> DB
+                            <input style="width: 50%;font-size:20px;text-align:center;" readonly type="number" class="kosar_db" name="k[db]" value="<?= ((int)@$_GET['db']>0)?(int)$_GET['db']:1;?>" placeholder="Darabszám" name="db" /> DB
 							<button onclick="siteJs.darabszamLapozo(-1, 0);" type="button">-</button>
 							<button onclick="siteJs.darabszamLapozo(1, 0);" type="button">+</button>
                         </div>
@@ -67,5 +92,9 @@
 	
 </form>
 <script>
-	$().ready(function() { siteJs.kosarElokeszites(); });
+	$().ready(function() { siteJs.kosarElokeszites(); 
+		<?php if(isset($_GET['db'])):?>
+		siteJs.arKalkulacio();
+		<?php endif;?>
+	});
 </script>
