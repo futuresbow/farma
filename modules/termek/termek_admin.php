@@ -449,7 +449,7 @@ class Termek_admin extends MY_Modul{
 		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
 		$tablazat->adatBeallitas('szerkeszto_url', 'termek/szerkesztes/');
 		$tablazat->adatBeallitas('torles_url', 'termek/torles/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','torles' => 'Törlés' ));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',    'masolas' => 'Klónozás','torles' => 'Törlés' ));
 		$tablazat->adatBeallitas('lista', $adatlista);
 		// táblázat beállítás vége
 		$ALG->tartalomDobozVege();
