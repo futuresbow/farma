@@ -449,7 +449,7 @@ class Termek_admin extends MY_Modul{
 		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
 		$tablazat->adatBeallitas('szerkeszto_url', 'termek/szerkesztes/');
 		$tablazat->adatBeallitas('torles_url', 'termek/torles/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',    'masolas' => 'Klónozás','torles' => 'Törlés' ));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','torles' => 'Törlés' ));
 		$tablazat->adatBeallitas('lista', $adatlista);
 		// táblázat beállítás vége
 		$ALG->tartalomDobozVege();
@@ -653,7 +653,7 @@ class Termek_admin extends MY_Modul{
 			// cikkszám vizsgálat
 			$a['cikkszam'] = $this->egyediCikkszam($a['cikkszam'], $id);
 			// főtermék kérdés
-			if(false) if($a['termekszulo_id']!=0) {
+			if($a['termekszulo_id']!=0) {
 				// ha már főtermékvolt, de hozzárendeljük másik főtermékhez, akkor a gyerekek annak a terméknek lesznek a gyerekei:
 				$this->db->query("UPDATE ".DBP."termekek SET termekszulo_id = ".$a['termekszulo_id']." WHERE termekszulo_id = ".$id);
 				// ha egy gyerekhez rendeljük, azt főtermékké tesszük
@@ -802,15 +802,13 @@ class Termek_admin extends MY_Modul{
 		
 		$doboz->duplaInput($input1, $gomb);
 		
-		
 		// változat
-		/*
 		$this->data['szulo'] = false;
 		if(@$sor->termekszulo_id != 0) {
 			$this->data['szulo'] = new Termek_osztaly($sor->termekszulo_id);
 		}
 		$doboz->HTMLHozzaadas('<div id="valtozatvalaszto">'.$this->load->view(ADMINTEMPLATE.'html/valtozatvalaszto', $this->data, true).'</div>');
-		*/
+		
 		
 		
 		$input1 = new Szovegmezo(array('attr' => ' onchange="aJs.bruttoSzamitas();" id="arertek" ' ,'nevtomb'=>'a', 'mezonev' => 'ar', 'felirat' => 'Ár (nettó)', 'ertek' => @$sor->ar));
