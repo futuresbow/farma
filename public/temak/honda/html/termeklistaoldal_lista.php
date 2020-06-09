@@ -38,7 +38,9 @@
                     </div>
 
                     <div class="prod-price">
-
+						<?php if($t->eredeti_ar!=0):?>
+						<span class="old-price"><?= PN_ELO.' '.ws_arformatum($t->eredeti_ar).' '.PN_UTO;?></span>
+						<?php endif;?>
                         <?= PN_ELO.' '.ws_arformatum($t->ar).' '.PN_UTO;?>
 
                     </div>

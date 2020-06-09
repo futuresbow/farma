@@ -514,6 +514,23 @@ function adminJs() {
 		} else {
 			$(inp).val(db)
 		}
+	}
+	
+	this.htmlencode = function() {
+		
+		var txtareas = $('.basecode');
+		
+		for(i = 0; i < txtareas.length;i++) {
+			
+			$(txtareas[i]).val("b64//"+this.utf8_to_b64($(txtareas[i]).val()));
+			
+			
+		}
+		//$('#termekForm').submit();
+		document.forms[0].submit();
+	}
+	this.utf8_to_b64 = function( str ) {
+		return window.btoa(unescape(encodeURIComponent( str )));
 	}
 }
 

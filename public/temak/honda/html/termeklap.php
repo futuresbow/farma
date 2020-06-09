@@ -6,7 +6,16 @@
 
         <div class="product-inner">
 			<?php $kepek = $termek->kepBetoltes();if($kepek): ?>
-            <div class="img-container">
+            <div class="img-container product-img-container">
+				
+				
+				<?php $i = 0; foreach($termek->cimkek as $cimke):?>
+					<?php if($cimke->cimkeosztaly!='' and $termek->cimkeTag($cimke->id)) : $c = $termek->cimkeTag($cimke->id);?>
+						<div class="prod<?= $cimke->cimkeosztaly. ' prodbadge-pos'.$i;?> "><?= $c->felirat!=''?$c->felirat:$cimke->nev;?></div>
+						
+					<?php $i++; endif;?>
+                <?php endforeach;?>
+				
                 <div class="main-img-slider">
 					<?php
 					foreach($kepek as $kep):
@@ -43,9 +52,13 @@
                 				
                 
                 <div class="description">					<div class="sr-num">Cikkszám: <?= $termek->cikkszam; ?></div>
-                    <?php foreach($termek->jellemzok as $jellemzo): if(trim(strip_tags($termek->jellemzo($jellemzo->nev)))=='') continue; ?>
-				
-						<h4><?= $jellemzo->nev;?></h4>
+                    <?php foreach($termek->jellemzok as $jellemzo): ?>
+                    <?php if($jellemzo->nev=="HTML"):?>
+                    <?= $termek->jellemzo($jellemzo->nev); ?>
+                    <?php continue; endif;?>
+                    <?php if(trim(strip_tags($termek->jellemzo($jellemzo->nev)))=='') continue; ?>
+					<?php $felirat = $termek->jellemzoFeliratTermelap($jellemzo->nev); ?>
+						<h4><?= $felirat;?></h4>
 						<?= nl2br(strip_tags($termek->jellemzo($jellemzo->nev))); ?><br><br>
 					
 					<?php endforeach;?>

@@ -271,5 +271,35 @@ box-shadow: rgba(220,24,45, 1) 1.5em 0 0 0, rgba(220,24,45, 1) 1.1em 1.1em 0 0, 
 .slide img {
     cursor:pointer;
 }
-
+.product-img-container {
+	position:relative;
+}
+.prodsale-badge, .prodnew-badge, .prodnew-badge2 {
+	position: absolute;
+	left: 20px;
+	display:inline-block;
+	
+	color: #fff;
+	font-size: 11px;
+	padding: 7px 14px;
+	z-index: 100;
+}
+.prodsale-badge {
+	background: #dc182d;
+} 
+.prodnew-badge {
+	background: #248a51;
+} 
+.prodnew-badge2 {
+background: #ea3;
+}
+.prodbadge-pos0 {
+	top: 20px;
+}
+.prodbadge-pos1 {
+	top: 60px;
+}
+.prodbadge-pos2 {
+	top: 100px;
+}
 

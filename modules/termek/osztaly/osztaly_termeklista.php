@@ -88,21 +88,13 @@ class Termeklista_osztaly extends MY_Model {
 		}
 		return $ret;
 	}
-	public function kategoriaTermekekByKategoriaId($id, $termekek = array(), $limit = 12, $start = 0 ) {
-		$id = (int)($id);
-		$alKategoriak = $this->sqlSorok("SELECT * FROM ".DBP."kategoriak WHERE szulo_id = $id");
-		if($alKategoriak) foreach($alKategoriak as $alKategoria) {
-			$termekek = $this->kategoriaTermekekByKategoriaId($alKategoria->id, $termekek);
-		}
-				$nyelv = $_SESSION['CMS_NYELV'];
-		
-		$sql = "SELECT t.id FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} m, ".DBP."termekxkategoria x WHERE {$this->listaKorlatozok}  AND m.termek_id = t.id AND x.termek_id = t.id AND x.kategoria_id = $id ORDER BY m.nev";
-		
-		$lista = $this->sqlSorok($sql );
+	public function kategoriaTermekekByKategoriaId($id, $termekek = array(), $limit = 12, $start = 0 ) {		// rekurzívról sima függvényre alakítva, rekurzió a kategória osztályban.
+		$id = (int)($id);		$kategoriak = new Kategoriak_osztaly();
+		$lista = $kategoriak->kategoriaOsszesAltermek($id);
 		
 		if($lista) {
-			foreach($lista as $sor) {
-				$termekek[$sor->id] = new Termek_osztaly($sor->id);
+			foreach($lista as $termekId) {
+				$termekek[$termekId] = new Termek_osztaly($termekId);
 			}
 			
 			

@@ -14,7 +14,7 @@ class Termek_osztaly extends MY_Model {
 	var $kivalasztottOpciok;
 	var $termekTabla = 'termekek';
 	var $megrendeltTermekTabla = 'rendeles_termekek';		var $termekcsoport;
-	var $termekValtozatok = null;
+	var $termekValtozatok = null;		var $jellemzoFeliratok = null;
 	public function __construct($id = false, $rendeles = false) {
 		$this->rendeles = $rendeles;
 		if($id == false) {
@@ -298,23 +298,7 @@ class Termek_osztaly extends MY_Model {
 		$this->valtozatok2 = $this->sqlSorok($sql);
 	}
 	
-	public function jellemzo($nev, $nyelv = 'hu') {
-		if(empty($this->jellemzok)) {
-			$this->jellemzoBetoltes();
-		}		
-		if(isset($this->jellemzok[$nev])) {
-			
-			// szöveges tartalom
-			if(isset($this->jellemzok[$nev]->adat[$nyelv])) return $this->jellemzok[$nev]->adat[$nyelv];
-			// egyéb tartalom
-			if(isset($this->jellemzok[$nev]->adat)) return $this->jellemzok[$nev]->adat;
-			
-			
-		}
-		
-		return false;
-	}
-	
+	public function jellemzo($nev, $nyelv = 'hu') {		if(empty($this->jellemzok)) {			$this->jellemzoBetoltes();		}				if(isset($this->jellemzok[$nev])) {						// szöveges tartalom			if(isset($this->jellemzok[$nev]->adat[$nyelv])) return $this->jellemzok[$nev]->adat[$nyelv];			// egyéb tartalom			if(isset($this->jellemzok[$nev]->adat)) return $this->jellemzok[$nev]->adat;								}				return false;	}	public function jellemzoFeliratTermelap($nev, $nyelv = 'hu') {		if(empty($this->jellemzok)) {			$this->jellemzoBetoltes();		}				if(isset($this->jellemzoFeliratok[$this->jellemzok[$nev]->slug][$nyelv])) 			if($this->jellemzoFeliratok[$this->jellemzok[$nev]->slug][$nyelv]!=='')				return $this->jellemzoFeliratok[$this->jellemzok[$nev]->slug][$nyelv];				if(isset($this->jellemzoFeliratok[$this->jellemzok[$nev]->slug])) 			if(!is_array($this->jellemzoFeliratok[$this->jellemzok[$nev]->slug]))				if($this->jellemzoFeliratok[$this->jellemzok[$nev]->slug]!=='')					return $this->jellemzoFeliratok[$this->jellemzok[$nev]->slug];		return $nev;					}	
 	public function jellemzoSor($nev, $nyelv = 'hu') {
 		if(empty($this->jellemzok)) {
 			$this->jellemzoBetoltes();
@@ -339,7 +323,7 @@ class Termek_osztaly extends MY_Model {
 		$this->jellemzok = array();		if($jellemzok) foreach ($jellemzok as $jellemzo)  {			$this->jellemzok[$jellemzo->nev] = $jellemzo;		}
 		
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
-		foreach($nyelvek as $nyelv) {						$adatok = $this->get($this->id, DBP.'termek_mezok_'.$nyelv, 'termek_id');									
+		foreach($nyelvek as $nyelv) {						$adatok = $this->get($this->id, DBP.'termek_mezok_'.$nyelv, 'termek_id');						if($adatok->label_feliratok!="") {				$feliratok = @unserialize(base64_decode($adatok->label_feliratok));				if(is_array($feliratok)) {					$this->jellemzoFeliratok = $feliratok;				}			}			
 			foreach($this->jellemzok as $k => $v) {												
 				if($v->tipus == 2 or $v->tipus == 3 or $v->tipus == 4 or $v->tipus == 5) {
 					// nyelvfüggő jellemzők					if(isset($adatok->{$v->slug})) {
@@ -351,7 +335,7 @@ class Termek_osztaly extends MY_Model {
 						$this->jellemzok[$k]->adat = $adatok->{$v->slug};					} else {						$this->jellemzok[$k]->adat = '';					}
 				}							}
 		}		
-	}
+	}		public function jellemzoFelirat($slug, $nyelv = false) {		if(isset($this->jellemzoFeliratok[$slug])) {			if($nyelv) {				if(@$this->jellemzoFeliratok[$slug][$nyelv]!='') {					return $this->jellemzoFeliratok[$slug][$nyelv];				}			} else {				if ($this->jellemzoFeliratok[$slug]!="") {					return $this->jellemzoFeliratok[$slug];				}			}		}		return '';	}	
 	public function link() {		if(!isset($this->id)) return '' ;				
 		$id =  $this->id;
 		if($this->rendeles) $id = $this->termek_id;

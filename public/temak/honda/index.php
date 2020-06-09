@@ -131,7 +131,7 @@
 		<div class="wrap">
 
 		<?php
-			$url = basename($_SERVER['REQUEST_URI']);
+			$url = @$_GET['lap'];
 			switch($url)
 			{
 

@@ -429,7 +429,7 @@ class Termek_admin extends MY_Modul{
 		
 		foreach($lista as $sor) {
 			$termek = new Termek_osztaly($sor->id);
-			$sor->nev = $termek->jellemzo('Név');
+			$sor->nev = '<a target="_blank" title="Előnézet" href="'.$termek->link().'">'.$termek->jellemzo('Név').'</a>';
 			if($termek->termekszulo_id!=0) $sor->nev = '<span style="color:#5F00D8">'.$sor->nev.'</span>';
 			$sor->cikkszam = $termek->cikkszam;
 			$sor->masolas = '<a onclick="if(!confirm(\'Biztosan?\')) return false;" href="'.ADMINURL.'termek/klonozas/'.$sor->id.'">Klónozás</a>';
@@ -636,6 +636,8 @@ class Termek_admin extends MY_Modul{
 		
 		
 		if($ci->input->post('a')) {
+		
+			
 			$a = $ci->input->post('a');
 			
 			// gyártó felvitel?
@@ -684,6 +686,17 @@ class Termek_admin extends MY_Modul{
 					$alapadatok = array_merge($alapadatok, $_POST['tj'][$nyelv]);
 				}
 				$van = $this->Sql->sqlSor("SELECT id FROM $tabla WHERE termek_id = $id LIMIT 1");
+				
+				// base64 decode
+				
+				foreach($alapadatok as $k => $v) {
+					
+					if(strpos($v, 'b64//')!==false) {
+						$alapadatok[$k]= base64_decode(str_replace("b64//", "", $v));
+					}
+				}
+				$alapadatok['label_feliratok'] = base64_encode(serialize( ($_POST['jellemzo_felirat'])));
+				
 				if($van) {
 					$alapadatok['id'] = $van->id;
 					$this->Sql->sqlUpdate($alapadatok, $tabla, 'id');
@@ -692,6 +705,8 @@ class Termek_admin extends MY_Modul{
 				}
 				
 			}
+			
+			
 			
 			//opciók
 			
@@ -770,9 +785,13 @@ class Termek_admin extends MY_Modul{
 			
 			ws_hookFuttatas('termek.keresostrfrissites', array('id'=> $id ) );
 			
-			
-			redirect(ADMINURL.'termek/lista');
-			return;
+			if(isset($_POST['elonezet'])) {
+				
+				print 'okok';
+			} else {
+				redirect(ADMINURL.'termek/lista');
+				return;
+			}
 		}
 		
 		$this->data['lista'] = $ci->Sql->kategoriaFa(0);
@@ -796,6 +815,12 @@ class Termek_admin extends MY_Modul{
 		
 		$doboz = $ALG->ujDoboz();
 		$doboz->dobozCim("Termék törzsadatok");
+		
+		// előnézet? nyissuk meg a terméket új tabon
+		if(isset($_POST['elonezet'])) {
+			$doboz->HTMLHozzaadas("<script>window.open('".$sor->link()."', 'elonezet');</script>");
+		}
+		
 		
 		$input1 = new Szovegmezo(array('attr'=> ' id="cikkszamertek"  ', 'nevtomb'=>'a', 'mezonev' => 'cikkszam', 'felirat' => 'Cikkszám', 'ertek' => @$sor->cikkszam));
 		$gomb = new Urlapgomb(array('attr' => 'class="btn" onclick="aJs.cikkszamGeneralas();" ', 'nevtomb'=>'', 'mezonev' => '', 'felirat' => 'Automatikus cikkszám generálás', 'ertek' => 'Generál'));
@@ -880,7 +905,8 @@ class Termek_admin extends MY_Modul{
 		$ALG->tartalomDobozVege();
 		
 		$ALG->urlapGombok(array(
-			array('osztaly' => 'btn-ok', 'onclick' => "document.forms[0].submit();", 'felirat' => 'Űrlap rögzítése', 'tipus' => 'button', 'link' => ''),
+			array('osztaly' => 'btn-ok', 'onclick' => "aJs.htmlencode();", 'felirat' => 'Mentés és vissza a listához', 'tipus' => 'button', 'link' => ''),
+			array('osztaly' => 'btn-ok', 'onclick' => "$(this).parent().append('<input name=elonezet type=hidden value=1 />');aJs.htmlencode();", 'attr' => '  ' , 'felirat' => 'Frissítés és termék megnyitása új lspon', 'tipus' => 'button', 'link' => ''),
 		));
 		$ALG->urlapVege();
 		

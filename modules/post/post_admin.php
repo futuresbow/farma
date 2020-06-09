@@ -9,6 +9,15 @@ class Post_admin extends MY_Modul{
 		$b = $_POST['b'];
 		$a = $_POST['a'];
 		
+		if(strpos($b['bevezeto'], 'b64//')!==false) {
+			$b['bevezeto'] = base64_decode(str_replace("b64//", "", $b['bevezeto']));
+		}
+		
+		if(strpos($b['szoveg'], 'b64//')!==false) {
+			$b['szoveg'] = base64_decode(str_replace("b64//", "", $b['szoveg']));
+		}
+		
+		
 		$tag = ws_belepesEllenorzes();
 		$b['felhasznalo_id'] = $tag->id;
 			
@@ -95,9 +104,9 @@ class Post_admin extends MY_Modul{
 
 		$input1 = new Szovegmezo(array('attr' => '', 'nevtomb' => 'b', 'mezonev' => 'cim', 'felirat' => 'Cím', 'ertek'=> @$sor->cim));
 
-		$text = new Szovegdoboz(array('attr' => ' id="bevezeto" ', 'nevtomb' => 'b', 'mezonev' => 'bevezeto', 'felirat' => 'Bevezető', 'ertek'=> @$sor->bevezeto));
+		$text = new Szovegdoboz(array('attr' => ' id="bevezeto" class="basecode"  ', 'nevtomb' => 'b', 'mezonev' => 'bevezeto', 'felirat' => 'Bevezető', 'ertek'=> @$sor->bevezeto));
 
-		$text2 = new Szovegdoboz(array('attr' => ' id="szoveg" ', 'nevtomb' => 'b', 'mezonev' => 'szoveg', 'felirat' => 'Leírás', 'ertek'=> @$sor->szoveg));
+		$text2 = new Szovegdoboz(array('attr' => ' id="szoveg"  class="basecode"  ', 'nevtomb' => 'b', 'mezonev' => 'szoveg', 'felirat' => 'Leírás', 'ertek'=> @$sor->szoveg));
 
 		
 
@@ -114,6 +123,7 @@ class Post_admin extends MY_Modul{
 		$doboz->ScriptHozzaadas('<script src="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.js"></script>');
 
 		$doboz->ScriptHozzaadas('<script> var editorGyarto = new Jodit("#szoveg", { "buttons": ",,,,,,,,,,,,,font,brush,paragraph,|,|,align,undo,redo,|"});</script>');
+		$doboz->ScriptHozzaadas('<script>$().ready(function(){ $("button[type=submit]").click(function(){aJs.htmlencode();}); })</script>');
 
 		
 
@@ -299,7 +309,15 @@ class Post_admin extends MY_Modul{
 		if($ci->input->post('a')) {			
 			$a = $ci->input->post('a') ;
 			$tag = ws_belepesEllenorzes();
-			$a['felhasznalo_id'] = $tag->id;
+			$a['felhasznalo_id'] = $tag->id;			
+			if(strpos($a['bevezeto'], 'b64//')!==false) {
+				$a['bevezeto'] = base64_decode(str_replace("b64//", "", $a['bevezeto']));
+			}
+			
+			if(strpos($a['szoveg'], 'b64//')!==false) {
+				$a['szoveg'] = base64_decode(str_replace("b64//", "", $a['szoveg']));
+			}
+			
 			if($id == 0) {
 				
 				$id = $this->Sql->sqlSave($a, DBP.'post');
@@ -421,15 +439,15 @@ class Post_admin extends MY_Modul{
 		$ALG->adatBeallitas('lapCim', "Bejegyzés szerkesztése");
 		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'post/lista', 'felirat' => 'Bejegyzések listája') );
 		
-		$ALG->urlapStart(array('attr'=> ' action="" enctype="multipart/form-data" method="post" '));
+		$ALG->urlapStart(array('attr'=> ' action=""  enctype="multipart/form-data" method="post" '));
 		
 		$ALG->tartalomDobozStart();
 		$doboz = $ALG->ujDoboz();
 		$doboz->dobozCim( 'Bejegyzés adatai', 2);
 		
 		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'cim', 'felirat' => 'Cím', 'ertek'=> @$sor->cim));
-		$text = new Szovegdoboz(array('attr' => ' id="bevezeto" ', 'nevtomb' => 'a', 'mezonev' => 'bevezeto', 'felirat' => 'Bevezető', 'ertek'=> @$sor->bevezeto));
-		$text2 = new Szovegdoboz(array('attr' => ' id="szoveg" ', 'nevtomb' => 'a', 'mezonev' => 'szoveg', 'felirat' => 'Leírás', 'ertek'=> @$sor->szoveg));
+		$text = new Szovegdoboz(array('attr' => ' id="bevezeto" class="basecode" ', 'nevtomb' => 'a', 'mezonev' => 'bevezeto', 'felirat' => 'Bevezető', 'ertek'=> @$sor->bevezeto));
+		$text2 = new Szovegdoboz(array('attr' => ' id="szoveg" class="basecode"  ', 'nevtomb' => 'a', 'mezonev' => 'szoveg', 'felirat' => 'Leírás', 'ertek'=> @$sor->szoveg));
 		
 		$doboz->szimplaInput($input1);
 		$doboz->szimplaInput($text);
@@ -442,7 +460,7 @@ class Post_admin extends MY_Modul{
 		$nyelvek = explode(',', $nyelvek);
 		foreach($nyelvek as $nyelv) $opciok[$nyelv] = $nyelv;
 		
-		$select = new Legordulo(array('nevtomb' => 'a', 'mezonev' => 'nyelv', 'felirat' => 'Nyelv', 'ertek'=> @$sor->nyelv, 'opciok' => $opciok));
+		$select = new Legordulo(array('nevtomb' => 'a', 'attr' => '', 'mezonev' => 'nyelv', 'felirat' => 'Nyelv', 'ertek'=> @$sor->nyelv, 'opciok' => $opciok));
 		
 		
 		$doboz->szimplaInput($select);		
@@ -493,7 +511,7 @@ class Post_admin extends MY_Modul{
 				'felirat' => 'Mentés',
 				'link' => '',
 				'osztaly' => 'btn-ok',
-				
+				'onclick' => 'aJs.htmlencode();',
 			),
 		));		
 		$ALG->urlapVege();

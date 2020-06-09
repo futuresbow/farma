@@ -112,7 +112,7 @@ class Mezogenerator_osztaly extends MY_Model {
     }
     
     public function mezoTorles($kulcs) {
-        if ($kulcs == 'id' or $kulcs == 'termek_id') return 0;
+        if ($kulcs == 'id' or $kulcs == 'termek_id' or $kulcs == 'label_feliratok') return 0;
         $sql = "ALTER TABLE `".$this->tabla."` DROP `$kulcs`";
         $this->db->query($sql);
         return $sql.'<br />';

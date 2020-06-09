@@ -30,7 +30,9 @@
                 <div class="prod-name">
                     <a href="<?= $t->jellemzo('Név');?>" title=""><?= $t->jellemzo('Név');?></a>
                 </div>
-                <div class="prod-price">
+                <div class="prod-price">					<?php if($t->eredeti_ar!=0):?>
+						<span class="old-price"><?= PN_ELO.' '.ws_arformatum($t->eredeti_ar).' '.PN_UTO;?></span>
+						<?php endif;?>
                     <?= ws_arformatum($t->ar);?> Ft
                 </div>
             </div>
