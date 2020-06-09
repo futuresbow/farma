@@ -101,7 +101,8 @@
             <input type="hidden" name="opc[0][tipus]" value="0" >
 <div class="box-item ">
 				
-				<?php /* a választhetó változat/opciók rendszere túl bonyolult, egyelőre csak változatot engedélyezünk lásd a hidden mező
+				
+
                 <div class="input-container">
                     <div class="label-container">
                         <label >Típus</label>
@@ -110,13 +111,13 @@
                     <div class="input-select-container">
 						<div class="styled-select">							<select name="opc[0][tipus]"  class="form-control" >
 								<option value="0">Termék változat (felülírja az alapárat)</option>
-								<option value="2">Termék változat 2 (felülírja az alapárat)</option>
-								<option value="1">Opció (hozzáadódik az alapárhoz)</option>
+								<option value="2">Termék változat 2 (felülírja az alapárat)</option>								<?php /* opció még nem lesz
+								<option value="1" style="">Opció (hozzáadódik az alapárhoz)</option>								*/ ?>
 							</select>
 						</div>
                     </div>
                 </div>
-                */ ?>
+               
 
                 <div class="input-container">
                     <div class="label-container">
@@ -150,17 +151,17 @@
  <div class="adminOpciosTabla">
 
 	<?php $i = 0;foreach($opc as $opcSor):$i++; ?>		<input name="opc[<?= $i; ?>][tipus]"  value="0" type="hidden"/>
-		<?php /*
+		
 		<select name="opc[<?= $i; ?>][tipus]"  class="" >
 
 		<option value="0" <?= ($opcSor->tipus==0)?'selected':''; ?> >Termék változat (felülírja az alapárat)</option>
 
 		<option value="2" <?= ($opcSor->tipus==2)?'selected':''; ?> >Termék változat 2 (felülírja az alapárat)</option>
-
+		<?php /*
 		<option value="1" <?= ($opcSor->tipus==1)?'selected':''; ?> >Opció (hozzáadódik az alapárhoz)</option>
-
+		*/ ?>
 	</select>
-	*/ ?>
+	
 	
 	<table class="">
 	<tr>

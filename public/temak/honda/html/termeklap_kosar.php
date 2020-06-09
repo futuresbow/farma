@@ -24,13 +24,14 @@
                         </div>
 
                     </div>
+                </div>
 
                     <?php endif;?>
-					
+				
+				<div class="price-container">
 					
 					<?php if($termek->vannakValtozatok()):?>
                     <div class="option">
-                        <label>Válassz méretet</label>
                         <div class="styled-select">
                             <select name="k[valtozat]" class="kosar_valtozat">
                                 <?php foreach($termek->valtozatok() as $valtozat): ?>
@@ -42,7 +43,6 @@
                     <?php endif;?>
                     <?php if($termek->vannakValtozatok2()):?>
                     <div class="option">
-                        <label>Válassz színt</label>
                         <div class="styled-select">
                             <select name="k[valtozat]" class="kosar_valtozat2">
                                 <?php foreach($termek->valtozatok2() as $valtozat): ?>
