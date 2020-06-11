@@ -24,9 +24,10 @@
                         </div>
 
                     </div>
-                </div>
+                
 
                     <?php endif;?>
+				</div>
 				
 				<div class="price-container">
 					
