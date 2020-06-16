@@ -195,7 +195,7 @@ class Levelkuldo_osztaly extends MY_Model  {
 	}
 	
 	
-	function levelKuldes($cimek, $targy) {
+	function levelKuldes($cimekStr, $targy) {
 		
 		$level = $this->level;
 		
@@ -222,18 +222,24 @@ class Levelkuldo_osztaly extends MY_Model  {
 		$mail->Body = $level;
 		
 		
-		$cimek = explode(',',$cimek);
+		$cimek = explode(',',$cimekStr);
 		$mail->ClearAllRecipients();
 		foreach($cimek as $cim) {
 			$cim = trim($cim) ;
 			if($cim) {
 				$mail->AddAddress($cim);
 			}
-		}
-		
-		 if(!$mail->Send()) {
-			echo "Mailer Error: " . $mail->ErrorInfo;
-		 } else {
+		}		$ci = getCI();
+		$a = array('level' => $level, 'cimek' => $cimekStr, 'targy' => $targy);
+		 if(!$mail->Send()) {
+			 $a['sikeres'] = 0;			$a['hiba'] =  ( "Mailer Error: " . $mail->ErrorInfo);
+
+			$ci->Sql->sqlSave($a, DBP.'levelezes','id');
+			
+			
+		 } else {			$a['sikeres'] = 1;
+			$ci->Sql->sqlSave($a, DBP.'levelezes','id');
+			
 			//echo "Message has been sent";
 		 }
 	}

@@ -328,7 +328,7 @@ class Rendelesek_admin extends MY_Modul {
 		}
 		
 		
-		$kod = $statusz->kod;
+		$kod = $statusz->kod;		
 		switch($kod) {
 			// rendelés leadása
 			case 'LEA':
@@ -425,7 +425,7 @@ class Rendelesek_admin extends MY_Modul {
 					// csatoljuk
 					$level->mail->addAttachment(FCPATH."data/pdf/".$vanSzamla->szamlanev.".pdf");
 				}
-				
+								
 				$level->levelKuldes($rendeles->vevo->email, $targy);
 								
 				
@@ -441,7 +441,7 @@ class Rendelesek_admin extends MY_Modul {
 		$ci = getCI();
 		$id = (int)$ci->uri->segment(4);
 		$statuszId = (int)(int)$ci->uri->segment(5);		if(!$statuszId) {
-			redirect(ADMINURL.'rendelesek/lista?m='.urlencode("Sikeres státuszváltoztatás"));
+			redirect(ADMINURL.'rendelesek/lista?m='.urlencode("Nincs változás a sztátuszban"));
 			return;
 		}
 		if($this->ci->input->post('a')) {			$s = $this->ci->input->post('a');

@@ -27,7 +27,7 @@ class Szamla_osztaly extends MY_Model {
 		
 		// készült már számla?
 		$vanSzamla = $this->sqlSor("SELECT * FROM ".DBP."szamlazas WHERE rendeles_id = ".$rendeles->id." AND sztorno = 0 ");
-		if($vanSzamla) return false;
+		if($vanSzamla) return true;
 		
 		// XML elkészítése
 		
