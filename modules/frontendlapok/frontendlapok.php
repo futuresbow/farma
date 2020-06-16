@@ -16,7 +16,7 @@ class Frontendlapok extends MY_Modul {
 	public function termeklistatartalmak($param=null) {
 
 		$ci = getCI();
-		naplozo('Terméklista megtekintése');
+		
 		return $this->ci->load->view(FRONTENDTEMA.'html/termeklistaoldal', array(), true);
 
 	}

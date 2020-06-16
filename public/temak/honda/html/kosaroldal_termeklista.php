@@ -1,4 +1,5 @@
-<?php if(!empty($rendeles->termekLista)) : ?>
+
+<?php if(!empty($rendeles->termekLista)) : ?><?php $armod = (beallitasOlvasas('armod-osszesito')=="0")?'Nettó':'Bruttó'; ?>
 					<table>
 					<?php foreach($rendeles->termekLista as $termek):?>
                         <tr>
@@ -19,15 +20,15 @@
                                     <input type="text" readonly name="" value="<?= $termek->kosarDarabszam(); ?>">
                                     <a href="javascript:void(0);" onclick="siteJs.kosarDarabModositas('<?= $termek->kosarId;?>',1);" title="minus"  class="plus"></a>
                                 </div>
-                            </td>
-                            <td class="all-price"><?=  PN_ELO.' '.ws_arformatum($termek->kosarOsszBruttoAr()).' '.PN_UTO; ?></td>
+                            </td>							
+                            <td class="all-price"><?=  PN_ELO.' '.ws_arformatum(($armod=="Bruttó")?$termek->kosarOsszBruttoAr():$termek->kosarOsszNettoAr()).' '.PN_UTO; ?></td>
                         </tr>
                         
                     <?php endforeach ; ?>
                         
                         <tr>
                             <td colspan="4" class="prod-name prod-all"><?= __f('Termékek összesen');?></td>
-                            <td class="all-price"><?= PN_ELO.' '.ws_arformatum($rendeles->osszBrutto()).' '.PN_UTO; ?></td>
+                            <td class="all-price"><?= PN_ELO.' '.ws_arformatum(($armod=="Bruttó")?$rendeles->osszBrutto():$rendeles->osszNetto()).' '.PN_UTO; ?></td>
                         </tr>
                     </table>
 <?php else: ?>

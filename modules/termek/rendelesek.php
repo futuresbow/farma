@@ -13,16 +13,16 @@ class Rendelesek extends MY_Modul {
 			if(isset($_POST['kosarajax'])) {
 				$adatok = $_POST['kosarajax'];
 				$adatok['kosarId'] = md5('KOSARID'.rand(1,100).date('Y-m-d H:i'));
-				$kosaradatok = $this->ci->session->userdata('kosaradatok');
-				$kosaradatok['termekek'][] = $adatok;
+				$kosaradatok = $this->ci->session->userdata('kosaradatok');				
+				$kosaradatok['termekek'][] = $adatok;								ws_autoload('termek');								$termek = new Termek_osztaly( $adatok['termek_id']);								naplozo('Termék kosárba helyezve', $adatok['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);				
 				$this->ci->session->set_userdata('kosaradatok',  $kosaradatok);
 				
 			}
 			// elem törlése a kosárból
 			if(isset($_POST['termektorles'])) {
-				$kosaradatok = $this->ci->session->userdata('kosaradatok');
+				$kosaradatok = $this->ci->session->userdata('kosaradatok');				ws_autoload("termek");								
 				foreach($kosaradatok['termekek'] as $k => $sor) {
-					if($sor['kosarId']==$_POST['termektorles']) unset($kosaradatok[$k]);
+					if($sor['kosarId']==$_POST['termektorles']) {										$termek = new Termek_osztaly( $sor['termek_id']);										naplozo('Termék kosárba helyezve', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);						unset($kosaradatok[$k]);					}
 				}
 				$this->ci->session->set_userdata('kosaradatok',  $kosaradatok);
 			}
@@ -34,9 +34,9 @@ class Rendelesek extends MY_Modul {
 			$kosaradatok = $this->ci->session->userdata('kosaradatok');
 			
 			if($kosaradatok) foreach($kosaradatok['termekek'] as $k => $sor) {
-				if($sor['kosarId']==$_POST['id']) {
+				if($sor['kosarId']==$_POST['id']) {															ws_autoload("termek");					$termek = new Termek_osztaly( $sor['termek_id']);					naplozo('Darabszám módosítás', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);															
 					$db = $sor['db']+ $_POST['mod'];
-					if($db <= 0) {
+					if($db <= 0) {												naplozo('Termék eltávolítása', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);					
 						unset($kosaradatok['termekek'][$k]);
 					} else {
 						$kosaradatok['termekek'][$k]['db'] = $db;

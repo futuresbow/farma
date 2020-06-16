@@ -578,7 +578,22 @@ class Beallitasok_admin extends MY_Modul{
 		$doboz->szimplaInput($gordulo1, $input1);
 		$gordulo1 = new Legordulo(array('felirat' => 'HTML termékjellemzők engedélyezve','opciok' => array('0' => 'Kikapcsolva', '1' => 'Bekapcsolva'),'nevtomb' => 'a', 'mezonev' => 'Termek-HTML-szerkeszto', 'ertek' => beallitasOlvasas('Termek-HTML-szerkeszto')));		
 		
-		$doboz->szimplaInput($gordulo1, $input1);
+		$doboz->szimplaInput($gordulo1, $input1);
+		
+		$gordulo1 = new Legordulo(array('felirat' => 'Ár megjelenítés a listákban','opciok' => array('0' => 'Nettó', '1' => 'Bruttó'),'nevtomb' => 'a', 'mezonev' => 'armod-termeklista', 'ertek' => beallitasOlvasas('armod-termeklista')));
+		$doboz->szimplaInput($gordulo1, $input1);
+
+		$gordulo1 = new Legordulo(array('felirat' => 'Ár megjelenítés a terméklapon','opciok' => array('0' => 'Nettó', '1' => 'Bruttó'),'nevtomb' => 'a', 'mezonev' => 'armod-termeklap', 'ertek' => beallitasOlvasas('armod-termeklap')));
+		$doboz->szimplaInput($gordulo1, $input1);
+		
+		$gordulo1 = new Legordulo(array('felirat' => 'Ár megjelenítés a lebegő kosárban','opciok' => array('0' => 'Nettó', '1' => 'Bruttó'),'nevtomb' => 'a', 'mezonev' => 'armod-lebego', 'ertek' => beallitasOlvasas('armod-lebego')));
+		$doboz->szimplaInput($gordulo1, $input1);
+		
+		$gordulo1 = new Legordulo(array('felirat' => 'Ár megjelenítés az összesítő oldalon','opciok' => array('0' => 'Nettó', '1' => 'Bruttó', '2' => 'Mindkettő'),'nevtomb' => 'a', 'mezonev' => 'armod-osszesito', 'ertek' => beallitasOlvasas('armod-osszesito')));
+		$doboz->szimplaInput($gordulo1, $input1);
+		
+		
+		
 		
 		$ALG->tartalomDobozVege();
 		

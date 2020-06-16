@@ -78,11 +78,10 @@
                     </div>
                     <div class="price">
                         <a  data-termekid="<?= $termek->id; ?>" href="javascript:void();" title="Megrendelés" class="price-btn kosar_elkuldes">
-                            <span class="prices kosar_osszar">
+                            <span class="prices kosar_osszar">								<?php $armod = (beallitasOlvasas('armod-termeklap')=="1")?'Bruttó':'Nettó'; ?>
                                 <?php if($termek->eredeti_ar!=0):?>
-								<span class="old-price"><?= PN_ELO.' '.ws_arformatum($termek->eredeti_ar).' '.PN_UTO;?></span>
-								<?php endif;?>
-                                <?= ws_arformatum($termek->ar); ?> Ft
+								<span class="old-price"><?= PN_ELO.' '.ws_arformatum($termek->eredetiAr($armod)).' '.PN_UTO;?></span>
+								<?php endif;?>								<?= ws_arformatum($termek->alapAr($armod)); ?> Ft								
                             </span>
                             <span class="icon">
                             </span>

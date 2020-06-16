@@ -3,3 +3,4 @@
 /.htaccess
 assets
 /public/.htaccess
+/public/data

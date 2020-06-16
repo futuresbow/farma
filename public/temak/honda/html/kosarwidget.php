@@ -1,8 +1,8 @@
 <?php $lista = $rendeles->termekLista;?>
-					
+										<?php $armod = (beallitasOlvasas('armod-lebego')=="1")?'Bruttó':'Nettó';  $osszAr = ($armod=="Bruttó")?$rendeles->osszBrutto():$rendeles->osszNetto();?>
 					<div class="cart-btn">
 						<div class="cart-icon"><span><?= count($lista);?></span></div>
-						<div class="cart-summ"><?= PN_ELO.' '.ws_arformatum($rendeles->osszBrutto() ).' '.PN_UTO;?></div>
+						<div class="cart-summ"><?= PN_ELO.' '.ws_arformatum($osszAr ).' '.PN_UTO;?></div>
 					</div>
 					<div class="cart-dd">
 						<table>
@@ -17,13 +17,13 @@
 	                                    <a href="javascript:void(0);" onclick="siteJs.kosarDarabModositas('<?= $t->kosarId;?>',1);" title="minus"  class="plus"></a>
 	                                </div>
 	                            </td>
-	                            <td class="all-price"><?= PN_ELO.' '.$t->kosarOsszBruttoAr().' '.PN_UTO; ?></td>
+	                            <td class="all-price"><?= PN_ELO.' '.(($armod=="Bruttó")?$t->kosarOsszBruttoAr():$t->kosarOsszNettoAr()).' '.PN_UTO; ?></td>
 	                        </tr>
 	                        <?php endforeach; ?>
 	                        
 	                        <tr>
-	                            <td colspan="3" class="prod-name prod-all">Termékek összesen (bruttó)</td>
-	                            <td class="all-price"><?= PN_ELO.' '.ws_arformatum($rendeles->osszBrutto() ).' '.PN_UTO;?></td>
+	                            <td colspan="3" class="prod-name prod-all">Termékek összesen (<?= mb_strtolower($armod, 'UTF-8');?>)</td>
+	                            <td class="all-price"><?= PN_ELO.' '.ws_arformatum( ($armod=="Bruttó")? $rendeles->osszBrutto() : $rendeles->osszNetto()  ).' '.PN_UTO;?></td>
 	                        </tr>
 						</table>
 						<div class="cart-order">

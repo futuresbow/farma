@@ -75,11 +75,14 @@
                     <div class="prod-name">
                         <a href="<?= $t->link();?>" title="<?= $t->jellemzo('Név');?>"><?= $t->jellemzo('Név');?></a>
                     </div>
-                    <div class="prod-price">						<?php if($t->eredetiar!=0):?>
-						<span class="old-price"><?= PN_ELO.' '.ws_arformatum($t->ar).' '.PN_UTO;?></span>
+                    <?php $armod = (beallitasOlvasas('armod-termeklista')=='1')?'Bruttó':'Nettó';?>
+                    <div class="prod-price">
+						<?php if($t->eredeti_ar!=0):?>
+						<span class="old-price"><?= PN_ELO.' '.ws_arformatum($t->eredetiAr($armod)).' '.PN_UTO;?></span>
 						<?php endif;?>
-                        <?= PN_ELO.' '.ws_arformatum($t->ar).' '.PN_UTO;?>
-                    </div>
+                        <?= PN_ELO.' '.ws_arformatum($t->alapAr($armod)).' '.PN_UTO;?>
+
+                    </div>
                 </div>
             </li>
 

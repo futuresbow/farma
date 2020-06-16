@@ -59,9 +59,10 @@ class Rendelesmegjelenites extends MY_Modul {
 			
 			return;
 		}
-		naplozo('Rendelés számla letöltése');
 		
 		if($this->ci->uri->segment(1)=='szamlaletoltes') {
+			naplozo('Rendelés számla letöltése');
+		
 			$id = (int)$this->ci->uri->segment(2);
 			$sor = $this->Sql->get($id, 'szamlazas', 'id');
 			if($sor){
