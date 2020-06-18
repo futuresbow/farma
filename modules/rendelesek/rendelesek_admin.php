@@ -197,8 +197,8 @@ class Rendelesek_admin extends MY_Modul {
 		
 		$lista = $this->sqlSorok('SELECT * FROM '.DBP.'rendelesek '.$w.' ORDER BY ido DESC LIMIT '.$start.', 30');
 		$statuszopciok = '';
-		$statuszArr = array();
-		foreach($this->gets(DBP."rendeles_statusz", " ORDER BY sorrend ASC") as $sor)  {
+		$statuszArr = array();		$bLista = $this->gets(DBP."rendeles_statusz", " ORDER BY sorrend ASC");
+		if($bLista)foreach($bLista as $sor)  {
 			$statuszopciok .= '<option  value="'.$sor->id.'">'.$sor->nev.'</option>';
 			$statuszArr[$sor->id] = $sor->nev;
 			

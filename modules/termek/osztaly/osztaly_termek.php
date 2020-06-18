@@ -323,7 +323,7 @@ class Termek_osztaly extends MY_Model {
 		$this->jellemzok = array();		if($jellemzok) foreach ($jellemzok as $jellemzo)  {			$this->jellemzok[$jellemzo->nev] = $jellemzo;		}
 		
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
-		foreach($nyelvek as $nyelv) {						$adatok = $this->get($this->id, DBP.'termek_mezok_'.$nyelv, 'termek_id');						if($adatok->label_feliratok!="") {				$feliratok = @unserialize(base64_decode($adatok->label_feliratok));				if(is_array($feliratok)) {					$this->jellemzoFeliratok = $feliratok;				}			}			
+		foreach($nyelvek as $nyelv) {						$adatok = $this->get($this->id, DBP.'termek_mezok_'.$nyelv, 'termek_id');						if(isset($adatok->label_feliratok)) if($adatok->label_feliratok!="") {				$feliratok = @unserialize(base64_decode($adatok->label_feliratok));				if(is_array($feliratok)) {					$this->jellemzoFeliratok = $feliratok;				}			}			
 			foreach($this->jellemzok as $k => $v) {												
 				if($v->tipus == 2 or $v->tipus == 3 or $v->tipus == 4 or $v->tipus == 5) {
 					// nyelvfüggő jellemzők					if(isset($adatok->{$v->slug})) {
