@@ -235,12 +235,12 @@ class Levelkuldo_osztaly extends MY_Model  {
 			 $a['sikeres'] = 0;			$a['hiba'] =  ( "Mailer Error: " . $mail->ErrorInfo);
 
 			$ci->Sql->sqlSave($a, DBP.'levelezes','id');
-			
+			return false;
 			
 		 } else {			$a['sikeres'] = 1;
 			$ci->Sql->sqlSave($a, DBP.'levelezes','id');
 			
-			//echo "Message has been sent";
+			//echo "Message has been sent";			return true;
 		 }
 	}
 }

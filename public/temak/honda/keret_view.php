@@ -69,7 +69,7 @@
 				<div class="mobile-menu"></div>
 				<div class="login-menu"></div>
 				<div class="search-menu"></div>
-				<a href="" title="" class="cart-menu"></a>
+				<a href="<?= base_url();?>kosar" title="" class="cart-menu"></a>
 				<?php if($fejleclink_felirat!=""):?>
 				<div class="back-to-homepage">
 					<a href="<?= $fejleclink_url; ?>" title=""><?= $fejleclink_felirat;?></a>

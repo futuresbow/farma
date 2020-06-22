@@ -395,6 +395,7 @@ class Termek_admin extends MY_Modul{
 				}
 			} elseif($mod==2) {
 				$sql = "SELECT id FROM ".DBP."termek_csoportok WHERE nev LIKE '{$sr['keresoszo']}'";
+				
 				$csoport = $this->Sql->sqlSor($sql);
 				if(isset($csoport->id)) {
 				
@@ -424,7 +425,7 @@ class Termek_admin extends MY_Modul{
 		$start = 0;
 		
 		$sql = "SELECT t.id FROM  ".DBP."termekek t WHERE $w 1 = 1  ";
-		
+		//print $sql;
 		$lista = $this->sqlSorok($sql);
 		
 		foreach($lista as $sor) {
@@ -906,7 +907,7 @@ class Termek_admin extends MY_Modul{
 		
 		$ALG->urlapGombok(array(
 			array('osztaly' => 'btn-ok', 'onclick' => "aJs.htmlencode();", 'felirat' => 'Mentés és vissza a listához', 'tipus' => 'button', 'link' => ''),
-			array('osztaly' => 'btn-ok', 'onclick' => "$(this).parent().append('<input name=elonezet type=hidden value=1 />');aJs.htmlencode();", 'attr' => '  ' , 'felirat' => 'Frissítés és termék megnyitása új lspon', 'tipus' => 'button', 'link' => ''),
+			array('osztaly' => 'btn-ok', 'onclick' => "$(this).parent().append('<input name=elonezet type=hidden value=1 />');aJs.htmlencode();", 'attr' => '  ' , 'felirat' => 'Frissítés és termék megnyitása új lapon', 'tipus' => 'button', 'link' => ''),
 		));
 		$ALG->urlapVege();
 		

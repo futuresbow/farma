@@ -18,7 +18,7 @@ class Log_admin extends MY_Modul {
 		$start = 0;
 		$w = '';
 				$elemek = $this->getsIdArr(DBP.'naploelemek','id');
-		$sql = 'SELECT sessionid FROM '.DBP.'naplobejegyzesek '.$w.'  GROUP BY sessionid  LIMIT 50 ';		print $sql;		$lista = $this->sqlSorok($sql);				
+		$sql = 'SELECT sessionid FROM '.DBP.'naplobejegyzesek '.$w.'  GROUP BY sessionid  LIMIT 50 ';		//print $sql;		$lista = $this->sqlSorok($sql);				
 		foreach($lista as $k => $sor) {						$sql = "SELECT * FROM ".DBP."naplobejegyzesek WHERE sessionid = '{$sor->sessionid}' ORDER BY ido DESC LIMIT 1";			$lista[$k] = $sor = $this->sqlSor($sql);			$nev = $elemek[$sor->naploelemid]->nev;			$tabla = $elemek[$sor->naploelemid]->tabla;			$lista[$k]->nev= $nev." (".$tabla.")";			$lista[$k]->kibont = '<a href="'.ADMINURL.'log/kibont/'.$sor->sessionid.'" >Kibont</a>';
 		}
 		// táblázat beállítás

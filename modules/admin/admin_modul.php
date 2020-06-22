@@ -52,10 +52,11 @@ class Admin_modul extends MY_Modul {
 				if(method_exists($obj, $metodus) ){					
 					$jogkorRs = $this->Sql->sqlSor("SELECT * FROM hozzaferesek WHERE eleres = '".$modul.'/'.$class.'/'.$metodus."' LIMIT 1");
 					$jogkor = 0;
+					$ujJokkor = false;
 					if(!$jogkorRs) {
 						// nincs még ilyen hozzáférési opció, ezért felvisszük szuperadmin johkörrel, hogy adminisztrálható legyen
-						$a = array('eleres' => $modul.'/'.$class.'/'.$metodus, 'jogkor' => JOG_SUPERADMIN );
-						
+						$a = array('eleres' => $modul.'/'.$class.'/'.$metodus, 'jogkor' => 56);// JOG_SUPERADMIN && JOG_ADMIN && JOG_BOSS
+						$ujJokkor = true;
 						$this->Sql->sqlSave($a, 'hozzaferesek', 'id');
 						$jogkor = 0;
 					} else {
@@ -65,7 +66,12 @@ class Admin_modul extends MY_Modul {
 					
 					$tag = belepettTag();
 					if(  !$tag->is( $jogkor ) )  {
-						$this->data['modulKimenet'] = '<b>Nincs megfelelő jogosultságod.</b>';
+						if($ujJokkor){
+							$this->data['modulKimenet'] = '<b>A hozzáférési pontot az adatbázishoz kapcsoltam, kérlek frissítsd az oldalt</b>';
+						} else {
+							$this->data['modulKimenet'] = '<b>Nincs megfelelő jogosultságod, ha szükséged van a felületre, kérlek jelezd az adminnak.</b>';
+						}
+						
 					} else {
 						$this->data['modulKimenet'] = $obj->$metodus();					}
 				}
