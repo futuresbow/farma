@@ -79,7 +79,7 @@ class Slider_admin extends MY_Modul {
 				$image->resize(1180, 400, $mod);
 				$a = array('slider_id' => $id, 'kep' =>'assets/slider/'.$fname.'.jpg');
 				$this->ci->Sql->sqlSave($a, DBP.'slider_kepek', 'id');
-				$lista = $this->ci->Sql->gets(DBP.'slider_kepek', ' ORDER BY sorrend ASC ');
+				$lista = $this->ci->Sql->gets(DBP.'slider_kepek', " WHERE slider_id = $id  ORDER BY sorrend ASC ");
 				if(!empty($lista)) {
 					foreach($lista as $k => $kepSor) {
 						$lista[$k]->kep = '<a href="'.base_url().$kepSor->kep.'" title="" target="_blank" class="pic-container" style="background-image: url(\''.base_url().ws_image($kepSor->kep, 'medium').'\');"></a>';
@@ -152,9 +152,9 @@ class Slider_admin extends MY_Modul {
 		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'slider/lista', 'felirat' => 'Slider lista') );
 		$ALG->urlapStart(array('attr'=> ' action="" enctype="multipart/form-data" method="post" '));
 		$ALG->tartalomDobozStart();
-		if($id!=0) {
+		if($id!=0) { 
 			$doboz = $ALG->ujDoboz();
-			$doboz->dobozCim( 'Slider képek feltöltése', 3);
+			$doboz->dobozCim( 'Slider képek feltöltése ( ajánlott méret: 1180 X 400 pixel )', 3);
 			/*
 			$input1 = new Filefeltolto(array('nevtomb' => 'fileok', 'mezonev' => '', 
 			'felirat' => 'Kép (többet is kiválaszthatsz.)', 'gombfelirat' => 'Feltöltés',
@@ -163,7 +163,7 @@ class Slider_admin extends MY_Modul {
 			*/
 			$ajaxFeltolto = new Ajaxfeltolto(array('mezonev' => '', 'nevtomb' => 'fileok', 'id' => $id, 'url' => ADMINURL.'slider/szerkesztes/'.$id) );
 			$doboz->szimplaInput($ajaxFeltolto);
-			$lista = $this->ci->Sql->gets(DBP.'slider_kepek', ' ORDER BY sorrend ASC ');
+			$lista = $this->ci->Sql->gets(DBP.'slider_kepek', "WHERE slider_id = $id ORDER BY sorrend ASC ");
 			if(!empty($lista)) {
 				foreach($lista as $k => $kepSor) {
 					$lista[$k]->kep = '<a href="'.base_url().$kepSor->kep.'" title="" target="_blank" class="pic-container" style="background-image: url(\''.base_url().ws_image($kepSor->kep, 'medium').'\');"></a>';

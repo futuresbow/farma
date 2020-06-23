@@ -47,7 +47,7 @@ $doboz->dobozCim( 'Nincs beállítási lehetőség', 2);
 
 $doboz->dobozCim( 'Alapadatok', 2);
 
-
+/*
 $file = new Filefeltolto(array('nevtomb' => '', 'mezonev' => 'logokep', 'felirat' => 'Logó feltöltése (PNG, JPG, GIF, SVG)'));
 $doboz->szimplaInput($file);
 
@@ -55,6 +55,7 @@ if(@$logokep!="") {
 	$doboz->HTMLHozzaadas('<p style="padding:10px;background: #ddd;">Jelenlegi logókép:<br><br><img src="'.base_url().$logokep.'" style="border: 1px solid #aaa;max-height:200px;" /></p>');
 
 }
+*/
 
 $input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'fejleclink_felirat', 'felirat' => 'Fejléc link felirata', 'ertek'=> @$fejleclink_felirat));
 $input2 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'fejleclink_url', 'felirat' => 'Fejléc link URI', 'ertek'=> @$fejleclink_url));
