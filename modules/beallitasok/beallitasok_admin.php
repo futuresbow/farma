@@ -949,7 +949,7 @@ public function menulista() {
 		$doboz->szimplaInput($text1);
 
 		
-		$input1 = new Szovegmezo(array('felirat' => 'Kimenő SMTP kiszolgáló', 'nevtomb' => 'a', 'mezonev' => 'SMTP_host', 'ertek' => beallitasOlvasas('SMTP_user'))) ;
+		$input1 = new Szovegmezo(array('felirat' => 'Kimenő SMTP kiszolgáló', 'nevtomb' => 'a', 'mezonev' => 'SMTP_host', 'ertek' => beallitasOlvasas('SMTP_host'))) ;
 
 		$doboz->szimplaInput($input1);
 
