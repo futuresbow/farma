@@ -971,7 +971,7 @@ public function menulista() {
         $gordulo2 = new Legordulo(array('felirat' => 'Naplózás','opciok' => array('0' => 'Bekapcsolva', '1' => 'Kikapcsolva'),'nevtomb' => 'a', 'mezonev' => 'log_kikapcsolva', 'ertek' => beallitasOlvasas('log_kikapcsolva')));
 
 		
-		$doboz->duplaInput($gordulo1);
+		$doboz->duplaInput($gordulo1,$gordulo2);
 
 
 		$ALG->tartalomDobozVege();
