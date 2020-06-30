@@ -425,3 +425,16 @@ background: #ea3;
 	top: 100px;
 }
 
+.elerheto_keszlet {
+	display: block;
+	width: 100%;
+	clear: both;
+	text-align: left;
+	font-weight: bold;
+	color: #55eb34;
+	padding-bottom: 20px;
+}
+.nincskeszleten {
+	color: #f26d7a;
+	
+}

@@ -23,8 +23,16 @@ class Keszletek_admin extends MY_Modul{
 		$sr = $this->ci->input->get('sr');
 		$nyelv = $_SESSION['CMS_NYELV'];
 		$keresestorles = false;
+		
+		if( isset( $_SESSION['keszlet_sr'] )) {
+			if(!isset($sr['keresoszo'])) {
+				$sr = $_SESSION['keszlet_sr'];
+			}
+		}
+		
+		
 		if(isset($sr['keresoszo'])) if($sr['keresoszo']!='') {
-			
+			$_SESSION['keszlet_sr'] = $sr;
 			$mod = (int)$sr['keresomezo'];
 			if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
 			if($mod==1) $w = ' j.nev LIKE "%'.$sr['keresoszo'].'%" ';
@@ -60,8 +68,8 @@ class Keszletek_admin extends MY_Modul{
 			$termek = new Termek_osztaly($sor->id);
 			$sor->nev = $termek->jellemzo('Név');
 			$adatlista[] = $sor;
-			$valtozatTipusok = $this->Sql->sqlSorok("SELECT DISTINCT(tipus) FROM ".DBP."termek_armodositok WHERE termek_id = {$sor->id} AND tipus != 1 ");
-			$lista[$k]->valtozatszam = count($valtozatTipusok);
+			$valtozatTipusok = $this->Sql->sqlSor("SELECT COUNT(id) as ossz FROM ".DBP."termek_armodositok WHERE termek_id = {$sor->id} AND tipus != 1 ");
+			$lista[$k]->valtozatszam = $valtozatTipusok->ossz;
 		}
 		// táblázat beállítás
 		$tablazat = $ALG->ujTablazat();
@@ -74,7 +82,7 @@ class Keszletek_admin extends MY_Modul{
 		
 		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
 		$tablazat->adatBeallitas('szerkeszto_url', 'keszletek/keszletszerkesztes/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám', 'valtozatszam' => 'Változatoktípusok',  'szerkesztes' => 'Készlet szerkesztés'));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám', 'valtozatszam' => 'Változatok',  'szerkesztes' => 'Készlet szerkesztés'));
 		$tablazat->adatBeallitas('lista', $adatlista);
 		
 		$tablazat->lapozo($start, $limit, $osszSorok->ossz);
@@ -97,7 +105,7 @@ class Keszletek_admin extends MY_Modul{
 		if(is_array($this->ci->input->post('db'))) {
 			$arr = $this->ci->input->post('db');
 			foreach($arr as $keszlet_id => $db) {
-				$a = array('id' => $keszlet_id, 'keszlet' => $db);
+				$a = array('id' => $keszlet_id, 'keszlet' => $db, 'lefoglalt' => $_POST['foglalt'][$keszlet_id]);
 				$this->Sql->sqlUpdate($a, 'termek_keszletek');
 			}
 			$redirect = true;
@@ -107,12 +115,15 @@ class Keszletek_admin extends MY_Modul{
 		if(is_array($this->ci->input->post('ujdb'))) {
 			$arr = $this->ci->input->post('ujdb');
 			
-			
-			
 			foreach($arr as $amod_ids => $db) {
-				if($db == 0) continue;
+				
+				$foglalt = $_POST['ujfoglalt'][$amod_ids];
+				
+				if($db == 0 and $foglalt == 0) continue;
+				
+				
 				$amod_ids = explode('_',$amod_ids);
-				$sql = "INSERT INTO ".DBP."termek_keszletek SET keszlet = $db, termek_id = $id , ";
+				$sql = "INSERT INTO ".DBP."termek_keszletek SET keszlet = $db,lefoglalt = $foglalt,  termek_id = $id , ";
 				$w = array();
 				foreach($amod_ids as $k => $amodid) {
 					
@@ -153,10 +164,12 @@ class Keszletek_admin extends MY_Modul{
 							<a onclick="aJs.keszletNoveles(this, 1);" href="javascript:void(0);" title="" class="btn btn-small increase"></a>
 						</div>' ));
 		} else {
+			
 			$valtozatSorok = array();
 			foreach($tipusok as $tipus_id) {
 				$valtozatSorok[] = $this->Sql->sqlSorok("SELECT * FROM ".DBP."termek_armodositok WHERE termek_id = $id AND tipus = $tipus_id ORDER BY nev ASC ");
 			}
+			
 			// rekurzív tömbflépítés a változatok permutálásával...
 			$adatlista = $this->kombinaciosLista($valtozatSorok);
 			
@@ -174,17 +187,28 @@ class Keszletek_admin extends MY_Modul{
 				$rs = $this->Sql->sqlSor( $sql);
 				if(isset($rs->keszlet)) {
 					$db = $rs->keszlet;
+					$foglalt = $rs->lefoglalt;
 					$keszlet_id = $rs->id;
 				} else {
 					$db = 0;
+					$foglalt = 0;
 					$keszlet_id = 0;
 				}
+				
 				$adatlista[$kindex]->db = '
 						<div class="quantity clearfix">
 							<a onclick="aJs.keszletNoveles(this, -1);"  href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
 							<input type="text" name="'.($keszlet_id==0?'ujdb['.$sor->amid.']':'db['.$rs->id.']').'" value="'.$db.'">
 							<a onclick="aJs.keszletNoveles(this, 1);"  href="javascript:void(0);" title="" class="btn btn-small increase"></a>
 						</div>' ;
+				$adatlista[$kindex]->foglalt = '
+						<div class="quantity clearfix">
+							<a onclick="aJs.keszletNoveles(this, -1);"  href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
+							<input type="text" name="'.($keszlet_id==0?'ujfoglalt['.$sor->amid.']':'foglalt['.$rs->id.']').'" value="'.$foglalt.'" >
+							<a onclick="aJs.keszletNoveles(this, 1);"  href="javascript:void(0);" title="" class="btn btn-small increase"></a>
+						</div>' ;
+				
+				
 				
 			}
 			
@@ -193,7 +217,14 @@ class Keszletek_admin extends MY_Modul{
 		
 		$tablazat->adatBeallitas('keresoMezok', false);
 		$tablazat->adatBeallitas('szerkeszto_url', 'termek/keszletszerkesztes/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'db' => 'Készlet'));
+		
+		$tablazat->adatBeallitas('megjelenitettMezok', 
+			array(
+				'nev' => 'Név', 
+				'db' => 'Készlet' , 
+				'foglalt' => 'Foglalt',
+			)
+		);
 		$tablazat->adatBeallitas('lista', $adatlista);
 		$tablazat->adatBeallitas('cellaAttr', array('db' => ' class="quantity-cell" '));
 		

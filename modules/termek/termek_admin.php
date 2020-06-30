@@ -430,6 +430,15 @@ class Termek_admin extends MY_Modul{
 		
 		foreach($lista as $sor) {
 			$termek = new Termek_osztaly($sor->id);
+			
+			if ( $termek->vanBelsoValtozat()) { 
+			
+				$sor->keszlet = '<a href="'.ADMINURL.'keszletek/keszletszerkesztes/'.$termek->id.'" target="_blank">&#8599;</a>';
+			
+			} else {
+				$sor->keszlet = $termek->keszlet;
+			
+			}
 			$sor->nev = '<a target="_blank" title="Előnézet" href="'.$termek->link().'">'.$termek->jellemzo('Név').'</a>';
 			if($termek->termekszulo_id!=0) $sor->nev = '<span style="color:#5F00D8">'.$sor->nev.'</span>';
 			$sor->cikkszam = $termek->cikkszam;
@@ -450,7 +459,7 @@ class Termek_admin extends MY_Modul{
 		$tablazat->adatBeallitas('keresoMezok', $keresoMezok);
 		$tablazat->adatBeallitas('szerkeszto_url', 'termek/szerkesztes/');
 		$tablazat->adatBeallitas('torles_url', 'termek/torles/');
-		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','torles' => 'Törlés' ));
+		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','keszlet' => 'Készlet','torles' => 'Törlés' ));
 		$tablazat->adatBeallitas('lista', $adatlista);
 		// táblázat beállítás vége
 		$ALG->tartalomDobozVege();
@@ -865,8 +874,12 @@ class Termek_admin extends MY_Modul{
 		
 		$doboz->duplaInput($select1, $input);
 		
+		// készlet
 		
+		$input1 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'keszlet', 'felirat' => 'Készlet (ha nincs változat)', 'ertek' => @$sor->keszlet));
+		$input2 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'lefoglalva', 'felirat' => 'lefoglalva', 'ertek' => @$sor->lefoglalva));
 		
+		$doboz->duplaInput($input1, $input2);
 		// termékcsoport
 		$csoportok = array();
 		$rs = $this->Sql->sqlSorok("SELECT * FROM ".DBP."termek_csoportok ORDER BY nev ASC");

@@ -39,7 +39,7 @@
 
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/style.css">
-	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css?r=1">
+	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css?r=2">
 		<!-- Slick -->
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick-theme.css"/>
@@ -246,7 +246,10 @@ var siteJs = {};
 		$('.kosar_valtozat').change(function(){ siteJs.arKalkulacio();})
 		$('.kosar_opcio').change(function(){ siteJs.arKalkulacio();})
 		$('.kosar_elkuldes').click(function(){ siteJs.kosarMentes();})
+		
 		$('#termekvaltozat').change(function(){ siteJs.termekValtozatAtiranyitas(this);})
+		$('.termekbelsovaltozat').change(function(){ siteJs.termekKosarFrissites();})
+	
 	};
 	siteJs.termekValtozatAtiranyitas = function(o) {
 		db = parseInt($('.kosar_db').val());
@@ -340,6 +343,47 @@ var siteJs = {};
 		});
 		
 	}
+	
+	
+	
+	siteJs.termekKosarFrissites = function() {
+		siteJs.fatyolStart();
+		adat = {
+			"termek_id" : $('.kosardivkeret').attr('data-termekid'),
+			"db" : parseInt($('.kosar_db').val()),
+			"opciok" : []
+			
+		}
+		// van valtozat?
+		v = $('.kosar_valtozat');
+		if(v[0]) {
+			adat.valtozat = parseInt($(v[0].options[v[0].selectedIndex]).val());
+			
+		}
+		// van valtozat 2?
+		v = $('.kosar_valtozat2');
+		if(v[0]) {
+			adat.valtozat2 = parseInt($(v[0].options[v[0].selectedIndex]).val());
+			
+		}
+		v = $('.kosar_opcio');
+		if(v[0]) {
+			for(i = 0; i < v.length; i++) {
+				if($(v[i]).prop('checked')){
+					adat.opciok.push({ "termek_armodositok_id" : $(v[i]).val() })
+					
+				}
+			}
+			
+		}
+		$.post(base_url()+'/kosarajax?beepulofuttatas=1&termeklapkosarfrissites=1', {'kosarajax':adat} , function(e) {
+			$('.termeklap_kosar_div').html(e);
+			siteJs.fatyolStop();
+		});
+		
+	}
+	
+	
 	siteJs.kosarPanelFrissites = function() {
 		$.post(base_url()+'/kosarwidget?beepulofuttatas=1', {} , function(html) {
 			if(html!='') {
@@ -356,7 +400,7 @@ var siteJs = {};
 		});
 	}
 	
-	siteJs.kosarDarabModositas = function(id, mod ) {
+	siteJs.kosarDarabModositas = function(id, mod , max) {
 		siteJs.fatyolStart();
 		$.post(base_url()+'/kosardarabmod?beepulofuttatas=1', { id: id, mod: mod } , function(e) {
 			siteJs.kosarPanelFrissites();

@@ -17,11 +17,16 @@
  
 
 
-/*
-$modulAdatok[] = (object)array(
-	'eleresek' => array('webshopadmin' => 'index'),
-	'nev' => 'admin'
-);
+/*
+
+$modulAdatok[] = (object)array(
+
+	'eleresek' => array('webshopadmin' => 'index'),
+
+	'nev' => 'admin'
+
+);
+
 * */
 
 
@@ -30,26 +35,32 @@ $modulAdatok[] = (object)array(
  */
  
 
-$tartalomkezeloAdatok['termek/termeklista'] = array(
+$tartalomkezeloAdatok['termek/termeklista'] = array(
+
 	'cim' => 'Termékoldal',
-	'jogkorok' => JOG_SUPERADMIN,
+	'jogkorok' => JOG_SUPERADMIN,
+
 );
 
 /* 
  * Címke szerinti szűrt termékek oldaltartalmi elem
  */
 
-$tartalomkezeloAdatok['termek/termeklista/cimketermeklista'] = array(
-	'cim' => 'Termékek listázása cimke alapján'
+$tartalomkezeloAdatok['termek/termeklista/cimketermeklista'] = array(
+
+	'cim' => 'Termékek listázása cimke alapján'
+
 );
 
 /* 
  * Terméklap oldaltartalmi elem
  */
 
-$tartalomkezeloAdatok['termek/termeklista/termeklap'] = array(
+$tartalomkezeloAdatok['termek/termeklista/termeklap'] = array(
+
 	'cim' => 'Terméklap megjelenítése',
-	'jogkorok' => JOG_SUPERADMIN,
+	'jogkorok' => JOG_SUPERADMIN,
+
 );
 
 /* 
@@ -57,9 +68,11 @@ $tartalomkezeloAdatok['termek/termeklista/termeklap'] = array(
  */
 
 
-$tartalomkezeloAdatok['termek/rendelesek/kosar'] = array(
+$tartalomkezeloAdatok['termek/rendelesek/kosar'] = array(
+
 	'cim' => 'Kosár oldal megjelenítése',
-	'jogkorok' => JOG_SUPERADMIN,
+	'jogkorok' => JOG_SUPERADMIN,
+
 );
 
 /* 
@@ -92,13 +105,15 @@ $tartalomkezeloAdatok['termek/termeklista/fooldalitermekek'] = array(
  
 
 $beepulok[] = 'termek/rendelesek/kosarajax';
+$beepulok[] = 'termek/rendelesek/termeklapkosarajax';
 
 /*
  * a globális keresőbe delegált termék-kereső
  */
 
 
-$keresesiPontok[] = 'termek/termeklista/kereses';
+$keresesiPontok[] = 'termek/termeklista/kereses';
+
 /*
  * termék módosításkor frissítjük a kereső stringet
  */
@@ -108,4 +123,5 @@ $hookBelepesipontok = globalisMemoria('hookBelepesipontok');
 
 $hookBelepesipontok['termek.keresostrfrissites'][] = 'termek/termek_admin/keresostr_hook';
 
-globalisMemoria('hookBelepesipontok' , $hookBelepesipontok);
+globalisMemoria('hookBelepesipontok' , $hookBelepesipontok);
+
