@@ -4,6 +4,158 @@ class Keszletek_admin extends MY_Modul{
 	var $data = array();
 	
 	
+	public function ajax() {
+		$termekId = $_GET['tid'];
+		if(isset($_GET['keszlet'])) {
+			$keszlet = (int)$_GET['keszlet'];
+			$this->ci->db->query("UPDATE ".DBP."termekek SET keszlet = $keszlet WHERE id = $termekId");
+			exit;
+		}
+		
+		if(isset($_GET['lefoglalt'])) {
+			$lefoglalt = (int)$_GET['lefoglalt'];
+			$this->ci->db->query("UPDATE ".DBP."termekek SET lefoglalva = $lefoglalt WHERE id = $termekId");
+			exit;
+		}
+		
+		die("0");
+	}
+	public function darabszam() {
+		ws_autoload('termek');
+		$valtozatTipusok = $this->Sql->sqlSorok("SELECT DISTINCT(tipus) FROM ".DBP."termek_armodositok WHERE tipus != 1 ");
+		$tipusok = array();
+		foreach($valtozatTipusok as $sor) $tipusok[] = $sor->tipus;
+		
+		
+		$w = '';
+		globalisMemoria("Nyitott menüpont",'Termékek');
+		globalisMemoria('utvonal', array(array('felirat' => 'Termékkészlet')));
+		$ALG = new Adminlapgenerator;
+		
+		$ALG->adatBeallitas('lapCim', "Termék darabszám");
+		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
+		
+		$ALG->tartalomDobozStart();
+		
+		// kereshető lapozható terméklista
+		// keresések
+		$sr = $this->ci->input->get('sr');
+		$nyelv = $_SESSION['CMS_NYELV'];
+		$keresestorles = false;
+		
+		if( isset( $_SESSION['keszlet_sr'] )) {
+			if(!isset($sr['keresoszo'])) {
+				$sr = $_SESSION['keszlet_sr'];
+			}
+		}
+		
+		
+		if(isset($sr['keresoszo'])) if($sr['keresoszo']!='') {
+			$_SESSION['keszlet_sr'] = $sr;
+			$mod = (int)$sr['keresomezo'];
+			if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
+			$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_mezok_{$nyelv} j WHERE t.id = j.termek_id AND $w";
+			$idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
+			//print($sql);
+			//exit;
+			if($idArr) {
+				$w = "  t.id IN (".implode(',', $idArr).") AND ";
+				
+			} else {
+				$w = "  t.id = -1 AND ";
+				
+			}
+		}
+		$ci = getCI();
+		// táblázat adatok összeállítása
+		$adatlista = array();
+		$start = 0;
+		$limit = 10;
+		$sql = "SELECT COUNT( DISTINCT(t.id)) as ossz FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id  ";
+		$osszSorok = $this->sqlSor($sql);
+		if($start>$osszSorok->ossz) $start = 0;
+		$sql = "SELECT t.id, j.nev as nev, t.* FROM `".DBP."termek_mezok_{$nyelv}` j, ".DBP."termekek t WHERE  $w j.termek_id = t.id  GROUP BY t.id  ORDER BY nev ASC LIMIT $start, $limit";
+		//die( $sql);
+		$lista = $this->sqlSorok($sql);
+		
+		foreach($lista as $listaIndex => $sor) {
+			$termek = new Termek_osztaly($sor->id);
+			$id = $sor->id;
+			$sor->nev = $termek->jellemzo('Név');
+			$adatlista[] = $sor;
+			
+			// lista
+			$valtozatSorok = array();
+			foreach($tipusok as $tipus_id) {
+				$valtozatSorok[] = $this->Sql->sqlSorok("SELECT * FROM ".DBP."termek_armodositok WHERE termek_id = {$id} AND tipus = $tipus_id ORDER BY nev ASC ");
+			}
+			
+			$adatlista = $this->kombinaciosLista($valtozatSorok);
+			
+			if(!empty($adatlista)) {
+				foreach($adatlista as $kindex => $amSor) {
+					$adatlista[$kindex]->id = 0;
+					
+					$sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND ";
+					$w = array();
+					foreach(explode('_', $amSor->amid) as $k => $amodid) {
+						
+						$w[] =  " valtozat".($k+1)."_id = ".$amodid." ";
+						
+					}
+					$sql .= implode(' AND ', $w);
+					
+					$rs = $this->Sql->sqlSor( $sql);
+					if(isset($rs->keszlet)) {
+						$db = $rs->keszlet;
+						$foglalt = $rs->lefoglalt;
+						$keszlet_id = $rs->id;
+					} else {
+						$db = 0;
+						$foglalt = 0;
+						$keszlet_id = 0;
+					}
+					$adatlista[$kindex]->db = $db;
+					$adatlista[$kindex]->foglalt = $foglalt;
+					$adatlista[$kindex]->keszlet_id = $keszlet_id;
+					
+					
+				}
+				$lista[$listaIndex]->adatlista = $adatlista;
+					
+			} else {
+				$lista[$listaIndex]->adatlista = false;
+			}
+			
+		}
+		// táblázat beállítás
+		//print_r($lista);
+		if(isset($_GET['ajax'])) {
+		
+		
+		
+			
+		
+		
+		
+		
+		
+		
+			print ( $ci->load->view('vezerlo/html/darabszam_lista', array('lista' => $lista), true ) );
+			return;
+		}
+		
+		
+		
+		$ALG->tartalomHozzaadas( $ci->load->view('vezerlo/html/darabszam_fej', array(), true ) );
+		
+		
+		$ALG->tartalomDobozVege();
+		
+		return $ALG->kimenet();
+	}
+	
+	
 	public function index() {
 		ws_autoload('termek');
 		
@@ -14,7 +166,6 @@ class Keszletek_admin extends MY_Modul{
 		
 		$ALG->adatBeallitas('lapCim', "Termékkészlet");
 		$ALG->adatBeallitas('szelessegOsztaly', "full-width");
-		$ALG->adatBeallitas('fejlecGomb', array('url' => ADMINURL.'keszletek/keszletszerkesztes/0', 'felirat' => 'Új darabszámok'));
 		
 		$ALG->tartalomDobozStart();
 		
