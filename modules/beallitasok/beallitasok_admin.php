@@ -967,7 +967,7 @@ public function menulista() {
 
 		$doboz->szimplaInput($input1);
 
-		$gordulo1 = new Legordulo(array('felirat' => 'SMTP debug','opciok' => array('0' => 'Bekapcsolva', '1' => 'Kikapcsolva'),'nevtomb' => 'a', 'mezonev' => 'smptp_debug', 'ertek' => beallitasOlvasas('smptp_debug')));
+		$gordulo1 = new Legordulo(array('felirat' => 'SMTP debug','opciok' => array('1' => 'Bekapcsolva', '0' => 'Kikapcsolva'),'nevtomb' => 'a', 'mezonev' => 'smptp_debug', 'ertek' => beallitasOlvasas('smptp_debug')));
         $gordulo2 = new Legordulo(array('felirat' => 'Naplózás','opciok' => array('0' => 'Bekapcsolva', '1' => 'Kikapcsolva'),'nevtomb' => 'a', 'mezonev' => 'log_kikapcsolva', 'ertek' => beallitasOlvasas('log_kikapcsolva')));
 
 		

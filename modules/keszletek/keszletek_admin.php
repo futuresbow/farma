@@ -6,6 +6,35 @@ class Keszletek_admin extends MY_Modul{
 	
 	public function ajax() {
 		$termekId = $_GET['tid'];
+		
+		
+		if(isset($_GET['am_id'])) {
+			$amSor = $this->ci->Sql->get((int)$_GET['am_id'], DBP.'termek_armodositok', 'id');
+			if(!$amSor) return;
+			$tipus = $amSor->tipus+1;
+			$sql = "SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = ".(int)$_GET['tid']." AND  termek_armodosito_id = ".$amSor->id." LIMIT 1 ";
+			$van = $this->ci->Sql->sqlSor($sql);
+			
+			if(isset($_GET['am_keszlet'])) {
+                $set = " keszlet = ".(int)$_GET['am_keszlet'];
+			}
+			
+			if(isset($_GET['am_lefoglalt'])) {
+                $set = " lefoglalt = ".(int)$_GET['am_lefoglalt'];
+			}
+			
+			
+			if ($van) {
+                $this->ci->db->query("UPDATE ".DBP."termek_keszletek SET $set WHERE id = ".$van->id);
+			} else {
+			    $this->ci->db->query("INSERT INTO ".DBP."termek_keszletek SET $set, termek_id = ".(int)$termekId.", termek_armodosito_id = {$amSor->id} ");
+			
+			}
+			
+			exit;
+		}
+		
+		
 		if(isset($_GET['keszlet'])) {
 			$keszlet = (int)$_GET['keszlet'];
 			$this->ci->db->query("UPDATE ".DBP."termekek SET keszlet = $keszlet WHERE id = $termekId");
@@ -92,18 +121,15 @@ class Keszletek_admin extends MY_Modul{
 			
 			$adatlista = $this->kombinaciosLista($valtozatSorok);
 			
+			
+
 			if(!empty($adatlista)) {
 				foreach($adatlista as $kindex => $amSor) {
 					$adatlista[$kindex]->id = 0;
 					
-					$sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND ";
-					$w = array();
-					foreach(explode('_', $amSor->amid) as $k => $amodid) {
-						
-						$w[] =  " valtozat".($k+1)."_id = ".$amodid." ";
-						
-					}
-					$sql .= implode(' AND ', $w);
+					$sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND 
+                            termek_armodosito_id = ".$amSor->amid;
+                    
 					
 					$rs = $this->Sql->sqlSor( $sql);
 					if(isset($rs->keszlet)) {
@@ -266,22 +292,15 @@ class Keszletek_admin extends MY_Modul{
 		if(is_array($this->ci->input->post('ujdb'))) {
 			$arr = $this->ci->input->post('ujdb');
 			
-			foreach($arr as $amod_ids => $db) {
-				
-				$foglalt = $_POST['ujfoglalt'][$amod_ids];
+			foreach($arr as $amod_id => $db) {
+                
+				$foglalt = $_POST['ujfoglalt'][$amod_id];
 				
 				if($db == 0 and $foglalt == 0) continue;
 				
 				
-				$amod_ids = explode('_',$amod_ids);
-				$sql = "INSERT INTO ".DBP."termek_keszletek SET keszlet = $db,lefoglalt = $foglalt,  termek_id = $id , ";
-				$w = array();
-				foreach($amod_ids as $k => $amodid) {
-					
-					$w[] =  " valtozat".($k+1)."_id = ".$amodid." ";
-					
-				}
-				$sql .= implode(' , ', $w);
+				$sql = "INSERT INTO ".DBP."termek_keszletek SET keszlet = $db,lefoglalt = $foglalt,  termek_id = $id , termek_armodosito_id = $amod_id ";
+
 				$this->ci->db->query( $sql) ;
 			}
 			$redirect = true;
@@ -327,14 +346,8 @@ class Keszletek_admin extends MY_Modul{
 			foreach($adatlista as $kindex => $sor) {
 				$adatlista[$kindex]->id = 0;
 				
-				$sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND ";
-				$w = array();
-				foreach(explode('_', $sor->amid) as $k => $amodid) {
-					
-					$w[] =  " valtozat".($k+1)."_id = ".$amodid." ";
-					
-				}
-				$sql .= implode(' AND ', $w);
+				$sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND termek_armodosito_id = ".$sor->amid;
+
 				$rs = $this->Sql->sqlSor( $sql);
 				if(isset($rs->keszlet)) {
 					$db = $rs->keszlet;
@@ -397,10 +410,10 @@ class Keszletek_admin extends MY_Modul{
 			}
 			if(!empty($alLista)) {
 				foreach($alLista as $alSor) {
-					$nevTomb[] = (object)array('nev' => $sor->nev.' '.$alSor->nev, 'amid' => $sor->id.'_'.$alSor->amid); 
+					$nevTomb[] = (object)array('nev' => $sor->nev.' '.$alSor->nev, 'cikkszam' => $sor->cikkszam, 'amid' => $sor->id.'_'.$alSor->amid); 
 				}
 			} else {
-				$nevTomb[] = (object)array('nev' => $sor->nev, 'amid' => $sor->id); 
+				$nevTomb[] = (object)array('nev' => $sor->nev, 'amid' => $sor->id, 'cikkszam' => $sor->cikkszam); 
 			}
 			
 		}

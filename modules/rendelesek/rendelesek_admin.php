@@ -454,9 +454,7 @@ class Rendelesek_admin extends MY_Modul {
 				$uzenet = rendszerUzenet($visszaigazolo);
 
 				$adattabla = $rendeles->megrendelesAdatTablak();
-
-		
-
+                
 		
 
 				include(ROOTPATH.'modules/hirlevel/autoload.php');
@@ -479,7 +477,6 @@ class Rendelesek_admin extends MY_Modul {
 				$level->rendszerlevelKeszites($uzenet.'<br><br>'.$adattabla);
 
 				
-
 				$level->levelKuldes($rendeles->vevo->email, $targy);
 				$level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), 'WEBSHOP megrendelés érkezett');
 
@@ -780,12 +777,12 @@ class Rendelesek_admin extends MY_Modul {
 		
 
 		$input1 = new Szovegmezo(array('nevtomb' => '', 'mezonev' => 'rendelesszam','felirat' => 'Rendelés száma', 'attr' => ' disabled' , 'ertek' => ws_ordernumber($rendeles->id) ));
-
+        /*
 		$select = new Legordulo(array('nevtomb' => 'r', 'mezonev' => 'statusz','felirat' => 'Státusz', 'attr' => '' , 'ertek' => $rendeles->statusz, 'opciok' => $lista ));
-
+        */
 		
 
-		$doboz->duplaInput($input1, $select);
+		$doboz->szimplaInput($input1);
 		
 		$szamlak = $this->Sql->sqlSorok("SELECT * FROM ".DBP."szamlazas WHERE rendeles_id =  $id ");
 		if($szamlak) {
@@ -1663,7 +1660,13 @@ class Rendelesek_admin extends MY_Modul {
 			);
 
 			$ci->Sql->sqlSave($a, DBP.'rendeles_termek_armodositok');
-
+            // cikkszám?
+            if($valtozat->cikkszam != "") {
+                $ci->db->query("UPDATE ".DBP."rendeles_termekek SET cikkszam = '".$valtozat->cikkszam."' WHERE id = $tid LIMIT 1");
+            } else {
+                print '<div class="alert">Figyelem, a '.$valtozat->nev.' változathoz nincs cikkszám beállítva, az eredeti termék cikkszám lett beállítva!</div>';
+                $ci->db->query("UPDATE ".DBP."rendeles_termekek SET cikkszam = eredeti_cikkszam WHERE id = $tid LIMIT 1");
+            }
 		}
 
 		
@@ -1991,8 +1994,15 @@ class Rendelesek_admin extends MY_Modul {
 
 		$doboz->duplaInput($select, $select2);
 		
+        //keszlet_noveles
+		$input1 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'keszlet_noveles', 'felirat' => 'Készlet módosítása (1 vagy -1)', 'ertek'=> @$sor->keszlet_noveles));
+        $input2 = new Szovegmezo(array('nevtomb' => 'a', 'mezonev' => 'foglalt_noveles', 'felirat' => 'Lefoglalt módosítása (1 vagy -1)', 'ertek'=> @$sor->foglalt_noveles));
 
 		
+
+		
+
+		$doboz->duplaInput($input1, $input2);
 		$input1 = new Szovegmezo(array('attr' => '', 'nevtomb' => 'a', 'mezonev' => 'visszaigazolo', 'felirat' => 'Visszaigazoló neve (hagyd üresen, ha nincs visszaigazolás)', 'ertek'=> @$sor->visszaigazolo));
 
 		

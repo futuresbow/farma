@@ -669,14 +669,25 @@ class Rendelesek extends MY_Modul {
 		
 
 					if($rendeles->termekLista) foreach($rendeles->termekLista as $termek) {
-
+                        $cikkszam = $termek->cikkszam;
+                        
+                        if(!empty($termek->kivalasztottValtozat)) {
+                            // cikkszám felülírás (csak az 1-es változattípussal lehetséges)
+                            $opcio = $termek->kivalasztottValtozat;
+                            $cikkszam = $termek->cikkszamMeghatarozas($opcio->id);
+                            
+                        }
+                        
+                        
 						$a = array(
 
 							'rendeles_id' => $rendeles_id,
 
 							'termek_id' => $termek->id,
 
-							'cikkszam' => $termek->cikkszam,
+							'cikkszam' => $cikkszam,
+							
+							'eredeti_cikkszam' => $termek->cikkszam,
 
 							'nev' => $termek->jellemzo('Név'),
 
@@ -689,10 +700,10 @@ class Rendelesek extends MY_Modul {
 							'darab' => $termek->kosarDarabszam()
 
 						);
-
+                       
 						$termek_id = $this->ci->Sql->sqlSave($a, DBP.'rendeles_termekek');
-
-						
+                        
+                        
 
 						if($termek->vannakKosarOpciok()) {
 
@@ -739,6 +750,8 @@ class Rendelesek extends MY_Modul {
 									'tipus' => $opcio->tipus,
 
 									'nev' => $opcio->nev,
+									
+									'cikkszam' => $opcio->cikkszam,
 
 									'nyelv' => $opcio->nyelv,
 
@@ -903,9 +916,8 @@ class Rendelesek extends MY_Modul {
 					}
 
 					// kész, visszatöltés
-
-					$this->ci->session->unset_userdata('kosaradatok');
-
+                    
+                    
 					
 
 					$rendeles = new Rendeles_osztaly();
@@ -913,6 +925,8 @@ class Rendelesek extends MY_Modul {
 					$rendeles->betoltesMegrendeles($rendeles_id );
 
 					ws_hookFuttatas('rendeles.statuszvaltozas', array('rendeles_id' => $rendeles->id ));
+                    
+                    $this->ci->session->unset_userdata('kosaradatok');
 
 					redirect(base_url().'rendelesbefejezes');
 

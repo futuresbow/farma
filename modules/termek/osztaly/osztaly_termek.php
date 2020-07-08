@@ -140,15 +140,24 @@ class Termek_osztaly extends MY_Model {
 		
 		
 	}
-	public function elerhetoKeszlet($valtozat1=0, $valtozat2=0) {
-		if($valtozat1==0 and $valtozat2 ==0) {
+	public function cikkszamMeghatarozas($termek_armodosito_id=0,$rendeles = false ) {
+        if($termek_armodosito_id==0) return $this->cikkszam;
+        $tabla = DBP.'termek_armodositok';
+        if($rendeles) $tabla = DBP.'rendeles_termek_armodositok';
+        $amSor = $this->Sql->get($termek_armodosito_id, $tabla, 'id');
+        //print ("#".$termek_armodosito_id."#");
+        if($amSor->cikkszam!="") return $amSor->cikkszam;
+        return $this->cikkszam;
+	}
+	
+	public function elerhetoKeszlet($termek_armodosito_id=0) {
+		if($termek_armodosito_id ==0) {
 			$keszlet = $this->keszlet;
 		} else {
 			$keszlet = 0;
 			$sql = "SELECT keszlet FROM ".DBP."termek_keszletek WHERE 
 				termek_id = ".$this->id." AND
-				valtozat1_id = $valtozat1 AND
-				valtozat2_id = $valtozat2 
+				termek_armodosito_id = $termek_armodosito_id
 				";
 			
 			$rs = $this->Sql->sqlSor($sql);
@@ -212,8 +221,20 @@ class Termek_osztaly extends MY_Model {
 	/*
 	 * megfelelő ár visszaadása
 	 */
-	function alapAr($armod='Nettó') {
-		
+	function alapAr($armod='Nettó', $termek_armodosito_id = 0) {
+		if($termek_armodosito_id!=0){
+            if(isset($this->valtozatok[$termek_armodosito_id])){
+                $valtozat = $this->valtozatok[$termek_armodosito_id];
+                
+                if($valtozat->ar > 0) {
+                    if(mb_strtolower($armod, 'UTF-8')=='nettó') {
+                        return $valtozat->ar;
+                    } else {
+                        return $valtozat->ar+$valtozat->ar*($valtozat->afa/100);
+                    }
+                }
+            }
+        }
 		if(mb_strtolower($armod, 'UTF-8')=='nettó') return $this->ar;
 		return $this->bruttoAr;
 	}
@@ -642,7 +663,26 @@ class Termek_osztaly extends MY_Model {
 		return true;
 
 	}
+	public function elsoValtozatId() {
 
+		if(empty($this->valtozatok)) {
+
+			$this->valtozatokBetoltes();
+
+		}
+
+		
+
+		if(empty($this->valtozatok)) {
+
+			return false;
+
+		}
+
+		return current($this->valtozatok)->id;
+
+	}
+    
 	
 	
 	public function vannakValtozatok2() {
@@ -957,12 +997,13 @@ class Termek_osztaly extends MY_Model {
 
 		$sql = "SELECT * FROM $tabla WHERE tipus = 0 AND termek_id = {$id} ORDER BY sorrend ASC ";
 
-		$this->valtozatok = $this->sqlSorok($sql);
+		$valtozatok = $this->sqlSorok($sql);
 		
+		$this->valtozatok = array();
 		
-		foreach($this->valtozatok as $sor) {
+		foreach($valtozatok as $sor) {
 			// készletek
-			
+			$this->valtozatok[$sor->id] = $sor;
 		}
 		
 
@@ -982,7 +1023,14 @@ class Termek_osztaly extends MY_Model {
 
 		$sql = "SELECT * FROM $tabla WHERE tipus = 2 AND termek_id = {$id} ORDER BY sorrend ASC ";
 
-		$this->valtozatok2 = $this->sqlSorok($sql);
+		$valtozatok2 = $this->sqlSorok($sql);
+		
+		$this->valtozatok2 = array();
+		
+		foreach($valtozatok2 as $sor) {
+			// készletek
+			$this->valtozatok2[$sor->id] = $sor;
+		}
 
 	}
 

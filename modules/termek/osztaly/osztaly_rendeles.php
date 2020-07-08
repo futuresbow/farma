@@ -181,8 +181,8 @@ class Rendeles_osztaly extends MY_Model {
 					
 				} else {
 				
-					$valtozat1ID = (int)@$valtozat1->termek_armodositok_id;
-					$valtozat2ID = (int)@$valtozat2->termek_armodositok_id;
+					$termek_armodositok_id = (int)@$valtozat1->termek_armodositok_id;
+					//$valtozat2ID = (int)@$valtozat2->termek_armodositok_id;
 					
 					$keszletNoveles = $keszletNoveles*$t->darab;
 					$foglaltNoveles = $foglaltNoveles*$t->darab;
@@ -191,8 +191,9 @@ class Rendeles_osztaly extends MY_Model {
 					$sql = "UPDATE ".DBP."termek_keszletek SET 
 								keszlet = keszlet + $keszletNoveles, lefoglalt = lefoglalt + $foglaltNoveles WHERE 
 						
-								termek_id = {$t->termek_id} AND valtozat1_id = $valtozat1ID AND valtozat2_id = $valtozat2ID LIMIT 1
+								termek_id = {$t->termek_id} AND termek_armodosito_id = $termek_armodositok_id LIMIT 1
 					";
+					
 					$ci = getCI();
 					$ci->db->query($sql);
 				}

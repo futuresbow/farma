@@ -31,9 +31,26 @@
 
 
 					<div class="table-top-input">
-
-						<input name="sr[keresoszo]" class="keresoInput" type="text" value="" onkeyup="$.get('<?= ADMINURL;?>keszletek/darabszam?ajax=1', $('.keresoUrlap').serialize(), function(e) { $('.talalatlista').html(e);} );" placeholder="Keresés...">
-
+                        
+                         <?php 
+                         $value = "";
+                         if( @$_GET['s'] != "") : 
+                         
+                         ws_autoload('termekek');$termek = new Termek_osztaly((int)$_GET['s']);
+                         if(isset($termek->id)):
+                            $value = $termek->cikkszam;
+                         ?>
+                        <script>
+                            $().ready(function() {
+                                $.get('<?= ADMINURL;?>keszletek/darabszam?ajax=1', $('.keresoUrlap').serialize(), function(e) { $('.talalatlista').html(e);} );
+                            });
+                        </script>
+                         <?php endif;?>
+                         <?php endif;?>
+                        
+						<input name="sr[keresoszo]" class="keresoInput" type="text" value="<?= $value;?>" onkeyup="$.get('<?= ADMINURL;?>keszletek/darabszam?ajax=1', $('.keresoUrlap').serialize(), function(e) { $('.talalatlista').html(e);} );" placeholder="Keresés...">
+                       
+                       
 						<label></label>
 
 						

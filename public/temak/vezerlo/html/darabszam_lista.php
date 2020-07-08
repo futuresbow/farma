@@ -69,7 +69,7 @@
                            <?php else: ?>
                           
                           
-							<?php  if($sor->adatlista ) foreach($sor->adatlista as $aSor): ?>
+							<?php  if($sor->adatlista ) foreach($sor->adatlista as $aSor):  ?>
 							
 							
 							
@@ -78,16 +78,16 @@
 										
 										
 										
-										<td style="width:60%"><?= $aSor->nev?> változat</td>
+										<td style="width:60%"><b><?= $aSor->nev. (($aSor->cikkszam!="")?" ({$aSor->cikkszam}) ":""); ?></b> változat</td>
 
 										
 										
 										
 										<td class="quantity-cell">
 											<div class="quantity clearfix">
-												<a onclick="aJs.keszletNoveles(this, -1);" href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
+												<a onclick="aJs.keszletNoveles(this, -1);$.get('<?= ADMINURL?>keszletek/ajax?tid=<?= $sor->id;?>&am_id=<?= $aSor->amid;?>&am_keszlet='+$(this).next().val());" href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
 												<input type="text" name="db[<?= $aSor->id; ?>]" value="<?= $aSor->db; ?>">
-												<a onclick="aJs.keszletNoveles(this, 1);alert('fejlesztés alatt');" href="javascript:void(0);" title="" class="btn btn-small increase"></a>
+												<a onclick="aJs.keszletNoveles(this, 1);$.get('<?= ADMINURL?>keszletek/ajax?tid=<?= $sor->id;?>&am_id=<?= $aSor->amid;?>&am_keszlet='+$(this).prev().val());" href="javascript:void(0);" title="" class="btn btn-small increase"></a>
 											</div></td>
 
 										
@@ -95,9 +95,9 @@
 										
 										<td>
 											<div class="quantity clearfix">
-												<a onclick="aJs.keszletNoveles(this, -1);" href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
+												<a onclick="aJs.keszletNoveles(this, -1);$.get('<?= ADMINURL?>keszletek/ajax?tid=<?= $sor->id;?>&am_id=<?= $aSor->amid;?>&am_lefoglalt='+$(this).next().val());" href="javascript:void(0);" title="" class="btn btn-small decrease"></a>
 												<input type="text" name="foglalt[<?= $aSor->id; ?>]" value="<?= $aSor->foglalt; ?>">
-												<a onclick="aJs.keszletNoveles(this, 1);alert('fejlesztés alatt');" href="javascript:void(0);" title="" class="btn btn-small increase"></a>
+												<a onclick="aJs.keszletNoveles(this, 1);$.get('<?= ADMINURL?>keszletek/ajax?tid=<?= $sor->id;?>&am_id=<?= $aSor->amid;?>&am_lefoglalt='+$(this).prev().val());" href="javascript:void(0);" title="" class="btn btn-small increase"></a>
 											</div></td>
 
 										

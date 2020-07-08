@@ -1,11 +1,10 @@
 <?php $armod = (beallitasOlvasas('armod-termeklap')=="1")?'Bruttó':'Nettó'; ?>
-                               
+<?php $termek_armodosito_id = $termek->elsoValtozatId(); ?>
+<?php if((int)@$adat['valtozat']>0) $termek_armodosito_id = (int)$adat['valtozat'];?>
+
+
 
 <form method="post">
-
-
-
-
 
 				<div class="price-container kosardivkeret" data-termekid="<?= $termek->id; ?>" >
 					
@@ -35,18 +34,9 @@
                     <?php endif;?>
 				</div>
 				
-				<?php $valtozat1ID = (int)@$adat['valtozat'];?>
-				<?php $valtozat2ID = (int)@$adat['valtozat2'];?>
-				<?php if($valtozat1ID==0 and $valtozat2ID==0) {
-						if($termek->vanBelsoValtozat()) {
-							$valtozatok1 = $termek->valtozatok();
-							$valtozatok2 = $termek->valtozatok2();
-							$valtozat1ID = (isset($valtozatok1[0]))?$valtozatok1[0]->id:0;
-							$valtozat2ID = (isset($valtozatok2[0]))?$valtozatok2[0]->id:0;
-							
-						}
-				}?>
-				<?php $keszlet = $termek->elerhetoKeszlet($valtozat1ID, $valtozat2ID); if($keszlet>0):?>
+				
+				<?php $cikkszam = $termek->cikkszamMeghatarozas($termek_armodosito_id); ?>
+				<?php $keszlet = $termek->elerhetoKeszlet($termek_armodosito_id); if($keszlet>0):?>
 					<div class="elerheto_keszlet">Elérhető: <?= $keszlet; ?> db</div>
 				<?php else: ?>
 					<div class="elerheto_keszlet nincskeszleten">Ez a termék nincs készleten</div>
@@ -65,8 +55,9 @@
                             <select name="k[valtozat]" class="kosar_valtozat termekbelsovaltozat" id="">
 
                                 <?php foreach($termek->valtozatok() as $valtozat): ?>
-
-								<option <?= @$adat['valtozat']==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= $valtozat->ar; ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
+                                
+                                
+								<option <?= $termek_armodosito_id==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= $termek->alapAr($armod, $valtozat->id); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
 
 								<?php endforeach;?>
 
@@ -154,7 +145,7 @@
 								 <?php if($termek->eredeti_ar!=0):?>
 								<span class="old-price"><?= PN_ELO.' '.ws_arformatum($termek->eredetiAr($armod)).' '.PN_UTO;?></span>
 								<?php endif;?>
-								<?= ws_arformatum($termek->alapAr($armod)); ?> Ft
+								<?= ws_arformatum($termek->alapAr($armod, $termek_armodosito_id)); ?> Ft
 								
                             </span>
 
@@ -174,7 +165,7 @@
 
 
 
-	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= $termek->alapAr($armod);?>" >
+	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= $termek->alapAr($armod, $termek_armodosito_id);?>" >
 
 	
 
@@ -190,3 +181,4 @@
 
 </script>
 
+<div class="sr-num">Cikkszám: <?= $cikkszam; ?></div>

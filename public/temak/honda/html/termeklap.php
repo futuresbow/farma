@@ -84,7 +84,7 @@
                 
 
                 <div class="description">
-					<div class="sr-num">Cikkszám: <?= $termek->cikkszam; ?></div>
+					
                     <?php foreach($termek->jellemzok as $jellemzo): ?>
                     <?php if($jellemzo->nev=="HTML"):?>
                     <?= $termek->jellemzo($jellemzo->nev); ?>

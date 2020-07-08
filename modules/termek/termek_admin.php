@@ -433,7 +433,7 @@ class Termek_admin extends MY_Modul{
 			
 			if ( $termek->vanBelsoValtozat()) { 
 			
-				$sor->keszlet = '<a href="'.ADMINURL.'keszletek/keszletszerkesztes/'.$termek->id.'" target="_blank">&#8599;</a>';
+				$sor->keszlet = '<a href="'.ADMINURL.'keszletek/darabszam?s='.$termek->id.'" target="_blank">&#8599;</a>';
 			
 			} else {
 				$sor->keszlet = $termek->keszlet;
