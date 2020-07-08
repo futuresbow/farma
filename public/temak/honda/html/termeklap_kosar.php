@@ -57,7 +57,7 @@
                                 <?php foreach($termek->valtozatok() as $valtozat): ?>
                                 
                                 
-								<option <?= $termek_armodosito_id==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= $termek->alapAr($armod, $valtozat->id); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
+								<option <?= $termek_armodosito_id==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= ws_arformatum($termek->alapAr($armod, $valtozat->id), ""); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
 
 								<?php endforeach;?>
 
@@ -79,7 +79,7 @@
 
                                 <?php foreach($termek->valtozatok2() as $valtozat): ?>
 
-								<option <?= @$adat['valtozat2']==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= $valtozat->ar; ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
+								<option <?= @$adat['valtozat2']==$valtozat->id ?' selected' :'' ;?> data-valtozatar="<?= ws_arformatum($termek->alapAr($armod, $valtozat->id), ""); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->nev;?> </option>
 
 								<?php endforeach;?>
 
@@ -107,7 +107,7 @@
 
                             <?php foreach($termek->opciok() as $opcio): ?>
 
-							<input  class="kosar_opcio" data-opcioar="<?= $opcio->ar; ?>" type="checkbox" value="<?= $opcio->id;?>"><?= $opcio->nev;?> (nettó <?= ws_arformatum($opcio->ar);?> Ft)<br>
+							<input  class="kosar_opcio" data-opcioar="<?= ws_arformatum($opcio->ar, ""); ?>" type="checkbox" value="<?= $opcio->id;?>"><?= $opcio->nev;?> (nettó <?= ws_arformatum($opcio->ar);?> Ft)<br>
 
 							<?php endforeach;?>
 
@@ -165,7 +165,7 @@
 
 
 
-	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= $termek->alapAr($armod, $termek_armodosito_id);?>" >
+	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= ws_arformatum($termek->alapAr($armod, $termek_armodosito_id));?>" >
 
 	
 

@@ -82,8 +82,8 @@ function belepettTag() {
 	return $tag;
 }
 
-function ws_arformatum($num) {
-	return number_format($num, 0,'',' ');
+function ws_arformatum($num, $ezresJelolo = " ") {
+	return number_format($num, 0,'',$ezresJelolo);
 }
 
 // lecsupaszítja egyszerű szöveggé a kapott stringet, csak entereket hagy <br> formában 
