@@ -431,14 +431,9 @@ class Termek_admin extends MY_Modul{
 		foreach($lista as $sor) {
 			$termek = new Termek_osztaly($sor->id);
 			
-			if ( $termek->vanBelsoValtozat()) { 
 			
-				$sor->keszlet = '<a href="'.ADMINURL.'keszletek/darabszam?s='.$termek->id.'" target="_blank">&#8599;</a>';
+            $sor->keszlet = '<a href="'.ADMINURL.'keszletek/darabszam?s='.$termek->id.'" target="_blank">&#8599;</a>';
 			
-			} else {
-				$sor->keszlet = $termek->keszlet;
-			
-			}
 			$sor->nev = '<a target="_blank" title="Előnézet" href="'.$termek->link().'">'.$termek->jellemzo('Név').'</a>';
 			if($termek->termekszulo_id!=0) $sor->nev = '<span style="color:#5F00D8">'.$sor->nev.'</span>';
 			$sor->cikkszam = $termek->cikkszam;

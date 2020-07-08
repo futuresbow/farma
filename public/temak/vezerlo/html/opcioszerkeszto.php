@@ -168,7 +168,7 @@
 
 				
 
-                <div class="input-container" style="visibility:hidden">
+                <div class="input-container" style="xvisibility:hidden">
 
                     <div class="label-container">
 
@@ -197,7 +197,7 @@
 				
 				
 
-                <div class="input-container">
+                <div class="input-container" style="display:none;">
 
                     <div class="label-container">
 
@@ -209,7 +209,7 @@
 
                     <div class="input-select-container">
 
-						<div class="styled-select">
+						<div class="styled-select" >
 							<select name="opc[0][tipus]"  class="form-control" >
 
 								<option value="0">Termék változat </option>
@@ -230,7 +230,7 @@
 
 
 
-                <div class="input-container">
+                <div class="input-container" style="display:none;">
 
                     <div class="label-container">
 
@@ -315,7 +315,7 @@
 
 	</tr><tr>
     <td><b >Cikkszám (felülírja ha nem üres):</b><br><input  name="opc[<?= $i; ?>][cikkszam]" value="<?= $opcSor->cikkszam; ?>" class="" ></td>
-	<td style="visibility:hidden"><b >Ár:</b><br><input name="opc[<?= $i; ?>][ar]" value="<?= $opcSor->ar; ?>" class="" ></td>
+	<td style="xvisibility:hidden"><b >Ár:</b><br><input name="opc[<?= $i; ?>][ar]" value="<?= $opcSor->ar; ?>" class="" ></td>
 
 	
 	
@@ -354,7 +354,7 @@
 
 </div>
 
-<input type="button" name="objModositas" class="btn btn-info" onclick="aJs.opcioHozzaadas(<?= $tid; ?>, 2)" value="Méret módósítása">
+<input style="display:none;" type="button" name="objModositas" class="btn btn-info" onclick="aJs.opcioHozzaadas(<?= $tid; ?>, 2)" value="Méret módósítása">
 
 
 
