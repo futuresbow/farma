@@ -314,7 +314,7 @@
 	
 
 	</tr><tr>
-    <td><b >Cikkszám (felülírja ha nem üres):</b><br><input  name="opc[<?= $i; ?>][cikkszam]" value="<?= $opcSor->cikkszam; ?>" class="" ></td>
+    <td><b >Cikkszám (felülírja ha nem üres):</b><br><input  name="opc[<?= $i; ?>][cikkszam]" value="<?= @$opcSor->cikkszam; ?>" class="" ></td>
 	<td style="xvisibility:hidden"><b >Ár:</b><br><input name="opc[<?= $i; ?>][ar]" value="<?= $opcSor->ar; ?>" class="" ></td>
 
 	
