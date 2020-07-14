@@ -165,7 +165,7 @@
 
 
 
-	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= ws_arformatum($termek->alapAr($armod, $termek_armodosito_id));?>" >
+	<input type="hidden" id="kosar_alapar" class="kosar_alapar" name="k[alapar]" value="<?= ws_arformatum($termek->alapAr($armod, $termek_armodosito_id),'');?>" >
 
 	
 
