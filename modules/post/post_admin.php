@@ -6,9 +6,66 @@ class Post_admin extends MY_Modul{
 
 	var $data = array();
 
-	
+	public function imgupload() {
+            include_once(APPPATH.'libraries/Zebraimage.php');
+            $uri = str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+            
+            $kepek = array();
+            if(!empty($_FILES['files']['name'])) {
+                
+                foreach($_FILES['files']['name'] as $k => $v) {
+                    
+                    
+                    $fname = $_FILES['files']['name'][$k];
+                    $ext = ws_ext($fname);
+                    $fname = rand(1000,9999).'_'. strToUrl(ws_withoutext($fname));
+                    $image = new Zebra_Image();
+                    $image->source_path = $_FILES['files']['tmp_name'][$k];
+                    $image->target_path  = FCPATH.'assets/post/'.$fname.'.jpg';
+                    $mod = ZEBRA_IMAGE_NOT_BOXED;
+                    $siker = $image->resize(1200, 800, $mod);
+                    
+                    //$kepek[] =  $uri.'assets/post/'.$fname.'.jpg';
+                    if($siker) $kepek[] = base_url().'assets/post/'.$fname.'.jpg';
+                }
+                
+            }
+            if(!empty($kepek)) {
+                
+                
+                
+                $arr = array('msg' => 'Minden rendben.',
+                    'message' => 'Minden rendben.',
+                    'messages' => array('Minden rendben.'),
+                    'error' => 0, 'images' => $kepek,
+                    'data'=> array(
+                        'messages' => array('Minden ok!'),
+                        'images' => $kepek
+                        
+                    ),
+                    'success' => true,
+                );
+                print json_encode($arr);
+                exit;
+                
+            }
+            $arr = array('msg' => 'A kép feltöltése sikertelen.',
+                    'message' => 'A kép feltöltése sikertelen.',
+                    'messages' => array('A kép feltöltése sikertelen.'),
+                    'error' => 0, 'images' => array(),
+                    'data'=> array(
+                        'messages' => array('A kép feltöltése sikertelen.'),
+                        'images' => array(),
+                        
+                    ),
+                    'success' => false,
+                );
+            print json_encode($arr);
+            
+            exit;
+        }
 
-	public function postmegjelenitesindex_ellenorzes($adat) {
+        public function postmegjelenitesindex_ellenorzes($adat) {
 		
 		$param = unserialize($adat['parameter']);
 		$b = $_POST['b'];
@@ -133,11 +190,11 @@ class Post_admin extends MY_Modul{
 
 		// WYSWYG editor (Jodit)
 
-		$doboz->ScriptHozzaadas('<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.css">');
+		$doboz->ScriptHozzaadas('<link rel="stylesheet" href="'. base_url().'temak/vezerlo/js/jodit/build/jodit.min.css">');
 
-		$doboz->ScriptHozzaadas('<script src="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.js"></script>');
+		$doboz->ScriptHozzaadas('<script src="'. base_url().'temak/vezerlo/js/jodit/build/jodit.js"></script>');
 
-		$doboz->ScriptHozzaadas('<script> var editorGyarto = new Jodit("#szoveg", { "buttons": ",,,,,,,,,,,,,font,brush,paragraph,|,|,align,undo,redo,|"});</script>');
+		$doboz->ScriptHozzaadas($this->ci->load->view('vezerlo/html/joditconfig', array('id'=>'#szoveg', 'peldany' => 'editorGyarto'), true));
 		$doboz->ScriptHozzaadas('<script>$().ready(function(){ $("button[type=submit]").click(function(){aJs.htmlencode();}); })</script>');
 
 		
@@ -549,10 +606,10 @@ class Post_admin extends MY_Modul{
 			
 
 			if($_FILES['logokep']['name']!='') {
-
+                            
 				if(imgcheck('logokep')) {
 
-					$filenev = DBP.'fokep_'.$id.'.'.ws_ext($_FILES['logokep']['name']);
+					$filenev = time().DBP.'fokep_'.$id.'.'.ws_ext($_FILES['logokep']['name']);
 
 					$path = 'assets/post/';
 
@@ -589,7 +646,6 @@ class Post_admin extends MY_Modul{
 						$this->Sql->sqlUpdate($a,DBP.'post' );
 
 						
-
 					} else {
 
 						$p = urlencode("Hiba a kép feltöltésénél!");
