@@ -38,8 +38,8 @@
 	<!-- Fonts -->
 
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/style.css">
-	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css?r=2">
+	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/style.css?r=1">
+	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/css/extra.css?r=3">
 		<!-- Slick -->
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick-theme.css"/>
