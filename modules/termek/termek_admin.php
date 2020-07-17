@@ -1631,13 +1631,19 @@ class Termek_admin extends MY_Modul{
 		$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
 		$mezok = $this->Sql->gets(DBP.'termek_jellemzok', '');
 		$termek = $this->Sql->get($id, DBP.'termekek', 'id');
-		
+                $armodositok = $this->sqlSorok("SELECT cikkszam FROM termek_armodositok "
+                        . " WHERE termek_id = $id AND cikkszam != '' ");
+                
+                
 		foreach($nyelvek as $nyelvKod) {
 			$tabla = DBP.'termek_mezok_'.$nyelvKod;
 					
 			$sor = $this->Sql->get($id, $tabla, ' termek_id ');
 			
 			$str = $termek->cikkszam.' ';
+                        
+                        if($armodositok) foreach($armodositok as $amSor) $str .= $amSor->cikkszam." ";
+                        
 			foreach($mezok as $mezo) {
 				if($mezo->keresheto == 0) continue;
 				
@@ -1648,6 +1654,9 @@ class Termek_admin extends MY_Modul{
 			/*
 			 * TODO: ha adott nyelven nincs kereső tábla létrehozhatná autómatikusan
 			 */
+                        
+                        
+                        
 			$keresoTabla = DBP.'termek_kereso_'.$nyelvKod;
 			$van = $this->Sql->get($id, $keresoTabla, ' termek_id ');
 			if($van) {
