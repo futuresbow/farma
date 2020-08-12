@@ -423,8 +423,15 @@ class Termek_admin extends MY_Modul{
 		// táblázat adatok összeállítása
 		$adatlista = array();
 		$start = 0;
+                $limit = 100;
+                if(isset($_GET['start'])) $start = (int)$_GET['start'];
 		
-		$sql = "SELECT t.id FROM  ".DBP."termekek t WHERE $w 1 = 1  ";
+		$sql = "SELECT count(t.id) as ossz FROM  ".DBP."termekek t WHERE $w 1 = 1  ";
+		//print $sql;
+		$ossz = $this->sqlSor($sql);
+		
+                
+		$sql = "SELECT t.id  FROM  ".DBP."termekek t WHERE $w 1 = 1 LIMIT $start,$limit  ";
 		//print $sql;
 		$lista = $this->sqlSorok($sql);
 		
@@ -456,6 +463,8 @@ class Termek_admin extends MY_Modul{
 		$tablazat->adatBeallitas('torles_url', 'termek/torles/');
 		$tablazat->adatBeallitas('megjelenitettMezok', array('nev' => 'Név', 'cikkszam' => 'Cikkszám',  'szerkesztes' => 'Szerkesztés',  'valtozat' => 'Változat',  'masolas' => 'Klónozás','keszlet' => 'Készlet','torles' => 'Törlés' ));
 		$tablazat->adatBeallitas('lista', $adatlista);
+                
+                $tablazat->lapozo($start,$limit, $ossz->ossz);
 		// táblázat beállítás vége
 		$ALG->tartalomDobozVege();
 		
