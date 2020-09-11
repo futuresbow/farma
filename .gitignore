@@ -3,5 +3,6 @@
 /.htaccess
 assets
 /public/.htaccess
+/data
 /public/data
 /nbproject/private/

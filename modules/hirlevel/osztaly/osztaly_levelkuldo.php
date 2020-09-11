@@ -426,7 +426,16 @@ class Levelkuldo_osztaly extends MY_Model  {
 
 		}
 		$ci = getCI();
-		$a = array('level' => $level, 'cimek' => $cimekStr, 'targy' => $targy);
+                
+                $mappa = 'data/levelek/'.date('Y-m');
+                if(!is_dir(ROOTPATH.$mappa)) mkdir (ROOTPATH.$mappa,0777);
+                
+                $levelNev = $mappa.'/rendelesStatus_'.date('YmdHi').'_'.rand(100,999).'.html';
+                
+                file_put_contents(ROOTPATH.$levelNev, $level);
+                chmod(ROOTPATH.$levelNev,0777);
+                
+                $a = array('level' => $levelNev, 'cimek' => $cimekStr, 'targy' => $targy);
 
 		 if(!$mail->Send()) {
 			 $a['sikeres'] = 0;

@@ -45,7 +45,7 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url().TEMAMAPPA;?>/honda/slick/slick-theme.css"/>
 	<!-- CSS -->
 
-	<!-- jQuery & jQUI for sortable -->
+	<!-- jQuery  -->
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<?= globalisMemoria("fejlec-scriptek");?>
 </head>

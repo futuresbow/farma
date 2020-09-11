@@ -926,7 +926,7 @@ class Rendelesek extends MY_Modul {
 
 					ws_hookFuttatas('rendeles.statuszvaltozas', array('rendeles_id' => $rendeles->id ));
                     
-                    $this->ci->session->unset_userdata('kosaradatok');
+                                        $this->ci->session->unset_userdata('kosaradatok');
 
 					redirect(base_url().'rendelesbefejezes');
 

@@ -47,7 +47,7 @@
                                 </td>
 
                                 <td>
-                                    <?php if($t->megrendeltValtozat()) $v = $t->megrendeltValtozat();?>
+                                    <?php $v = new stdClass();$v->id = false; if($t->megrendeltValtozat()) $v = $t->megrendeltValtozat();?>
 
 									<a href="<?= $t->link(); ?>" target="_blank" title=""><?= $t->nev." - ".$t->cikkszamMeghatarozas($v->id, true); ?></a> 
 
