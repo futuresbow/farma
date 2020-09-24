@@ -323,7 +323,13 @@ class Rendelesek extends MY_Modul {
 
 			}
 		}
-		
+		if($uri=='kosarfizmodfrissites') {
+                    $sql = "SELECT f.* FROM ".DBP."szallmod_fizetesmodok szf, fizetesmodok f WHERE szf.aktiv = 1 AND f.id = szf.fizetesmod_id AND  szallitasmod_id = ".(int)$this->ci->input->post('szmodid');
+                    $lista = $this->Sql->sqlSorok($sql);
+                    //print_r ($lista);
+                    print json_encode($lista);
+                    exit;
+                }
 		if($uri=='kosarosszarfrissites') {
 
 			// szállítás  fizetés mód változás (később kupon, vagy más költség)
@@ -536,7 +542,12 @@ class Rendelesek extends MY_Modul {
 				}
 
 			} 
-
+                        
+                        if($_POST['fizetesmod']=='0' || $_POST['fizetesmod']=='') {
+                            $hiba['fizetesmod'] = __f('Válassza ki a fizetési módot!');
+                            naplozo('Kosár oldal hiba', 0, '', 'Nincs fizetési mód');
+                            
+                        }
 			// mindenmás ellenőrzése...
 
 			
@@ -806,7 +817,7 @@ class Rendelesek extends MY_Modul {
 						
 
 					$armodosito = $rendeles->armodositok['fizetesmod'];
-
+                                        
 					$a = array(
 
 								'rendeles_id' => $rendeles_id,
@@ -963,10 +974,27 @@ class Rendelesek extends MY_Modul {
 
 			// fizetési - szállítási módok
 
-			$data['fizetesmodok'] = $this->ci->Sql->gets(DBP."fizetesmodok", " WHERE statusz = 1 ORDER BY sorrend ASC");
-
+			
 			$data['szallitasmodok'] = $this->ci->Sql->gets(DBP."szallitasmodok", "WHERE statusz = 1 ORDER BY sorrend ASC");
+                        $szmodid = (int)@$data['rendeles']->armodositok['szallitasmod']->id;
+                        if($szmodid==0) {
+                            // nincs még kiválasztva szállítás, a fizetés üres
+                            $data['fizetesmodok'] = array();
 
+                        } else {
+                            $kapcsoltak = $this->Sql->sqlSorok("SELECT fizetesmod_id FROM ".DBP."szallmod_fizetesmodok "
+                            . "WHERE aktiv = 1 AND szallitasmod_id = $szmodid ");
+                            $fizmodIdArr = array();
+                            foreach($kapcsoltak as $szallXfiz) {
+
+                                $fizmodIdArr[] = $szallXfiz->fizetesmod_id;
+                            }
+                            $data['fizetesmodok'] = $this->ci->Sql->gets(DBP."fizetesmodok", " WHERE id IN (". implode(',',$fizmodIdArr).") AND  statusz = 1 ORDER BY sorrend ASC");
+
+                        }
+                        
+                        
+                        
 			$tag = belepettTag();
 
 			if($tag) {

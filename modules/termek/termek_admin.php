@@ -370,7 +370,8 @@ class Termek_admin extends MY_Modul{
 			$mod = (int)$sr['keresomezo'];
 			
 			if($mod!=2)  {
-				if($mod==0) $w = ' t.cikkszam LIKE "%'.$sr['keresoszo'].'%" ';
+				if($mod==0) $w = ' ( t.cikkszam LIKE "%'.$sr['keresoszo'].'%"  '
+                                        . ' OR t.id IN (SELECT termek_id FROM  '.DBP.'termek_armodositok WHERE cikkszam LIKE "%'.$sr['keresoszo'].'%" ) ) ';
 				if($mod==1) $w = ' j.termek_id = t.id AND j.keresostr LIKE "%'.$sr['keresoszo'].'%" ';
 				
 				if($mod<2) $sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_kereso_$nyelv j WHERE $w";
@@ -381,7 +382,7 @@ class Termek_admin extends MY_Modul{
 					$sql = "SELECT DISTINCT(t.id) FROM ".DBP."termekek t, ".DBP."termek_cimkek c, ".DBP."termekxcimke x WHERE $w";
 					
 				}
-				$idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
+                                $idArr = ws_valueArray($this->Sql->sqlSorok($sql), 'id');
 				
 				if($idArr) {
 					$w = "  t.id IN (".implode(',', $idArr).") AND ";
@@ -427,8 +428,8 @@ class Termek_admin extends MY_Modul{
                 if(isset($_GET['start'])) $start = (int)$_GET['start'];
 		
 		$sql = "SELECT count(t.id) as ossz FROM  ".DBP."termekek t WHERE $w 1 = 1  ";
-		//print $sql;
-		$ossz = $this->sqlSor($sql);
+		
+                $ossz = $this->sqlSor($sql);
 		
                 
 		$sql = "SELECT t.id  FROM  ".DBP."termekek t WHERE $w 1 = 1 LIMIT $start,$limit  ";
@@ -450,7 +451,7 @@ class Termek_admin extends MY_Modul{
 		}
 		// táblázat beállítás
 		$tablazat = $ALG->ujTablazat();
-		
+
 		$keresoMezok = array(
 			array('felirat' => 'Cikkszám', 'mezonev' => 'cikkszam'),
 			array('felirat' => 'Szöveges', 'mezonev' => 'nev'),

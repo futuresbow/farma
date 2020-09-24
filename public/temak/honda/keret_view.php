@@ -423,6 +423,15 @@ var siteJs = {};
 			siteJs.fatyolStop();
 		});
 	}
+	siteJs.szallmodValasztas = function () {
+            fmod = $('#fizetesmod').val("0");
+            szmod = $('#szallitasmod').val();
+            $.post(base_url()+'kosarfizmodfrissites?beepulofuttatas=1',{szmodid:szmod}, function(e){
+                $('#fizetesmod').empty().append('<option value="0">Kérem, válasszon!</option>');
+                e = JSON.parse(e);
+                for(i = 0;i < e.length; i++ ) $('#fizetesmod').append('<option value="'+e[i].id+'">'+e[i].nev+'</option>');
+            });
+        }
 	siteJs.kosarOsszarKalkulacio = function () {
 		// szállítás, fizetés mód állításkor hívjuk
 		szmod = $('#szallitasmod').val();
