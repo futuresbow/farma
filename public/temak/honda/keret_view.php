@@ -9,7 +9,7 @@
 	<meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="<?= beallitasOlvasas('google-signin-client_id')?>">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-	
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 	<!-- FACEBOOK LOGIN -->
 		<script>
 		window.fbAsyncInit = function() {
@@ -334,6 +334,14 @@ var siteJs = {};
 			
 		}
 		$.post(base_url()+'/kosarajax?beepulofuttatas=1', {'kosarajax':adat} , function(e) {
+                        
+                        if(e.trim()=='-1'){
+                            siteJs.fatyolStop();
+                             
+                            Swal.fire('Nincs készleten.');
+                            return;
+                        }
+                        
 			siteJs.kosarPanelFrissites() ;
 			$([document.documentElement, document.body]).animate({
 				scrollTop: $('.kosarwidget').offset().top
@@ -403,7 +411,15 @@ var siteJs = {};
 	siteJs.kosarDarabModositas = function(id, mod , max) {
 		siteJs.fatyolStart();
 		$.post(base_url()+'/kosardarabmod?beepulofuttatas=1', { id: id, mod: mod } , function(e) {
-			siteJs.kosarPanelFrissites();
+                            if(e.trim()=='-1'){
+                            siteJs.fatyolStop();  
+                             Swal.fire('Nincs készleten.');
+                            return;
+                            
+                            
+                        }
+        
+                        siteJs.kosarPanelFrissites();
 			o = $('#nagykosar');
 			if(o.length>0) {
 				$('#nagykosar').load(base_url()+'/nagykosarfrissites?beepulofuttatas=1', function() { siteJs.fatyolStop(); } );

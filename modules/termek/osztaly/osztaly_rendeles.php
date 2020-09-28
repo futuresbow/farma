@@ -168,6 +168,9 @@ class Rendeles_osztaly extends MY_Model {
 				print '<br><br>';
 				*/
 				
+                                $keszletNoveles = $keszletNoveles*$t->darab;
+				$foglaltNoveles = $foglaltNoveles*$t->darab;
+                                        
 				if(!$valtozat1 and !$valtozat2) {
 					// normál termék
 					
@@ -184,8 +187,7 @@ class Rendeles_osztaly extends MY_Model {
 					$termek_armodositok_id = (int)@$valtozat1->termek_armodositok_id;
 					//$valtozat2ID = (int)@$valtozat2->termek_armodositok_id;
 					
-					$keszletNoveles = $keszletNoveles*$t->darab;
-					$foglaltNoveles = $foglaltNoveles*$t->darab;
+					
 				
 					$db = $t->darab;
 					$sql = "UPDATE ".DBP."termek_keszletek SET 

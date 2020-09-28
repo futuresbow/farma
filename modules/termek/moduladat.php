@@ -105,6 +105,7 @@ $tartalomkezeloAdatok['termek/termeklista/fooldalitermekek'] = array(
  
 
 $beepulok[] = 'termek/rendelesek/kosarajax';
+$beepulok[] = 'termek/rendelesek/sessionkezeles';
 $beepulok[] = 'termek/rendelesek/termeklapkosarajax';
 
 /*

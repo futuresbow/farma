@@ -13,12 +13,59 @@ class Rendelesek extends MY_Modul {
 	function termeklapkosarajax() {
 	
 	}
+        /*
+         * TODO: cronba bekötni, ezek cron feladatok 5 perces futtatással
+         */
+        function elfogyottTermekElrejtes() {
+            $sql = "UPDATE ".DBP."termekek SET aktiv = 0 WHERE termekszulo_id = 0 AND keszlet = 0 AND modositva < ".strtotime('-1 day');
+            $this->db->query($sql);
+            
+        }
+        function sessionkezeles() {
+            $lejarat = time()-$this->config->item('sess_expiration');
+            
+            
+            $sql = "SELECT * FROM ".DBP."ci_sessions WHERE timestamp < '".($lejarat)."'";
+            
+            $sessions = $this->Sql->sqlSorok($sql);
+            
+            $kosarSessionId = false;
+            foreach($sessions as $session) {
+                $arr = $session->data;
+                $arr = explode(';', $arr);
+                foreach($arr as $arrSor) {
+                    
+                    if(strpos($arrSor, 'kosarSessId')!==false) {
+                        
+                        $adatArr = explode(':', $arrSor);
+                        $kosarSessionId = trim($adatArr[2],'"');
+                    }
+                }
+            }
+            if($kosarSessionId){
+                
+                $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE session_id = '$kosarSessionId' ");
+            
+            }
+            $this->db->query("DELETE FROM ci_sessions WHERE timestamp < ".$lejarat);
+            
+            $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE modositva < '".date('Y-m-d H:i', strtotime("-2 hours"))."'");
+            
+            $this->elfogyottTermekElrejtes();
+            
+        }
 	function kosarajax() {
 
 		// session törlés
 
 		//$this->ci->session->set_userdata('kosaradatok', false);
-
+                
+                $kosarSessId = $this->ci->session->userdata('kosarSessId');
+                if(!$kosarSessId) {
+                    $kosarSessId = md5('KOSARSESSIONID'.rand(100,999).date('Y-m-d H:i'));
+                    $this->ci->session->set_userdata('kosarSessId',  $kosarSessId );
+                    
+                }
 		
 
 		$uri = $this->ci->uri->segment(1);
@@ -46,14 +93,32 @@ class Rendelesek extends MY_Modul {
 				$adatok = $_POST['kosarajax'];
 
 				$adatok['kosarId'] = md5('KOSARID'.rand(1,100).date('Y-m-d H:i'));
-
+                                ws_autoload('termek');
+				
+                                $termek = new Termek_osztaly( $adatok['termek_id']);
+				
+                                $keszlet = isset($adatok['valtozat'])?$termek->elerhetoKeszlet($adatok['valtozat']):$termek->elerhetoKeszlet(); 
+                                
+                                if($adatok['db']>$keszlet) {
+                                    print '-1';
+                                    return -1;
+                                    
+                                }
+                                 $kosarbanTermek = array(
+                                    'kosar_id' => $adatok['kosarId'],
+                                    'session_id' => $kosarSessId,
+                                    'termek_id' => @(int)$adatok['termek_id'], 
+                                    'armodosito_id' => @(int)$adatok['valtozat'],
+                                    'darabszam' => @(int)$adatok['db'],
+                                );
+                                
+                                $this->Sql->sqlSave($kosarbanTermek, DBP.'termek_kosar_darabszam');
+                                
 				$kosaradatok = $this->ci->session->userdata('kosaradatok');
 				
 				$kosaradatok['termekek'][] = $adatok;
 				
-				ws_autoload('termek');
 				
-				$termek = new Termek_osztaly( $adatok['termek_id']);
 				
 				naplozo('Termék kosárba helyezve', $adatok['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);
 				
@@ -74,7 +139,7 @@ class Rendelesek extends MY_Modul {
 				foreach($kosaradatok['termekek'] as $k => $sor) {
 
 					if($sor['kosarId']==$_POST['termektorles']) {
-				
+                                                $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE kosar_id = '".$sor['kosarId']."' LIMIT 1");
 						$termek = new Termek_osztaly( $sor['termek_id']);
 				
 						naplozo('Termék kosárba helyezve', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);
@@ -110,19 +175,31 @@ class Rendelesek extends MY_Modul {
 					$termek = new Termek_osztaly( $sor['termek_id']);
 					naplozo('Darabszám módosítás', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);
 					
-					
-					
+                                        if(isset($sor['valtozat']) && $sor['valtozat']>0){
+                                            $keszlet = $keszlet = $termek->elerhetoKeszlet($sor['valtozat']);
+                                        } else {
+                                            $keszlet = $keszlet = $termek->elerhetoKeszlet();
+                                        }
+                                        
 					$db = $sor['db']+ $_POST['mod'];
-
+                                        
+                                        if($db>$keszlet) {
+                                            naplozo('Termék nincs készleten', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);
+                                            print '-1';
+                                            return -1;
+                                        }
+                                        
 					if($db <= 0) {
 						
 						naplozo('Termék eltávolítása', $sor['termek_id'], 'termek', $termek->jellemzo('Név')." - ".$termek->cikkszam);
-					
+                                                $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE kosar_id = '".$sor['kosarId']."' LIMIT 1");
+
 						unset($kosaradatok['termekek'][$k]);
 
 					} else {
 
 						$kosaradatok['termekek'][$k]['db'] = $db;
+                                                $this->db->query("UPDATE ".DBP."termek_kosar_darabszam SET darabszam = $db WHERE kosar_id = '".$sor['kosarId']."' LIMIT 1");
 
 					}
 
@@ -139,9 +216,8 @@ class Rendelesek extends MY_Modul {
 		}
 
 		if($uri=='kosarwidget') {
-
-			define('beepulofuttatas_utan_leall', 1);
-
+                        define('beepulofuttatas_utan_leall', 1);
+                        
 			ws_autoload('termek');
 
 			$kosaradatok = $this->ci->session->userdata('kosaradatok');
@@ -649,7 +725,10 @@ class Rendelesek extends MY_Modul {
 				$kosaradatok = $this->ci->session->userdata('kosaradatok');
 
 				if($kosaradatok) {
-
+                                        
+                                        
+                                        
+                                       
 					$rendeles = new Rendeles_osztaly;
 
 					$rendeles->betoltesMunkamenetbol($kosaradatok);
@@ -680,14 +759,14 @@ class Rendelesek extends MY_Modul {
 		
 
 					if($rendeles->termekLista) foreach($rendeles->termekLista as $termek) {
-                        $cikkszam = $termek->cikkszam;
-                        
-                        if(!empty($termek->kivalasztottValtozat)) {
-                            // cikkszám felülírás (csak az 1-es változattípussal lehetséges)
-                            $opcio = $termek->kivalasztottValtozat;
-                            $cikkszam = $termek->cikkszamMeghatarozas($opcio->id);
-                            
-                        }
+                                            $cikkszam = $termek->cikkszam;
+
+                                            if(!empty($termek->kivalasztottValtozat)) {
+                                                // cikkszám felülírás (csak az 1-es változattípussal lehetséges)
+                                                $opcio = $termek->kivalasztottValtozat;
+                                                $cikkszam = $termek->cikkszamMeghatarozas($opcio->id);
+
+                                            }
                         
                         
 						$a = array(
@@ -713,8 +792,8 @@ class Rendelesek extends MY_Modul {
 						);
                        
 						$termek_id = $this->ci->Sql->sqlSave($a, DBP.'rendeles_termekek');
-                        
-                        
+                                                
+                                                
 
 						if($termek->vannakKosarOpciok()) {
 
@@ -926,8 +1005,8 @@ class Rendelesek extends MY_Modul {
 						
 					}
 
-					// kész, visszatöltés
-                    
+					// kész, kosár űrítés, visszatöltés
+                                        
                     
 					
 
@@ -937,8 +1016,10 @@ class Rendelesek extends MY_Modul {
 
 					ws_hookFuttatas('rendeles.statuszvaltozas', array('rendeles_id' => $rendeles->id ));
                     
+                                        $sql = ("DELETE FROM ".DBP."termek_kosar_darabszam WHERE session_id = '".$this->ci->session->userdata('kosarSessId')."' ");
+                                        $this->db->query($sql);
                                         $this->ci->session->unset_userdata('kosaradatok');
-
+                                        
 					redirect(base_url().'rendelesbefejezes');
 
 				}

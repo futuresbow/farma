@@ -165,7 +165,10 @@ class Termek_osztaly extends MY_Model {
 				$keszlet = $rs->keszlet;
 			}
 		}
-		
+                $ci = getCI();
+                $sql = "SELECT SUM(darabszam) as darab FROM ".DBP."termek_kosar_darabszam WHERE session_id != '".$ci->session->userdata('kosarSessId')."' AND termek_id = ".$this->id."";
+		$darabszam = $this->Sql->sqlSor($sql);
+                $keszlet -= $darabszam->darab;
 		return $keszlet;
 	}
 	/*
