@@ -920,8 +920,20 @@ class Termek_admin extends MY_Modul{
 		$doboz->HTMLHozzaadas($this->load->view(ADMINTEMPLATE.'html/termekszerkeszto_javascript', $this->data, true));
 		$doboz->HTMLHozzaadas("<script>var tid = ".$this->data['tid']."</script>");
 		
+                // ajánlott termékek
+                $kategoriak = $ci->Sql->kategoriaFa(0);
+                //print_r($kategoriak);
+                $katSelect = array();
+                foreach ($kategoriak as $kategoria) {
+                    $katSelect[$kategoria->id] = str_repeat('-', $kategoria->szint).' '.$kategoria->nev;
+                }
+                $select1 = new Legordulo(array('attr' => ' id="kategoriaAjanloValaszto" ' , 'nevtomb'=>'', 'mezonev' => 'ajanlottkategoria', 'felirat' => 'Ajánlott termék kategóriák', 'ertek' => '', 'opciok' => $katSelect));
+		$gomb = new Urlapgomb(array('attr'=> 'onclick="aJs.kategoriaAjanloValasztoClick();" class="btn btn-info"', 'nevtomb' => '', 'mezonev'=> 'kategoriahozzaadas','ertek' => 'Kategória kiválasztása' ));
 		
-		$ALG->tartalomDobozVege();
+                $doboz->duplaInput($select1, $gomb);
+		$doboz->HTMLHozzaadas('<div id="termekszerkeszto_kategoriaajanlovalaszto"></div>');
+		
+                $ALG->tartalomDobozVege();
 		
 		$ALG->urlapGombok(array(
 			array('osztaly' => 'btn-ok', 'onclick' => "aJs.htmlencode();", 'felirat' => 'Mentés és vissza a listához', 'tipus' => 'button', 'link' => ''),
