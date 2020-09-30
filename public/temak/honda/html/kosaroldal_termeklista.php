@@ -2,7 +2,13 @@
 <?php if(!empty($rendeles->termekLista)) : ?>
 <?php $armod = (beallitasOlvasas('armod-osszesito')=="0")?'Nettó':'Bruttó'; ?>
 					<table>
-
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="one-price">Nettó egységár</td>
+                                                <td></td>
+                                                <td class="all-price">Bruttó</td>
+                                            </tr>
 					<?php foreach($rendeles->termekLista as $termek):?>
 
                         <tr>
