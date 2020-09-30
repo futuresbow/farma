@@ -797,7 +797,34 @@ class Termek_admin extends MY_Modul{
 				
 				
 			}
-			
+                        
+                        // termék-kategria ajánló
+                        $meglevoKatAjanlok = $this->Sql->fieldKeyArray("SELECT * FROM  ".DBP."termek_kategoriaajanlo ka "
+                      . "WHERE ka.termek_id = $id ", 'id', 'kategoria_id');
+                        
+                        if(!$meglevoKatAjanlok ) $meglevoKatAjanlok  = array();
+                        
+                        if(isset($_POST['katajanlo'])){
+                            foreach($_POST['katajanlo'] as $kategoria_id) {
+                                $vanMar = $this->sqlSor("SELECT id FROM ".DBP."termek_kategoriaajanlo WHERE termek_id = $id AND kategoria_id = $kategoria_id LIMIT 1");
+                                if(!$vanMar) {
+                                    $katxterm = array('termek_id' =>  $id, 'kategoria_id'  => $kategoria_id);
+                                    $this->Sql->sqlSave($katxterm, DBP.'termek_kategoriaajanlo');
+                                    
+                                }
+                                unset($meglevoKatAjanlok[$kategoria_id]);
+                                 
+                                
+                            }
+                        }
+                        if(!empty($meglevoKatAjanlok)) {
+                            foreach($meglevoKatAjanlok as $kaajanloId) {
+                                $sql  = "DELETE FROM ". DBP.'termek_kategoriaajanlo WHERE id = '.$kaajanloId;
+                                $this->db->query ($sql);
+                        
+                            }
+                        }
+                        
 			ws_hookFuttatas('termek.keresostrfrissites', array('id'=> $id ) );
 			
 			if(isset($_POST['elonezet'])) {
@@ -923,16 +950,16 @@ class Termek_admin extends MY_Modul{
                 // ajánlott termékek
                 $kategoriak = $ci->Sql->kategoriaFa(0);
                 //print_r($kategoriak);
-                $katSelect = array();
+                $katSelect = ['' => 'Válassz kapcsolódó kategóriát'];
                 foreach ($kategoriak as $kategoria) {
                     $katSelect[$kategoria->id] = str_repeat('-', $kategoria->szint).' '.$kategoria->nev;
                 }
                 $select1 = new Legordulo(array('attr' => ' id="kategoriaAjanloValaszto" ' , 'nevtomb'=>'', 'mezonev' => 'ajanlottkategoria', 'felirat' => 'Ajánlott termék kategóriák', 'ertek' => '', 'opciok' => $katSelect));
-		$gomb = new Urlapgomb(array('attr'=> 'onclick="aJs.kategoriaAjanloValasztoClick();" class="btn btn-info"', 'nevtomb' => '', 'mezonev'=> 'kategoriahozzaadas','ertek' => 'Kategória kiválasztása' ));
+		$gomb = new Urlapgomb(array('attr'=> 'onclick="aJs.kategoriaAjanloValasztoClick('.$id.');" class="btn btn-info"', 'nevtomb' => '', 'mezonev'=> 'kategoriahozzaadas','ertek' => 'Kategória kiválasztása' ));
 		
                 $doboz->duplaInput($select1, $gomb);
 		$doboz->HTMLHozzaadas('<div id="termekszerkeszto_kategoriaajanlovalaszto"></div>');
-		
+		globalisMemoria('footerJs', '<script>$().ready(function(){ aJs.kategoriaAjanloValasztoClick('.$id.');})</script>', true);
                 $ALG->tartalomDobozVege();
 		
 		$ALG->urlapGombok(array(
@@ -944,6 +971,37 @@ class Termek_admin extends MY_Modul{
 		return $ALG->kimenet();
 		
 	}
+        function kapcsolodokategoriak() {
+            
+            $termek_id  = (int)$_GET['termek_id'];
+            $kategoria_id  = 0;
+            if(isset($_GET['kategoria_id'])) $kategoria_id = (int)$_GET['kategoria_id'];
+            
+            
+            if($kategoria_id==0 ) {
+                // első futás, az elmentett kapcsolatokat adjuk vissza
+                $sql = "SELECT k.* FROM ".DBP."kategoriak k, ".DBP."termek_kategoriaajanlo ka "
+                  . "WHERE ka.termek_id = $termek_id AND k.id = ka.kategoria_id";
+               
+                $kategoriak = $this->Sql->sqlSorok($sql);
+            } else {
+                // kategória hozzáadása
+                $kategoriak = array();
+            }
+            
+            if($kategoria_id!=0) {
+                $kategoriak = $this->Sql->sqlSorok("SELECT k.* FROM ".DBP."kategoriak k "
+                        . " WHERE  k.id = $kategoria_id LIMIT 1");
+            }
+            
+            if(!empty($kategoriak)) foreach ($kategoriak as $k => $v) {
+                $kategoriak[$k]->kep =  base_url().ws_image($v->kep, 'smallboxed');
+                
+            }
+            print json_encode($kategoriak);
+            return;
+            
+        }
 	function fotermekkivalasztas() {
 		// változat
 		

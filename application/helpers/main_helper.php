@@ -444,13 +444,18 @@ function widget($utvonal, $param = false) {
 }
 
 // globálisan eléhető adatok
-function globalisMemoria($kulcs, $ertek = null) {
+function globalisMemoria($kulcs, $ertek = null, $hozzafuzes = false) {
 	global $globalisMemoria;
 	if(is_null($ertek)) {
 		if(isset($globalisMemoria[$kulcs])) return $globalisMemoria[$kulcs] ;
 		return false;
 	}
-	$globalisMemoria[$kulcs] = $ertek;
+        if($hozzafuzes){
+            $globalisMemoria[$kulcs] .= $ertek;
+        } else {
+            $globalisMemoria[$kulcs] = $ertek;
+        }
+	
 }
 
 // rendszerüzenetek tárgya
