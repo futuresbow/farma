@@ -494,10 +494,18 @@ class Rendelesek extends MY_Modul {
 			redirect(base_url().'kosar');
 			return;
 		}
-		
-		
+		if(isset($_GET['nincsregisztracio'])) $this->ci->session->set_userdata('vasarlasmod', -1);
+                    
 		$tag = belepettTag();
-
+                
+                
+                if(!$this->ci->session->userdata('vasarlasmod')) {
+                    if(!$tag) {
+                        return ws_frontendView('html/kosaroldal_belep_reg_valaszto', null, true);
+                    } else {
+                        // $this->ci->session->set_userdata('vasarlasmod', 2); // belépett felhasználóként vásárol
+                    }
+                }
 		if(@$u['regtipus']!='') {
 
 			// soc gombos belépés/reg; ha nincs a user, egyből reggeljük is.
@@ -1033,7 +1041,8 @@ class Rendelesek extends MY_Modul {
                                         $sql = ("DELETE FROM ".DBP."termek_kosar_darabszam WHERE session_id = '".$this->ci->session->userdata('kosarSessId')."' ");
                                         $this->db->query($sql);
                                         $this->ci->session->unset_userdata('kosaradatok');
-                                        
+                                        $this->ci->session->unset_userdata('vasarlasmod');
+		
 					redirect(base_url().'rendelesbefejezes');
 
 				}
@@ -1145,9 +1154,7 @@ class Rendelesek extends MY_Modul {
 			}
 
 			return ws_frontendView('html/kosaroldal_ureskosar', null, true);
-
-		
-
+                        
 		}
 
 	}

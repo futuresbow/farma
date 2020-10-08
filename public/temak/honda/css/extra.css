@@ -438,3 +438,34 @@ background: #ea3;
 	color: #f26d7a;
 	
 }
+
+.btn.btn-green {
+        background-color: #248a51;
+        color: #ffffff;
+}
+.btn.btn-green:hover {
+        background-color: #017d75;
+}
+.btn.btn-orange {
+        background-color: #D38901;
+        color: #ffffff;
+}
+.btn.btn-orange:hover {
+        background-color: #ea3;
+}
+.btn.btn-blue {
+        background-color: #003399;
+        color: #ffffff;
+}
+.btn.btn-blue:hover {
+        background-color: #0062cc;
+}
+
+.flexcols {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+.flexitem {
+    margin: auto;
+}
