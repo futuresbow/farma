@@ -33,11 +33,11 @@ class Levelkuldo_osztaly extends MY_Model  {
 
 		$mail->SMTPAuth = true; // authentication enabled
 
-		//$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
+		$mail->SMTPSecure = beallitasOlvasas('SMTP_secure'); //'ssl'  // secure transfer enabled REQUIRED for Gmail
 
 		$mail->Host = beallitasOlvasas('SMTP_host');
 
-		$mail->Port = 26; // or 587
+		$mail->Port = beallitasOlvasas('SMTP_port'); // or 587
 
 		$mail->IsHTML(true);
 

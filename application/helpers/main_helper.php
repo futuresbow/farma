@@ -487,14 +487,27 @@ function ws_belepesEllenorzes() {
 	// van session?
 	if(!$ci->session->userdata('__belepett_felhasznalo')) return false;
 	$tag = globalisMemoria('felhsaznaloMunkamenet');
+        
 	if($tag) return $tag;
 	
 	//nincs még tagpéldány, létrehozzuk
 	ws_autoload('felhasznalok');
 	$tag = new Tag_osztaly($ci->session->userdata('__belepett_felhasznalo'));
-	if(isset($tag->id)) return $tag;
-	// nincs meg a tag
-	$this->ci->delete_userdata('__belepett_felhasznalo');
+	
+        if(isset($tag->id)) {
+            
+            if($tag->statusz!=1) {
+                
+                $ci->session->unset_userdata('__belepett_felhasznalo');
+	
+                redirect(base_url().'?logout'); 
+                return;
+                
+            }
+            return $tag;
+        }
+        // nincs meg a tag
+	$ci->session->unset_userdata('__belepett_felhasznalo');
 	return false;
 }
 function ws_frontendMenupontok($csoport_id=0) {

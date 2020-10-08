@@ -952,6 +952,14 @@ public function menulista() {
 		$input1 = new Szovegmezo(array('felirat' => 'Kimenő SMTP kiszolgáló', 'nevtomb' => 'a', 'mezonev' => 'SMTP_host', 'ertek' => beallitasOlvasas('SMTP_host'))) ;
 
 		$doboz->szimplaInput($input1);
+		
+                $input1 = new Szovegmezo(array('felirat' => 'Kimenő SMTP port (pl. 26)', 'nevtomb' => 'a', 'mezonev' => 'SMTP_port', 'ertek' => beallitasOlvasas('SMTP_port'))) ;
+
+		$doboz->szimplaInput($input1);
+                
+                $input1 = new Szovegmezo(array('felirat' => 'SMTP secure ( pl. ssl )', 'nevtomb' => 'a', 'mezonev' => 'SMTP_secure', 'ertek' => beallitasOlvasas('SMTP_secure')));
+
+		$doboz->szimplaInput($input1);
 
 		$input1 = new Szovegmezo(array('felirat' => 'Kimenő SMTP felhasználó', 'nevtomb' => 'a', 'mezonev' => 'SMTP_user', 'ertek' => beallitasOlvasas('SMTP_user'))) ;
 
