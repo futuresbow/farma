@@ -734,7 +734,21 @@ class Rendelesek extends MY_Modul {
 					$vasarlo['felhasznalo_id'] = $tag->id;
 
 					naplozo('Kosár oldal vásárló mentés', $tag->id, DBP.'felhasznalok');
-				}
+				
+                                        // felhasználó adatok frissítése
+                                        $v = $vasarlo;
+                                        unset($v['vezeteknev'] , $v['keresztnev'], $v['email']);
+                                        $vanAdat = $this->Sql->get($tag->id, DBP.'felhasznalo_adatok', 'felhasznalo_id');
+                                        if($vanAdat) {
+                                            $v['id'] = $vanAdat->id;
+                                            $this->Sql->sqlUpdate($v, DBP.'felhasznalo_adatok', 'id');
+                                        } else {
+                                            
+                                            $this->Sql->sqlSave($v, DBP.'felhasznalo_adatok');
+
+                                        }
+                                        
+                                }
 
 				
 
@@ -1077,7 +1091,7 @@ class Rendelesek extends MY_Modul {
 			}
 
 			// fizetési - szállítási módok
-
+                        
 			
 			$data['szallitasmodok'] = $this->ci->Sql->gets(DBP."szallitasmodok", "WHERE statusz = 1 ORDER BY sorrend ASC");
                         $szmodid = (int)@$data['rendeles']->armodositok['szallitasmod']->id;
@@ -1112,7 +1126,6 @@ class Rendelesek extends MY_Modul {
 				$data['v'] = $tag->vasarloAdatok();
 
 				
-
 				
 
 			} else {
@@ -1124,24 +1137,18 @@ class Rendelesek extends MY_Modul {
 			}
 
 			if(isset($_POST['v'])) {
+                            
+                                // már történt postolás, felül írjuk az adatokat
 
 				$data['v'] = (object)$_POST['v'];
 
 				$data['f'] = (object)$_POST['f'];
 
-			} else {
-
-				if($tag) {
-
-					$data['f'] = $tag;
-
-					$data['v'] = $this->ci->Sql->sqlSor("SELECT * FROM ".DBP."rendeles_felhasznalok WHERE felhasznalo_id = ".$tag->id." ORDER BY ido DESC ");
-
-					
-
-				}
-
-			}
+			} 
+                        
+                        
+                        
+                        
 			if(!empty($data['rendeles']->termekLista))
 				return ws_frontendView('html/kosaroldal', $data, true);
 			return ws_frontendView('html/kosaroldal_ureskosar', null, true);
