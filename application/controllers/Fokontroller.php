@@ -89,7 +89,8 @@ class Fokontroller extends CI_Controller {
 				$osztaly = $modulEleres[1];
 				$metodus = isset($modulEleres[2])?$modulEleres[2]:'index';
 				include_once(ROOTPATH.'modules/'.$modul.'/'.$osztaly.'.php');
-				$o = new $osztaly;
+				
+                                $o = new $osztaly;
 				
 				$o->{$metodus}();
 					

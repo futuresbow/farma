@@ -543,6 +543,7 @@ var siteJs = {};
 	$().ready(function(){ siteJs.fatyolStop(); window.onbeforeunload = function(event) {  siteJs.fatyolStart(); };});
 	</script>
 	<?= globalisMemoria('lablec-scriptek'); ?>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js?forceLang=hu&tracking=1&always=1"></script>
 </body>
 </html>
 
