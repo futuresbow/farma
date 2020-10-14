@@ -449,7 +449,7 @@ class Rendelesek_admin extends MY_Modul {
 			$visszaigazolo = $statusz->visszaigazolo;
 			
 			
-			$targy = rendszerUzenetTargy($visszaigazolo);
+			$targy = rendszerUzenetTargy($visszaigazolo).' '. ws_ordernumber($rendeles->id);
 
 				$uzenet = rendszerUzenet($visszaigazolo);
 
@@ -478,7 +478,7 @@ class Rendelesek_admin extends MY_Modul {
 
 				
 				$level->levelKuldes($rendeles->vevo->email, $targy);
-				$level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), 'WEBSHOP megrendelés érkezett');
+				$level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), $targy);
 
 				
 

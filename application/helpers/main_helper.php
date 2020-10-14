@@ -82,7 +82,7 @@ function belepettTag() {
 	return $tag;
 }
 
-function ws_arformatum($num, $ezresJelolo = " ") {
+function ws_arformatum($num, $ezresJelolo = "&nbsp;") {
 	return number_format($num, 0,'',$ezresJelolo);
 }
 

@@ -117,7 +117,7 @@ class Rendeles_osztaly extends MY_Model {
 
 	function megrendelesAdatTablak($file='') {
 		
-		$this->megrendelesArszamitas();
+		//$this->megrendelesArszamitas(true);
 
 		if($file == '' )$file = 'rendelesadatok.php';
 
@@ -125,31 +125,33 @@ class Rendeles_osztaly extends MY_Model {
 
 		if(!file_exists($file)) return "Hiányzó rendelésadat template file: ".$file;
 
-		ob_start();include($file);$out = ob_get_contents();ob_end_clean();
+		ob_start();
+                include($file);
+                $out = ob_get_contents();ob_end_clean();
 		
 		return $out;
 
 	}
 
-	function megrendelesOsszar() {
+	function megrendelesOsszar($csakTermek = false) {
 
-		if(is_null($this->osszNetto)) $this->megrendelesArszamitas();
+		if(is_null($this->osszNetto)) $this->megrendelesArszamitas($csakTermek);
 
 		return $this->osszNetto;
 
 	}
 
-	function megrendelesOsszarBrutto() {
+	function megrendelesOsszarBrutto($csakTermek = false) {
 
-		if(is_null($this->osszNetto)) $this->megrendelesArszamitas();
+		if(is_null($this->osszNetto)) $this->megrendelesArszamitas($csakTermek);
 
 		return $this->osszBrutto;
 
 	}
 
-	function megrendelesOsszarAfa() {
+	function megrendelesOsszarAfa($csakTermek = false) {
 
-		if(is_null($this->osszNetto)) $this->megrendelesArszamitas();
+		if(is_null($this->osszNetto)) $this->megrendelesArszamitas($csakTermek = false);
 
 		return $this->osszAfa;
 
@@ -204,11 +206,10 @@ class Rendeles_osztaly extends MY_Model {
 			}
 		}
 	}
-	function megrendelesArszamitas() {
+	function megrendelesArszamitas($csakTermek = false) {
 
 		
-
-		// termék összárak
+                // termék összárak
 
 		$osszar = 0; 
 
@@ -238,110 +239,111 @@ class Rendeles_osztaly extends MY_Model {
 
 		// ha a bruttóár nagyobb mint a limit akkor nincs költség
 
-			$termekOsszar = $osszar;
+                $termekOsszar = $osszar;
 
-			
 
-			if($this->armodositok) {
-				
-				foreach($this->armodositok as $k =>  $modosito) {
-					if(isset($modosito->id)) {
-						
-						
-						
-						$amNetto = $this->armodositok[$k]->nettoAr = 0;
-						$amBrutto = $this->armodositok[$k]->bruttoAr = 0;
-						
-						
-						
-						
-						
-						
-						
-							
-						if($modosito->ingyeneslimitar!=0) if($modosito->ingyeneslimitar<$termekOsszar) {
+                if(!$csakTermek) if($this->armodositok) {
 
-							continue;
 
-						}
-						//print($modosito->nev." ");
-					
-						if(!isset($modosito->cikkszamok)) $modosito->cikkszamok = '';
-						if(trim($modosito->cikkszamok)!='') {
-							
-							// termékenként számoljuk a kedvezményt, mert nem vonatozik mindegyikre
-							
-							$this->osszKedvezmenyekNetto += 
-								$amNetto =  
-									$osszKedvezmenyNetto;
-							$this->osszKedvezmenyekBrutto += 
-								$amBrutto =  
-									$osszKedvezmenyBrutto;
-							
-							$this->armodositok[$k]->nettoAr =  $osszKedvezmenyNetto;
-							$this->armodositok[$k]->bruttoAr = $osszKedvezmenyBrutto;
 
-							
-						
-							
-						} else {
+                        foreach($this->armodositok as $k =>  $modosito) {
+                                if(isset($modosito->id)) {
 
-							$amNetto =  $modosito->ar;
 
-							$amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
 
-								
+                                        $amNetto = $this->armodositok[$k]->nettoAr = 0;
+                                        $amBrutto = $this->armodositok[$k]->bruttoAr = 0;
 
-							if($modosito->mukodesimod==0) {
 
-								// hozzáadódik az ár
 
-								$this->osszKedvezmenyekNetto += $this->armodositok[$k]->nettoAr = $amNetto =  $modosito->ar;
 
-								$this->osszKedvezmenyekBrutto += $this->armodositok[$k]->bruttoAr =$amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
 
-								
 
-								$osszar += $amNetto;
 
-								$osszarBrutto += $amBrutto;
 
-								
+                                        if($modosito->ingyeneslimitar!=0) if($modosito->ingyeneslimitar<$termekOsszar) {
 
-							} else {
+                                                continue;
 
-								// százalékos működés
-								
-								$this->osszKedvezmenyekNetto += $this->armodositok[$k]->nettoAr = $amNetto =  ($termekOsszar/100)*$modosito->ar;
+                                        }
+                                        //print($modosito->nev." ");
 
-								$this->osszKedvezmenyekBrutto += $this->armodositok[$k]->bruttoAr =$amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
+                                        if(!isset($modosito->cikkszamok)) $modosito->cikkszamok = '';
+                                        if(trim($modosito->cikkszamok)!='') {
 
-								
-								
-								$osszar = $osszar+$amNetto;
+                                                // termékenként számoljuk a kedvezményt, mert nem vonatozik mindegyikre
 
-								$osszarBrutto = $osszarBrutto+$amBrutto;
+                                                $this->osszKedvezmenyekNetto += 
+                                                        $amNetto =  
+                                                                $osszKedvezmenyNetto;
+                                                $this->osszKedvezmenyekBrutto += 
+                                                        $amBrutto =  
+                                                                $osszKedvezmenyBrutto;
 
-								
+                                                $this->armodositok[$k]->nettoAr =  $osszKedvezmenyNetto;
+                                                $this->armodositok[$k]->bruttoAr = $osszKedvezmenyBrutto;
 
-							}
-						}
-						
-						$this->ervenyesitettArmodositok[] = array(
-							'nev' => $modosito->nev,
-							'netto' => $amNetto,
-							'brutto' => $amBrutto,
-							'afaertek' => $amBrutto-$amNetto,
-							'afa' => $modosito->afa,
-						);
-						//print $modosito->nev." ".$osszar.' '.$osszarBrutto.'<br>';
 
-					} else {
-						
-					}
-				}
 
-			}
+
+                                        } else {
+
+                                                $amNetto =  $modosito->ar;
+
+                                                $amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
+
+
+
+                                                if($modosito->mukodesimod==0) {
+
+                                                        // hozzáadódik az ár
+
+                                                        $this->osszKedvezmenyekNetto += $this->armodositok[$k]->nettoAr = $amNetto =  $modosito->ar;
+
+                                                        $this->osszKedvezmenyekBrutto += $this->armodositok[$k]->bruttoAr =$amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
+
+
+
+                                                        $osszar += $amNetto;
+
+                                                        $osszarBrutto += $amBrutto;
+
+
+
+                                                } else {
+
+                                                        // százalékos működés
+
+                                                        $this->osszKedvezmenyekNetto += $this->armodositok[$k]->nettoAr = $amNetto =  ($termekOsszar/100)*$modosito->ar;
+
+                                                        $this->osszKedvezmenyekBrutto += $this->armodositok[$k]->bruttoAr =$amBrutto =  $amNetto+($amNetto/100)*$modosito->afa;
+
+
+
+                                                        $osszar = $osszar+$amNetto;
+
+                                                        $osszarBrutto = $osszarBrutto+$amBrutto;
+
+
+
+                                                }
+                                        }
+
+                                        $this->ervenyesitettArmodositok[] = array(
+                                                'nev' => $modosito->nev,
+                                                'netto' => $amNetto,
+                                                'brutto' => $amBrutto,
+                                                'afaertek' => $amBrutto-$amNetto,
+                                                'afa' => $modosito->afa,
+                                        );
+                                        //print $modosito->nev." ".$osszar.' '.$osszarBrutto.'<br>';
+
+                                } else {
+
+                                }
+                        }
+
+                }
 
 			
 
@@ -355,8 +357,7 @@ class Rendeles_osztaly extends MY_Model {
 		$this->osszAfa = $osszarBrutto-$osszar;
 
                             
-
-		
+                
 
 	}
 
