@@ -204,7 +204,11 @@ class Termek_osztaly extends MY_Model {
 				$this->termekValtozatok[0] = new stdClass();
 				$this->termekValtozatok[0]->id = $this->id;
 				
-				$lista = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE termekszulo_id = ".$this->id." ORDER BY altermek_sorrend ASC");
+                                $sql = "SELECT id FROM ".DBP."termekek t WHERE termekszulo_id = ".$this->id." AND"
+                                        . " ( t.keszlet > 0 OR EXISTS( SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = t.id AND  keszlet > 0 LIMIT 1 ) )"
+                                        . " ORDER BY altermek_sorrend ASC";
+                                print $sql;
+				$lista = $this->Sql->sqlSorok($sql);
 				if(!empty($lista)) {
 					$this->termekValtozatok = array_merge($this->termekValtozatok,$lista);
 				} else {
@@ -214,7 +218,11 @@ class Termek_osztaly extends MY_Model {
 				// ez egy altermek
 				$this->termekValtozatok = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE id = ".$this->termekszulo_id." LIMIT 1");
 				
-				$altermekek = $this->Sql->sqlSorok("SELECT id FROM ".DBP."termekek WHERE termekszulo_id = ".$this->termekszulo_id."   ORDER BY altermek_sorrend ASC ");
+                                $sql = "SELECT id FROM ".DBP."termekek t WHERE termekszulo_id = ".$this->termekszulo_id." AND "
+                                        . " ( t.keszlet > 0 OR EXISTS( SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = t.id AND  keszlet > 0 LIMIT 1 ) )"
+                                        . " ORDER BY altermek_sorrend ASC ";
+                                
+				$altermekek = $this->Sql->sqlSorok($sql);
 				if(!empty($altermekek)) $this->termekValtozatok = array_merge($this->termekValtozatok,$altermekek);
 				
 			}

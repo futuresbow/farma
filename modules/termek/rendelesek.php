@@ -17,7 +17,8 @@ class Rendelesek extends MY_Modul {
          * TODO: cronba bekötni, ezek cron feladatok 5 perces futtatással
          */
         function elfogyottTermekElrejtes() {
-            $sql = "UPDATE ".DBP."termekek SET aktiv = 0 WHERE termekszulo_id = 0 AND keszlet = 0 AND modositva < ".strtotime('-1 day');
+            $sql = "UPDATE ".DBP."termekek SET aktiv = 0 WHERE termekszulo_id = 0 AND keszlet = 0 AND modositva < '".date('Y-m-d H:i',strtotime('-1 day'))."'";
+            
             $this->db->query($sql);
             
             $sql = "SELECT DISTINCT(termek_id) FROM ".DBP."termek_keszletek tk, ".DBP."termekek t  WHERE t.aktiv = 1 AND t.id = tk.termek_id AND tk.keszlet = 0 AND ido < '".date('Y-m-d H:i', strtotime("-1 day"))."'";
@@ -37,30 +38,35 @@ class Rendelesek extends MY_Modul {
         }
         function sessionkezeles() {
             $lejarat = time()-$this->config->item('sess_expiration');
+            // teszt:
+            // $lejarat = time()+10;
             
             
             $sql = "SELECT * FROM ".DBP."ci_sessions WHERE timestamp < '".($lejarat)."'";
             
             $sessions = $this->Sql->sqlSorok($sql);
+            //print_r($sessions);
             
             $kosarSessionId = false;
             foreach($sessions as $session) {
                 $arr = $session->data;
                 $arr = explode(';', $arr);
                 foreach($arr as $arrSor) {
-                    
                     if(strpos($arrSor, 'kosarSessId')!==false) {
                         
                         $adatArr = explode(':', $arrSor);
                         $kosarSessionId = trim($adatArr[2],'"');
+                        
+                        if($kosarSessionId){
+                            $sql = "DELETE FROM ".DBP."termek_kosar_darabszam WHERE session_id = '$kosarSessionId' ";
+                            $this->db->query($sql);
+                        }
+                        
                     }
                 }
             }
-            if($kosarSessionId){
-                
-                $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE session_id = '$kosarSessionId' ");
             
-            }
+            
             $this->db->query("DELETE FROM ci_sessions WHERE timestamp < ".$lejarat);
             
             $this->db->query("DELETE FROM ".DBP."termek_kosar_darabszam WHERE modositva < '".date('Y-m-d H:i', strtotime("-2 hours"))."'");
