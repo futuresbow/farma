@@ -446,6 +446,8 @@ var siteJs = {};
                 $('#fizetesmod').empty().append('<option value="0">Kérem, válasszon!</option>');
                 e = JSON.parse(e);
                 for(i = 0;i < e.length; i++ ) $('#fizetesmod').append('<option value="'+e[i].id+'">'+e[i].nev+'</option>');
+                
+                siteJs.kosarOsszarKalkulacio();
             });
         }
 	siteJs.kosarOsszarKalkulacio = function () {

@@ -496,7 +496,7 @@ function ws_belepesEllenorzes() {
 	
         if(isset($tag->id)) {
             
-            if($tag->statusz!=1) {
+            if($tag->statusz!=1 && !$ci->session->userdata('tmp_allowed')) {
                 
                 $ci->session->unset_userdata('__belepett_felhasznalo');
 	
