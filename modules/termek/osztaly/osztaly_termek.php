@@ -151,25 +151,26 @@ class Termek_osztaly extends MY_Model {
 	}
 	
 	public function elerhetoKeszlet($termek_armodosito_id=0) {
-		if($termek_armodosito_id ==0) {
-			$keszlet = $this->keszlet;
-		} else {
-			$keszlet = 0;
-			$sql = "SELECT keszlet FROM ".DBP."termek_keszletek WHERE 
-				termek_id = ".$this->id." AND
-				termek_armodosito_id = $termek_armodosito_id
-				";
-			
-			$rs = $this->Sql->sqlSor($sql);
-			if(isset($rs->keszlet)) {
-				$keszlet = $rs->keszlet;
-			}
-		}
-                $ci = getCI();
-                $sql = "SELECT SUM(darabszam) as darab FROM ".DBP."termek_kosar_darabszam WHERE session_id != '".$ci->session->userdata('kosarSessId')."' AND termek_id = ".$this->id."";
-		$darabszam = $this->Sql->sqlSor($sql);
-                $keszlet -= $darabszam->darab;
-		return $keszlet;
+            // először a készlet táblában keresünk
+            $termek_armodosito_id = (int)$termek_armodosito_id;
+            $keszlet = 0;
+            $sql = "SELECT keszlet FROM ".DBP."termek_keszletek WHERE 
+                    termek_id = ".$this->id." AND
+                    termek_armodosito_id = $termek_armodosito_id
+                    ";
+
+            $rs = $this->Sql->sqlSor($sql);
+            if(isset($rs->keszlet)) {
+                $keszlet = $rs->keszlet;
+            } elseif($termek_armodosito_id ==0) {
+                // kompatibilitás visszafele, TODO: kivenni
+                //$keszlet = $this->keszlet;
+            } 
+            $ci = getCI();
+            $sql = "SELECT SUM(darabszam) as darab FROM ".DBP."termek_kosar_darabszam WHERE session_id != '".$ci->session->userdata('kosarSessId')."' AND termek_id = ".$this->id."";
+            $darabszam = $this->Sql->sqlSor($sql);
+            $keszlet -= $darabszam->darab;
+            return $keszlet;
 	}
 	/*
 	 * vannakTermekValtozatok

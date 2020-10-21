@@ -135,6 +135,12 @@
 				</ul>
 			</div>
 			
+                        <?php $ci = getCI();$oldal = $ci->uri->segment(1);if($oldal=='') $oldal = 'fooldal';?>
+                        <?php if(beallitasOlvasas("info_".$oldal)):?>
+                        <div class="alert alert-info"><?= beallitasOlvasas("info_".$oldal);?></div>
+                        <?php endif;?>
+                        
+                        
 			<?= $modulKimenet; ?>
 
 		</div>

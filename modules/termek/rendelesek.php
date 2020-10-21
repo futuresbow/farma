@@ -17,15 +17,17 @@ class Rendelesek extends MY_Modul {
          * TODO: cronba bekötni, ezek cron feladatok 5 perces futtatással
          */
         function elfogyottTermekElrejtes() {
-            $sql = "UPDATE ".DBP."termekek SET aktiv = 0 WHERE termekszulo_id = 0 AND keszlet = 0 AND modositva < '".date('Y-m-d H:i',strtotime('-1 day'))."'";
             
-            $this->db->query($sql);
             
-            $sql = "SELECT DISTINCT(termek_id) FROM ".DBP."termek_keszletek tk, ".DBP."termekek t  WHERE t.aktiv = 1 AND t.id = tk.termek_id AND tk.keszlet = 0 AND ido < '".date('Y-m-d H:i', strtotime("-1 day"))."'";
+            $sql = "SELECT DISTINCT(termek_id) "
+                    . "FROM ".DBP."termek_keszletek tk, ".DBP."termekek t  "
+                    . "WHERE t.aktiv = 1 AND t.id = tk.termek_id AND "
+                    . "tk.keszlet = 0 AND ido < '".date('Y-m-d H:i', strtotime("-1 day"))."'";
             $kifogyok = $this->sqlSorok($sql);
             
+            
             if($kifogyok) foreach($kifogyok as $kifogyo) {
-                $sql = "SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = {$kifogyo->termek_id} AND keszlet = 1 LIMIT 1";
+                $sql = "SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = {$kifogyo->termek_id} AND keszlet > 0 LIMIT 1";
                 $vanMeg = $this->sqlSor($sql);
                 if(!$vanMeg){
                     $sql = "UPDATE ".DBP."termekek SET aktiv = 0 WHERE id = {$kifogyo->termek_id}";

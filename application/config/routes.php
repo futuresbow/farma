@@ -53,6 +53,8 @@ $route['default_controller'] = 'fokontroller';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['api/(:any)'] = 'api/$1';
+
 $route['(:any)'] = 'fokontroller/index';
 $route['(:any)/(:any)'] = 'fokontroller/index';
 $route['(:any)/(:any)/(:any)'] = 'fokontroller/index';

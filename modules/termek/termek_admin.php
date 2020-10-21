@@ -683,6 +683,24 @@ class Termek_admin extends MY_Modul{
 				$a['id'] = $id;
 				$this->sqlUpdate($a, DBP.'termekek', 'id');
 			}
+                        
+                        // darabszám
+                        $sql = "SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = $id AND termek_armodosito_id = 0 LIMIT 1";
+                        $vanDarab = $this->sqlSor($sql);
+                        if($vanDarab) {
+                            $tk = (array)$vanDarab;
+                            $tk['keszlet'] = $a['keszlet'];
+                            $tk['lefoglalt'] = $a['lefoglalva'];
+                            $this->sqlUpdate($tk, DBP."termek_keszletek");
+                            
+                        } else {
+                            $tk = ['termek_id' => $id, 'termek_armodosito_id' => 0,'keszlet' => $a['keszlet'], 'lefoglalt' => $a['lefoglalva'] ];
+                            $this->sqlSave($tk, DBP."termek_keszletek");
+                            
+                            
+                        }
+                        
+                        
 			$nyelvek = explode(',', beallitasOlvasas('nyelvek'));
 			$foNyelv = current($nyelvek);
 			
@@ -829,7 +847,7 @@ class Termek_admin extends MY_Modul{
 			
 			if(isset($_POST['elonezet'])) {
 				
-				print 'okok';
+				//print 'okok';
 			} else {
 				redirect(ADMINURL.'termek/lista');
 				return;
@@ -861,6 +879,7 @@ class Termek_admin extends MY_Modul{
 		// előnézet? nyissuk meg a terméket új tabon
 		if(isset($_POST['elonezet'])) {
 			$doboz->HTMLHozzaadas("<script>window.open('".$sor->link()."', 'elonezet');</script>");
+			$doboz->HTMLHozzaadas("<script>window.location.href='".ADMINURL."termek/szerkesztes/".$id."';</script>");
 		}
 		
 		
@@ -907,9 +926,20 @@ class Termek_admin extends MY_Modul{
 		$doboz->duplaInput($select1, $input);
 		
 		// készlet
-		
-		$input1 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'keszlet', 'felirat' => 'Készlet (ha nincs változat)', 'ertek' => @$sor->keszlet));
-		$input2 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'lefoglalva', 'felirat' => 'lefoglalva', 'ertek' => @$sor->lefoglalva));
+		if(isset($sor->id)) {
+                    $sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = {$sor->id} AND termek_armodosito_id = 0 LIMIT 1";
+                    //print $sql;
+                    $vanDarab = $this->sqlSor($sql);
+                    $keszlet = $vanDarab->keszlet;
+                    $lefoglalva = $vanDarab->lefoglalt;
+                } else {
+                    $keszlet = 0;
+                    $lefoglalva = 0;
+                    
+                }
+                
+		$input1 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'keszlet', 'felirat' => 'Készlet (ha nincs változat)', 'ertek' => $keszlet));
+		$input2 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'lefoglalva', 'felirat' => 'lefoglalva', 'ertek' => $lefoglalva));
 		
 		$doboz->duplaInput($input1, $input2);
 		// termékcsoport

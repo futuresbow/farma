@@ -176,11 +176,7 @@ class Rendeles_osztaly extends MY_Model {
 				if(!$valtozat1 and !$valtozat2) {
 					// normál termék
 					
-					$sql = "UPDATE ".DBP."termekek SET 
-									keszlet = keszlet + $keszletNoveles, lefoglalva = lefoglalva + $foglaltNoveles 
-								WHERE 
-									id = {$t->termek_id} LIMIT 1
-					";
+                                        $sql = ("UPDATE ".DBP."termek_keszletek SET keszlet = keszlet + $keszletNoveles, lefoglalt = lefoglalt + $foglaltNoveles WHERE termek_id = {$t->termek_id} LIMIT 1 ");
 					$ci = getCI();
 					$ci->db->query($sql);
 					

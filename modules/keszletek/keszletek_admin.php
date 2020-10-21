@@ -5,8 +5,9 @@ class Keszletek_admin extends MY_Modul{
 	
 	
 	public function ajax() {
-		$termekId = $_GET['tid'];
+		$termekId = (int)$_GET['tid'];
 		
+                
 		
 		if(isset($_GET['am_id'])) {
 			$amSor = $this->ci->Sql->get((int)$_GET['am_id'], DBP.'termek_armodositok', 'id');
@@ -34,28 +35,37 @@ class Keszletek_admin extends MY_Modul{
 			exit;
 		}
 		
+                $sql = "SELECT id FROM ".DBP."termek_keszletek WHERE termek_id = ".(int)$_GET['tid']." AND  termek_armodosito_id = 0 LIMIT 1 ";
+                $van = $this->ci->Sql->sqlSor($sql);
+		if(!$van) {
+                    $vid = $this->Sql->sqlSave(array('termek_id' => $termekId, 'keszlet' => 0, 'lefoglalt' => 0),DBP."termek_keszletek");
+                } else {
+                    $vid = $van->id;
+                }
 		
 		if(isset($_GET['keszlet'])) {
 			$keszlet = (int)$_GET['keszlet'];
-			$this->ci->db->query("UPDATE ".DBP."termekek SET keszlet = $keszlet WHERE id = $termekId");
+			$this->ci->db->query("UPDATE ".DBP."termek_keszletek SET keszlet = $keszlet WHERE id = $vid");
 			exit;
 		}
 		
 		if(isset($_GET['lefoglalt'])) {
 			$lefoglalt = (int)$_GET['lefoglalt'];
-			$this->ci->db->query("UPDATE ".DBP."termekek SET lefoglalva = $lefoglalt WHERE id = $termekId");
+			$this->ci->db->query("UPDATE ".DBP."termek_keszletek SET lefoglalt = $lefoglalt WHERE id = $vid");
 			exit;
 		}
 		
 		die("0");
 	}
 	public function darabszam() {
+            
+                
 		ws_autoload('termek');
 		$valtozatTipusok = $this->Sql->sqlSorok("SELECT DISTINCT(tipus) FROM ".DBP."termek_armodositok WHERE tipus != 1 ");
 		$tipusok = array();
 		foreach($valtozatTipusok as $sor) $tipusok[] = $sor->tipus;
 		
-		
+                
 		$w = '';
 		globalisMemoria("Nyitott menüpont",'Termékek');
 		globalisMemoria('utvonal', array(array('felirat' => 'Termékkészlet')));
@@ -107,16 +117,27 @@ class Keszletek_admin extends MY_Modul{
 		//die( $sql);
 		$lista = $this->sqlSorok($sql);
 		
-		foreach($lista as $listaIndex => $sor) {
+                foreach($lista as $listaIndex => $sor) {
 			$termek = new Termek_osztaly($sor->id);
 			$id = $sor->id;
 			$sor->nev = $termek->jellemzo('Név');
+                        
+                        // ha van már mentés
+                        $sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = $id AND 
+                            termek_armodosito_id = 0";
+                        $termekkeszlet = $this->Sql->sqlSor($sql);
+                        if($termekkeszlet) {
+                            $sor->keszlet = $termekkeszlet->keszlet;
+                            $sor->lefoglalva = $termekkeszlet->lefoglalt;
+                        }
 			$adatlista[] = $sor;
 			
 			// lista
 			$valtozatSorok = array();
 			foreach($tipusok as $tipus_id) {
-				$valtozatSorok[] = $this->Sql->sqlSorok("SELECT * FROM ".DBP."termek_armodositok WHERE termek_id = {$id} AND tipus = $tipus_id ORDER BY nev ASC ");
+                                $sql = "SELECT * FROM ".DBP."termek_armodositok WHERE termek_id = {$id} AND tipus = $tipus_id ORDER BY nev ASC ";
+                                
+				$valtozatSorok[] = $this->Sql->sqlSorok($sql);
 			}
 			
 			$adatlista = $this->kombinaciosLista($valtozatSorok);
@@ -403,21 +424,21 @@ class Keszletek_admin extends MY_Modul{
 	}
 	
 	public function kombinaciosLista($valtozatok,  $index = 0) {
-		$nevTomb = array();
-		foreach($valtozatok[$index] as $sor) {
-			if(!empty($valtozatok[$index+1])) {
-				$alLista = $this->kombinaciosLista($valtozatok, $index+1);
-			}
-			if(!empty($alLista)) {
-				foreach($alLista as $alSor) {
-					$nevTomb[] = (object)array('nev' => $sor->nev.' '.$alSor->nev, 'cikkszam' => $sor->cikkszam, 'amid' => $sor->id.'_'.$alSor->amid); 
-				}
-			} else {
-				$nevTomb[] = (object)array('nev' => $sor->nev, 'amid' => $sor->id, 'cikkszam' => $sor->cikkszam); 
-			}
-			
-		}
-		return $nevTomb;
+            $nevTomb = array();
+            foreach($valtozatok[$index] as $sor) {
+                    if(!empty($valtozatok[$index+1])) {
+                            $alLista = $this->kombinaciosLista($valtozatok, $index+1);
+                    }
+                    if(!empty($alLista)) {
+                            foreach($alLista as $alSor) {
+                                    $nevTomb[] = (object)array('nev' => $sor->nev.' '.$alSor->nev, 'cikkszam' => $sor->cikkszam, 'amid' => $sor->id.'_'.$alSor->amid); 
+                            }
+                    } else {
+                            $nevTomb[] = (object)array('nev' => $sor->nev, 'amid' => $sor->id, 'cikkszam' => $sor->cikkszam); 
+                    }
+
+            }
+            return $nevTomb;
 	}
 	
 }

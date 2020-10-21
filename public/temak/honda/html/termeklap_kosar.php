@@ -18,7 +18,7 @@
 
                             <select id="termekvaltozat" class="kosar_termekvaltozat">
 								
-								<?php foreach($termek->termekvaltozatok() as $valtozat):$valtozat = new Termek_osztaly($valtozat->id); ?>
+								<?php foreach($termek->termekvaltozatok() as $valtozat):$valtozat = new Termek_osztaly($valtozat->id);if($valtozat->aktiv==0)continue; ?>
 
 								<option <?= ($termek->id==$valtozat->id)?' selected ':''; ?> data-link="<?= $valtozat->link(); ?>" value="<?= $valtozat->id;?>"><?= $valtozat->jellemzo("Név"); ?></option>
 

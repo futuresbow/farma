@@ -15,7 +15,9 @@ class Levelkuldo_osztaly extends MY_Model  {
 	function __construct() {
 
 		$this->data['Oldal URL'] = base_url();
-		require_once(APPPATH."third_party/PHPMailer-master/src/PHPMailer.php");
+		
+                 require_once(APPPATH."third_party/PHPMailer-master/src/PHPMailer.php");
+                 
 
 		require_once(APPPATH."third_party/PHPMailer-master/src/SMTP.php");
 
@@ -49,6 +51,7 @@ class Levelkuldo_osztaly extends MY_Model  {
 
 		$mail->SetFrom( beallitasOlvasas('Mail_sender_email'));
 		$this->mail = $mail;
+                 
 	}
 
 	function helyorzo($kulcs , $ertek) {

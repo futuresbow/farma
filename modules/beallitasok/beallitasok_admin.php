@@ -785,6 +785,15 @@ public function menulista() {
 		
 
 		$doboz->szimplaInput($input1);
+                
+                $input1 = new Szovegmezo(array('felirat' => 'Info a kosár oldalon','tipus' => 'szoveg','attr' => '','nevtomb' => 'a', 'mezonev' => 'info_kosar', 'ertek' => beallitasOlvasas('info_kosar'))) ;
+		$doboz->szimplaInput($input1);
+
+                $input1 = new Szovegmezo(array('felirat' => 'Info a fiókom oldalra','tipus' => 'szoveg','attr' => '','nevtomb' => 'a', 'mezonev' => 'info_fiokom', 'ertek' => beallitasOlvasas('info_fiokom'))) ;
+		$doboz->szimplaInput($input1);
+
+                $input1 = new Szovegmezo(array('felirat' => 'Info a főoldalra','tipus' => 'szoveg','attr' => '','nevtomb' => 'a', 'mezonev' => 'info_fooldal', 'ertek' => beallitasOlvasas('info_fooldal'))) ;
+		$doboz->szimplaInput($input1);
 
 		
 
