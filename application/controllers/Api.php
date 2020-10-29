@@ -253,7 +253,11 @@ class Api extends CI_Controller {
 
     public function termeklista_full() {
         define("DBP", '');
-
+        
+        if(@$_GET['s']!='fd7/kjfd') die();
+        
+        
+        
         $sql = "SELECT id FROM termekek";
         $termekIdk = $this->Sql->sqlSorok($sql);
         //print_r($termekIdk);
@@ -453,10 +457,9 @@ class Api extends CI_Controller {
         ob_end_clean();
 
         $nev = 'osszes_termekek_' . date("Y-m-d");
-
-        var_dump(file_put_contents(ROOTPATH . 'data/' . $nev . '.csv', $o));
-        print 'data/' . $nev . '.csv kiirva <br>';
-
+        //print ROOTPATH . 'data/export/' . $nev . '.csv';
+        file_put_contents(ROOTPATH . 'data/export/' . $nev . '.csv', $o);
+        redirect(base_url().'webshopadmin/termek/csveleres');
     }
 
     public function heti() {

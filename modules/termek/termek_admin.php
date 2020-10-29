@@ -7,7 +7,59 @@ class Termek_admin extends MY_Modul{
 		parent::__construct();
 		include_once('osztaly/osztaly_termeklista.php');
 	}
-	
+        public function csveleres() {
+            
+            if(isset($_GET['dl'])) {
+                
+                $file = ROOTPATH . 'data/export/'.$_GET['dl'];
+                if(is_file($file)) {
+                    header("Content-type: text/csv");
+                    header("Content-Disposition: attachment; filename=".$_GET['dl']);
+                    header("Pragma: no-cache");
+                    header("Expires: 0");
+                    
+                    print (file_get_contents($file));
+                    
+                    die();
+                    
+                } else {
+                    
+                }
+            }
+            
+            globalisMemoria("Nyitott menüpont",'Termékek');
+            $ci = getCI();
+
+            
+            globalisMemoria('utvonal', array(array('url' => 'termek/csveleres', 'felirat' => 'Export fileok') ));
+
+            $ALG = new Adminlapgenerator;
+
+            $ALG->adatBeallitas('lapCim', "Export Listák");
+
+            $ALG->adatBeallitas('fejlecGomb', array('url' => base_url().'api/termeklista_full?s=fd7/kjfd', 'felirat' => 'Generálás') );
+            
+            $ALG->tartalomDobozStart();
+            
+            $doboz = $ALG->ujDoboz();
+            $doboz->HTMLHozzaadas("Kattints a letöltéshez");
+            $dir = scandir(ROOTPATH . 'data/export/');
+            $str = '';
+            foreach($dir as $file) {
+                if($file == '.' or $file == '..') continue;
+                $str .= '<a href="?dl='.$file.'">'.$file.'</a><br>';
+                
+            
+            }
+            $doboz->HTMLHozzaadas($str);
+            
+            $ALG->tartalomDobozVege();
+
+		
+
+            return $ALG->kimenet();
+		
+        }
 	/*
 	 * termek_armodositocsoportlista
 	 * 
