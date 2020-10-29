@@ -426,6 +426,7 @@ class Rendelesek_admin extends MY_Modul {
 		$rendeles = new Rendeles_osztaly;
 
 		$rendeles->betoltesMegrendeles($param['rendeles_id']);
+                
 		if(isset($param['megjegyzes']))
 		{
 			$megjegyzes = $param['megjegyzes'];
@@ -447,40 +448,75 @@ class Rendelesek_admin extends MY_Modul {
 		
 		if($statusz->visszaigazolo != '' ) {
 			$visszaigazolo = $statusz->visszaigazolo;
+			$visszaigazoloAdmin = $statusz->visszaigazolo.'_admin';
 			
 			
 			$targy = rendszerUzenetTargy($visszaigazolo).' '. ws_ordernumber($rendeles->id);
 
-				$uzenet = rendszerUzenet($visszaigazolo);
+                        $uzenet = rendszerUzenet($visszaigazolo);
 
-				$adattabla = $rendeles->megrendelesAdatTablak();
-                
-		
+                        $adattabla = $rendeles->megrendelesAdatTablak();
 
-				include(ROOTPATH.'modules/hirlevel/autoload.php');
 
-				$level = new Levelkuldo_osztaly;
 
-				$level->helyorzo('Teljes név', $rendeles->vevo->vezeteknev.' '.$rendeles->vevo->keresztnev);
+                        include(ROOTPATH.'modules/hirlevel/autoload.php');
 
-				$level->helyorzo('Keresztnév', $rendeles->vevo->keresztnev);
+                        $level = new Levelkuldo_osztaly;
 
-				$level->helyorzo('Vezetéknév', $rendeles->vevo->vezeteknev);
+                        $level->helyorzo('Teljes név', $rendeles->vevo->vezeteknev.' '.$rendeles->vevo->keresztnev);
 
-				$level->helyorzo('Email', $rendeles->vevo->email);
+                        $level->helyorzo('Keresztnév', $rendeles->vevo->keresztnev);
 
-				$level->helyorzo('Rendelés ID', ws_ordernumber($rendeles->id));
-				if($megjegyzes)
-				{
-					$level->helyorzo('Megjegyzés', ($megjegyzes));
-				}
-				$level->rendszerlevelKeszites($uzenet.'<br><br>'.$adattabla);
+                        $level->helyorzo('Vezetéknév', $rendeles->vevo->vezeteknev);
 
-				
-				$level->levelKuldes($rendeles->vevo->email, $targy);
-				$level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), $targy);
+                        $level->helyorzo('Email', $rendeles->vevo->email);
 
-				
+                        $level->helyorzo('Rendelés ID', ws_ordernumber($rendeles->id));
+                        if($megjegyzes)
+                        {
+                                $level->helyorzo('Megjegyzés', ($megjegyzes));
+                        }
+                        $level->rendszerlevelKeszites($uzenet.'<br><br>'.$adattabla);
+
+
+                        $level->levelKuldes($rendeles->vevo->email, $targy);
+                        
+                        // admin
+                        
+                        $uzenet = rendszerUzenet($visszaigazoloAdmin);
+                        if($uzenet) {
+                            $targy = rendszerUzenetTargy($visszaigazoloAdmin).' '. ws_ordernumber($rendeles->id);
+
+
+                            
+
+
+                            include(ROOTPATH.'modules/hirlevel/autoload.php');
+
+                            $level = new Levelkuldo_osztaly;
+
+                            $level->helyorzo('Teljes név', $rendeles->vevo->vezeteknev.' '.$rendeles->vevo->keresztnev);
+
+                            $level->helyorzo('Keresztnév', $rendeles->vevo->keresztnev);
+
+                            $level->helyorzo('Vezetéknév', $rendeles->vevo->vezeteknev);
+
+                            $level->helyorzo('Email', $rendeles->vevo->email);
+
+                            $level->helyorzo('Rendelés ID', ws_ordernumber($rendeles->id));
+                            if($megjegyzes)
+                            {
+                                    $level->helyorzo('Megjegyzés', ($megjegyzes));
+                            }
+                            $level->rendszerlevelKeszites($uzenet.'<br><br>'.$adattabla);
+                        } 
+
+                        
+                        
+                        
+                        $level->levelKuldes(beallitasOlvasas('admin_ertesites_email_cim'), $targy);
+
+
 
 				
 			

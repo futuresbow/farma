@@ -465,7 +465,7 @@ function rendszerUzenetTargy($kulcs, $nyelv = false) {
 	$sql = "SELECT * FROM ".DBP."email_sablonok WHERE kulcs = '$kulcs' AND nyelv = '$nyelv' LIMIT 1";
 	
 	$uzenet = $ci->Sql->sqlSor($sql);
-	if(!isset($uzenet->targy)) return '#'.$kulcs.' rendszerüzenet nem található! ';
+	if(!isset($uzenet->targy)) return false;
 	return $uzenet->targy;
 }
 
@@ -474,7 +474,7 @@ function rendszerUzenet($kulcs, $nyelv = false) {
 	$ci = getCI();
 	if(!$nyelv) $nyelv = $_SESSION['CMS_NYELV'];
 	$uzenet = $ci->Sql->sqlSor("SELECT * FROM ".DBP."email_sablonok WHERE kulcs = '$kulcs' AND nyelv = '$nyelv' LIMIT 1");
-	if(!isset($uzenet->html)) return '#'.$kulcs.' rendszerüzenet nem található! ';
+	if(!isset($uzenet->html)) return false;
 	return nl2br($uzenet->html);
 }
 // aktuális téma HTML mappa view-ok betöltéséhez
