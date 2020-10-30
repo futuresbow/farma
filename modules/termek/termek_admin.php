@@ -47,11 +47,12 @@ class Termek_admin extends MY_Modul{
             $str = '';
             foreach($dir as $file) {
                 if($file == '.' or $file == '..') continue;
-                $str .= '<a href="?dl='.$file.'">'.$file.'</a><br>';
+                $str .= '<a href="?dl='.$file.'&r='.rand(1,9898798).'">'.$file.'</a><br>';
                 
             
             }
             $doboz->HTMLHozzaadas($str);
+            $doboz->HTMLHozzaadas("<br><a href=\"/assets/termekkepek20201029.tgz\">Képek mappa</a>");
             
             $ALG->tartalomDobozVege();
 
@@ -731,6 +732,7 @@ class Termek_admin extends MY_Modul{
 			}
 			if($id==0) {
 				$id = $this->sqlSave($a, DBP.'termekek');
+				naplozo('Admin tevékenység',0,'', "Új termék felvitele: ".$id);
 			} else {
 				$a['id'] = $id;
 				$this->sqlUpdate($a, DBP.'termekek', 'id');
@@ -962,7 +964,7 @@ class Termek_admin extends MY_Modul{
 		$brutto = 0;
 		if(isset($sor->ar)) {
 			if($sor->afa!=0) {
-				$brutto = $sor->ar + (($sor->ar/100)*$sor->afa);
+				$brutto = round($sor->ar + (($sor->ar/100)*$sor->afa),0);
 			}
 		}
 		$input = new Szovegmezo(array('nevtomb' => '', 'mezonev' => 'brutto', 'felirat' => 'Bruttó érték', 'ertek' => $brutto, 'attr' => ' onchange="aJs.nettoSzamitas();" id="bruttoertek" '));
@@ -978,17 +980,17 @@ class Termek_admin extends MY_Modul{
 		$doboz->duplaInput($select1, $input);
 		
 		// készlet
-		if(isset($sor->id)) {
-                    $sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = {$sor->id} AND termek_armodosito_id = 0 LIMIT 1";
-                    //print $sql;
-                    $vanDarab = $this->sqlSor($sql);
-                    $keszlet = $vanDarab->keszlet;
-                    $lefoglalva = $vanDarab->lefoglalt;
-                } else {
-                    $keszlet = 0;
-                    $lefoglalva = 0;
+		$keszlet = 0;
+        $lefoglalva = 0;
                     
-                }
+		if(isset($sor->id)) {
+            $sql = "SELECT * FROM ".DBP."termek_keszletek WHERE termek_id = {$sor->id} AND termek_armodosito_id = 0 LIMIT 1";
+            $vanDarab = $this->sqlSor($sql);
+            if($vanDarab) {
+                $keszlet = $vanDarab->keszlet;
+                $lefoglalva = $vanDarab->lefoglalt;
+            }
+        }
                 
 		$input1 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'keszlet', 'felirat' => 'Készlet (ha nincs változat)', 'ertek' => $keszlet));
 		$input2 = new Szovegmezo(array('attr' => '' ,'nevtomb'=>'a', 'mezonev' => 'lefoglalva', 'felirat' => 'lefoglalva', 'ertek' => $lefoglalva));

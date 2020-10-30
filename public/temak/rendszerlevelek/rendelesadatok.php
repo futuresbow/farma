@@ -13,7 +13,6 @@
             <td style="padding:10px;font-family:sans-serif;">
                 Rendelésszám: <?= ws_ordernumber($this->id); ?><br>
                 Rendelés dátuma: <?= ws_date($this->ido); ?><br>
-                
                 <br>
                 <?php $fizmod = $szallmod = false; foreach ($this->armodositok as $sor) {
                     if($sor->tipus == 'fizetesmod') $fizmod = $sor;
@@ -27,8 +26,11 @@
                 Telefonszám: <?= $this->vevo->telefonszam; ?><br>
 
                 Szállítási cím:   <?= $this->vevo->szall_irszam; ?> <?= $this->vevo->szall_telepules; ?>, <?= $this->vevo->szall_utca; ?>  <br>
-                Számlázási cím:    <?= $this->vevo->szaml_irszam; ?> <?= $this->vevo->szaml_telepules; ?>, <?= $this->vevo->szaml_utca; ?> 
+                Számlázási cím:    <?= $this->vevo->szaml_irszam; ?> <?= $this->vevo->szaml_telepules; ?>, <?= $this->vevo->szaml_utca; ?> <br>
                 
+                <?php if(trim($this->vevo->megjegyzes!='')):?>
+                Megjegyzés: <?= htmlspecialchars(nl2br($this->vevo->megjegyzes));?><br>
+                <?php endif;?>
                 <br>
                 
             </td>
@@ -142,10 +144,10 @@
             
                 <br>
                 <br>
-                <?php if(trim($rendeles->megjegyzes)!==''):?>
+                <?php if(false) if(trim($this->megjegyzes)!==''):?>
                 Megjegyzés:
                 <br>
-                <i><?= htmlspecialchars($rendeles->megjegyzes)?></i><br><br>
+                <i><?= htmlspecialchars($this->megjegyzes)?></i><br><br>
                 <?php endif; ?>
                 Motoros üdvözlettel,<br>
                 a Karasna Honda csapata
